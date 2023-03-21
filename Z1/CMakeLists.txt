@@ -3,4 +3,4 @@ project(AOD_1)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(AOD_1 main.cpp)
+add_executable(AOD_1 main.cpp Graph.cpp Graph.h)
