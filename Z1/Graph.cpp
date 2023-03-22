@@ -5,14 +5,30 @@
 #include <iostream>
 #include "Graph.h"
 #include "stack"
-Graph::Graph(bool directed, size_t n, size_t m) noexcept
+#include "fstream"
+Graph::Graph(std::ifstream &graphDefinition) noexcept
 {
-    this->directed = directed;
-    this->n = n;
-    this->m = m;
+    std::string line;
+    getline(graphDefinition, line);
+    line == "D" ? directed = true : directed = false;
+    getline(graphDefinition, line);
+    n = std::stol(line);
+    getline(graphDefinition, line);
+    m = std::stol(line);
+
+
     visited.resize(n+1, false);
     //make space for the last element
     adj.resize(n+1);
+    //create the graph
+    while(getline(graphDefinition, line))
+    {
+        size_t i, v1, v2;
+        i = line.find(' ');
+        v1 = std::stol(line.substr(0, i));
+        v2 = std::stol(line.substr(i, std::string::npos));
+        addEdge(v1, v2);
+    }
 }
 
 void Graph::addEdge(size_t V1, size_t V2) noexcept
@@ -35,7 +51,7 @@ void Graph::BFS(size_t s) noexcept
     {
         //mark first vertex in queue
         s = queue.front();
-        std::cout << s << " ";
+        searchOrder.push_back(s);
         queue.pop_front();
 
         //traverse all adjacent vertices of s
@@ -56,7 +72,7 @@ void Graph::BFS(size_t s) noexcept
 void Graph::DFS(size_t s) noexcept
 {
     visited[s] = true;
-    std::cout << s << " ";
+    searchOrder.push_back(s);
 
     for (size_t adjacent:adj[s])
     {
@@ -67,7 +83,15 @@ void Graph::DFS(size_t s) noexcept
     }
 }
 
-void Graph::print() noexcept
+void Graph::printSearchOrder() noexcept
+{
+    for (size_t vertice:searchOrder)
+    {
+        std::cout << vertice << " ";
+    }
+}
+
+void Graph::printGraph() noexcept
 {
     //generate graph tree (BFS OR DFS)
 }
