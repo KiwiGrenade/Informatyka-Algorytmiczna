@@ -11,7 +11,7 @@ int main(int argc, char** argv)
         Graph* graph = new Graph(graphDefinition);
 
         //serach the graph
-        graph->BFS(1);
+        graph->BFS();
         graph->printSearchOrder();
 
         if(*argv[1] == 'p')
