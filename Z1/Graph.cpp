@@ -96,7 +96,7 @@ bool Graph::DFS() noexcept
 {
     visited.resize(n+1, false);
     searchOrder.clear();
-    for (size_t i = 1; i <= m; i++)
+    for (size_t i = 1; i <= n; i++)
     {
         if(!visited[i])
         {
@@ -119,7 +119,7 @@ bool Graph::TPS() noexcept
     searchOrder.clear();
     std::vector<size_t> topOrder;
 
-    for (size_t i = 1; i <= m; i++)
+    for (size_t i = 1; i <= n; i++)
     {
         if(!visited[i])
         {
@@ -164,6 +164,41 @@ bool Graph::TPSVisit(size_t s, std::vector<size_t>& topOrder) noexcept
     finished[s] = time;
     topOrder.push_back(s);
     return true;
+}
+
+
+void Graph::CCC() noexcept
+{
+    std::stack <size_t> finVertices;
+    if(!isDirected)
+    {
+        std::cout << "Error: Graph is undirected!" << std::endl;
+        return;
+    }
+    for(size_t i = 0; i < n; i++)
+    {
+        if(!visited[i])
+        {
+            CCCVisit(i, finVertices);
+        }
+    }
+    t
+
+
+}
+
+std::stack<size_t> & Graph::CCCVisit(size_t s, std::stack<size_t> &finVertices) noexcept
+{
+//    searchOrder.push_back(s);
+
+    for (size_t adjacent:adj[s])
+    {
+        if(!visited[adjacent])
+        {
+            CCCVisit(adjacent, finVertices);
+        }
+    }
+    finVertices.push(s);
 }
 
 void Graph::printSearchOrder() noexcept

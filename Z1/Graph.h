@@ -7,6 +7,8 @@
 
 #include <vector>
 #include <list>
+#include <stack>
+
 class Graph
 {
 private:
@@ -22,6 +24,7 @@ private:
 
     bool DFSVisit(size_t s) noexcept;
     bool TPSVisit(size_t s, std::vector<size_t>& topOrder) noexcept;
+    std::stack<size_t> &CCCVisit(size_t s, std::stack<size_t> &finVertices) noexcept;
 
 public:
     explicit Graph(std::ifstream &graphDefinition) noexcept;
@@ -29,9 +32,11 @@ public:
     void BFS() noexcept;
     bool DFS() noexcept;
     bool TPS() noexcept;
-    void printSearchOrder() noexcept;
-    void printGraph() noexcept;
+    void CCC() noexcept;
 
+    void printSearchOrder() noexcept;
+
+    void printGraph() noexcept;
 };
 
 
