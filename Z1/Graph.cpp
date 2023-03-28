@@ -113,12 +113,11 @@ void Graph::DFSVisit(size_t s) noexcept
 }
 
 
-bool Graph::TPS() noexcept
+void Graph::TPS() noexcept
 {
     if(!isDirected)
     {
         std::cout << "Error: Can't TPS an undirected graph!" << std::endl;
-        return false;
     }
     visited.clear();
     visited.resize(n+1, false);
@@ -137,7 +136,7 @@ bool Graph::TPS() noexcept
             if(!TPSVisit(i, topOrder))
             {
                 std::cout << "There exists a directed cycle!" << std::endl;
-                return false;
+                return;
             }
         }
     }
@@ -146,11 +145,10 @@ bool Graph::TPS() noexcept
     {
         for(size_t i = 0; i < n; i++)
         {
-            std::cout << topOrder[i] << std::endl;
+            std::cout << topOrder[i] << " ";
         }
+        std::cout << std::endl;
     }
-
-    return true;
 }
 
 bool Graph::TPSVisit(size_t s, std::vector<size_t>& topOrder) noexcept
@@ -166,7 +164,8 @@ bool Graph::TPSVisit(size_t s, std::vector<size_t>& topOrder) noexcept
         {
             TPSVisit(adjacent, topOrder);
         }
-        else if(adjacent == s || ((finished[adjacent] > 0) && (finished[adjacent] < time+1)))
+//        else if(adjacent == s || ((finished[adjacent] > 0) && (finished[adjacent] > time+1)))
+        else if(finished[adjacent] == 0)
         {
             return false;
         }
@@ -331,5 +330,19 @@ void Graph::transpose() noexcept
         }
     }
     adjacencyList = T;
+}
+
+void Graph::printSearchTree() noexcept
+{
+    std::cout << "Tree:" << std::endl;
+    for (size_t i = 1; i <= n; i++ )
+    {
+        std::cout << i << " --> ";
+        for(size_t v : adjacencyList[i])
+        {
+            std::cout << v << " ";
+        }
+        std::cout << std::endl;
+    }
 }
 

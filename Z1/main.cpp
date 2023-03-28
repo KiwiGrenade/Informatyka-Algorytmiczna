@@ -11,12 +11,10 @@ int main(int argc, char** argv)
         Graph* graph = new Graph(graphDefinition);
 
         //serach the graph
-        graph->DFS();
-
-
+        graph->BFS();
         if(*argv[1] == 'p')
         {
-            graph->printGraph();
+            graph->printSearchTree();
         }
     }
     else
