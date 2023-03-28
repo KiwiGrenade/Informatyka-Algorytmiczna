@@ -40,12 +40,14 @@ void Graph::addEdge(size_t V1, size_t V2) noexcept
 
 void Graph::BFS() noexcept
 {
+    visited.clear();
     visited.resize(n+1, false);
     searchOrder.clear();
+    searchOrder.reserve(n+1);
     //mark the first vertex to access as visited
 
     //create a que of vertices yet to be fully marked
-    std::list<size_t> queue;
+    std::list<size_t> queue(n+1);
 
     for(size_t i = 1; i <=n; i++)
     {
@@ -76,7 +78,23 @@ void Graph::BFS() noexcept
     }
 }
 
-bool Graph::DFSVisit(size_t s) noexcept
+void Graph::DFS() noexcept
+{
+    visited.clear();
+    visited.resize(n+1, false);
+    searchOrder.clear();
+    searchOrder.reserve(n+1);
+
+    for (size_t i = 1; i <= n; i++)
+    {
+        if(!visited[i])
+        {
+            DFSVisit(i);
+        }
+    }
+}
+
+void Graph::DFSVisit(size_t s) noexcept
 {
     visited[s] = true;
     searchOrder.push_back(s);
@@ -88,23 +106,8 @@ bool Graph::DFSVisit(size_t s) noexcept
             DFSVisit(adjacent);
         }
     }
-
-    return true;
 }
 
-bool Graph::DFS() noexcept
-{
-    visited.resize(n+1, false);
-    searchOrder.clear();
-    for (size_t i = 1; i <= n; i++)
-    {
-        if(!visited[i])
-        {
-            DFSVisit(i);
-        }
-    }
-    return true;
-}
 
 bool Graph::TPS() noexcept
 {
@@ -113,12 +116,16 @@ bool Graph::TPS() noexcept
         std::cout << "Error: Can't TPS an undirected graph!" << std::endl;
         return false;
     }
+    visited.clear();
     visited.resize(n+1, false);
+    finished.clear();
     finished.resize(n+1, false);
     time = 0;
     searchOrder.clear();
+
     std::vector<size_t> topOrder;
 
+    //search the vertice if unvisited
     for (size_t i = 1; i <= n; i++)
     {
         if(!visited[i])
@@ -167,35 +174,71 @@ bool Graph::TPSVisit(size_t s, std::vector<size_t>& topOrder) noexcept
 }
 
 
-void Graph::CCC() noexcept
+void Graph::SCC() noexcept
 {
+    std::vector<std::vector<size_t>> sccList;
     std::stack <size_t> finVertices;
+
+    visited.clear();
+    visited.resize(n+1, false);
+    searchOrder.clear();
+
+
     if(!isDirected)
     {
         std::cout << "Error: Graph is undirected!" << std::endl;
         return;
     }
-    for(size_t i = 0; i < n; i++)
+    for(size_t i = 1; i <= n; i++)
     {
         if(!visited[i])
         {
-            CCCVisit(i, finVertices);
+            SCCVisit(i, finVertices);
         }
     }
-    t
 
+    transpose();
 
+    visited.clear();
+    visited.resize(n+1, false);
+    searchOrder.clear();
+
+    if(n <= 200)
+    {
+        std::cout << "Strongly connected components:" << std::endl;
+    }
+
+    while(!finVertices.empty())
+    {
+        if(!visited[finVertices.top()])
+        {
+            searchOrder.clear();
+            DFSVisit(finVertices.top());
+            if(n <= 200)
+            {
+                printSearchOrder();
+            }
+            sccList.push_back(searchOrder);
+        }
+        finVertices.pop();
+    }
+    std::cout << "Number of SCC: " << sccList.size() << std::endl;
+    std::cout << "Numbers of vertices in SCCs:" << std::endl;
+    for(const std::vector<size_t>& i : sccList)
+    {
+        std::cout << i.size() << std::endl;
+    }
 }
 
-std::stack<size_t> & Graph::CCCVisit(size_t s, std::stack<size_t> &finVertices) noexcept
+void Graph::SCCVisit(size_t s, std::stack<size_t> &finVertices) noexcept
 {
-//    searchOrder.push_back(s);
-
+    visited[s] = true;
+    searchOrder.push_back(s);
     for (size_t adjacent:adj[s])
     {
         if(!visited[adjacent])
         {
-            CCCVisit(adjacent, finVertices);
+            SCCVisit(adjacent, finVertices);
         }
     }
     finVertices.push(s);
@@ -203,14 +246,30 @@ std::stack<size_t> & Graph::CCCVisit(size_t s, std::stack<size_t> &finVertices) 
 
 void Graph::printSearchOrder() noexcept
 {
-    for (size_t vertice:searchOrder)
+    for (size_t vertex:searchOrder)
     {
-        std::cout << vertice << " ";
+        std::cout << vertex << " ";
     }
+    std::cout << std::endl;
 }
 
 void Graph::printGraph() noexcept
 {
     //generate graph tree (BFS OR DFS)
+}
+
+
+void Graph::transpose() noexcept
+{
+    std::vector<std::vector<size_t>> T;
+    T.resize(n + 1);
+    for (size_t i = 0 ;i < n + 1; i++)
+    {
+        for(size_t j : adj[i])
+        {
+            T[j].push_back(i);
+        }
+    }
+    adj = T;
 }
 
