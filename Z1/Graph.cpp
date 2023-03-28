@@ -11,7 +11,7 @@ Graph::Graph(std::ifstream &graphDefinition) noexcept
     time = 0;
     std::string line;
     getline(graphDefinition, line);
-    line == "D" ? isDirected = true : isDirected = false;
+    line[0] == 'D' ? isDirected = true : isDirected = false;
     getline(graphDefinition, line);
     n = std::stol(line);
     getline(graphDefinition, line);
@@ -20,7 +20,7 @@ Graph::Graph(std::ifstream &graphDefinition) noexcept
 
     visited.resize(n+1, false);
     //make space for the last element
-    adj.resize(n+1);
+    adjacencyList.resize(n + 1);
     //create the graph
     while(getline(graphDefinition, line))
     {
@@ -29,13 +29,17 @@ Graph::Graph(std::ifstream &graphDefinition) noexcept
         v1 = std::stol(line.substr(0, i));
         v2 = std::stol(line.substr(i, std::string::npos));
         addEdge(v1, v2);
+        if(!isDirected)
+        {
+            addEdge(v2, v1);
+        }
     }
 }
 
 void Graph::addEdge(size_t V1, size_t V2) noexcept
 {
     //add vertex V2 to list of vertices adjacent to V1
-    adj[V1].push_back(V2);
+    adjacencyList[V1].push_back(V2);
 }
 
 void Graph::BFS() noexcept
@@ -63,7 +67,7 @@ void Graph::BFS() noexcept
                 queue.pop_front();
 
                 //traverse all adjacent vertices of s
-                for (size_t adjacent:adj[v])
+                for (size_t adjacent:adjacencyList[v])
                 {
                     //if vertex hasn't been visited
                     if(!visited[adjacent])
@@ -99,7 +103,7 @@ void Graph::DFSVisit(size_t s) noexcept
     visited[s] = true;
     searchOrder.push_back(s);
 
-    for (size_t adjacent:adj[s])
+    for (size_t adjacent:adjacencyList[s])
     {
         if(!visited[adjacent])
         {
@@ -125,7 +129,7 @@ bool Graph::TPS() noexcept
 
     std::vector<size_t> topOrder;
 
-    //search the vertice if unvisited
+    //search the vertex if unvisited
     for (size_t i = 1; i <= n; i++)
     {
         if(!visited[i])
@@ -156,7 +160,7 @@ bool Graph::TPSVisit(size_t s, std::vector<size_t>& topOrder) noexcept
     visited[s] = time;
     searchOrder.push_back(s);
 
-    for (size_t adjacent:adj[s])
+    for (size_t adjacent:adjacencyList[s])
     {
         if(!visited[adjacent])
         {
@@ -234,7 +238,7 @@ void Graph::SCCVisit(size_t s, std::stack<size_t> &finVertices) noexcept
 {
     visited[s] = true;
     searchOrder.push_back(s);
-    for (size_t adjacent:adj[s])
+    for (size_t adjacent:adjacencyList[s])
     {
         if(!visited[adjacent])
         {
@@ -253,9 +257,65 @@ void Graph::printSearchOrder() noexcept
     std::cout << std::endl;
 }
 
-void Graph::printGraph() noexcept
+void Graph::GCP() noexcept
 {
-    //generate graph tree (BFS OR DFS)
+    std::vector<int> color;
+    color.resize(n+1, 0);
+    std::list<size_t> queue(n+1);
+
+    for(size_t i = 1; i <= n; i++)
+    {
+        if(color[i] == 0)
+        {
+            color[i] = 1;
+            queue.push_back(i);
+            while(!queue.empty())
+            {
+                //mark first vertex in queue
+                size_t v = queue.front();
+                queue.pop_front();
+
+                size_t nRed = 0;
+                size_t nGreen = 0;
+                //traverse all adjacent vertices of s
+                for (size_t adjacent:adjacencyList[v])
+                {
+                    //if vertex hasn't been visited
+                    if(color[adjacent] == color[v])
+                    {
+                        std::cout << "Graph can't be 2-colored!" << std::endl;
+                        return;
+                    }
+                    else if(color[adjacent] == 0)
+                    {
+                        color[adjacent] = -color[v];
+                        queue.push_back(adjacent);
+                    }
+                }
+            }
+        }
+    }
+    std::cout << "Graph can be 2-colored!" << std::endl;
+    if(n <= 200)
+    {
+        std::cout << "Red vertices:" << std::endl;
+        for(int i = 1; i <= n; i++)
+        {
+            if(color[i] == 1)
+            {
+                std::cout << i << " ";
+            }
+        }
+        std::cout << std::endl << "Green vertices:" << std::endl;
+        for(int i = 1; i <= n; i++)
+        {
+            if(color[i] == -1)
+            {
+                std::cout << i << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
 }
 
 
@@ -265,11 +325,11 @@ void Graph::transpose() noexcept
     T.resize(n + 1);
     for (size_t i = 0 ;i < n + 1; i++)
     {
-        for(size_t j : adj[i])
+        for(size_t j : adjacencyList[i])
         {
             T[j].push_back(i);
         }
     }
-    adj = T;
+    adjacencyList = T;
 }
 

@@ -8,7 +8,6 @@
 #include <vector>
 #include <list>
 #include <stack>
-
 class Graph
 {
 private:
@@ -19,7 +18,7 @@ private:
     std::vector <size_t> visited;
     std::vector <size_t> finished;
     std::vector <size_t> searchOrder;
-    std::vector <std::vector<size_t>> adj;
+    std::vector <std::vector<size_t>> adjacencyList;
 
     void DFSVisit(size_t s) noexcept;
     bool TPSVisit(size_t s, std::vector<size_t>& topOrder) noexcept;
@@ -28,15 +27,13 @@ private:
 public:
     explicit Graph(std::ifstream &graphDefinition) noexcept;
     void addEdge(size_t V1, size_t V2) noexcept;
-    void BFS(
-
-            ) noexcept;
+    void BFS() noexcept;
     void DFS() noexcept;
     bool TPS() noexcept;
     void SCC() noexcept;
+    void GCP() noexcept;
     void transpose() noexcept;
     void printSearchOrder() noexcept;
-    void printGraph() noexcept;
 };
 
 
