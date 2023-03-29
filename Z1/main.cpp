@@ -11,7 +11,33 @@ int main(int argc, char** argv)
         Graph* graph = new Graph(graphDefinition);
 
         //serach the graph
-        graph->BFS();
+        switch (*argv[2])
+        {
+            //zad 1
+            case '1':
+            {
+                graph->BFS();
+            }
+            case '2':
+            {
+                graph->DFS();
+            }
+            //zad 2
+            case '3':
+            {
+                graph->TPS();
+            }
+            //zad 3
+            case '4':
+            {
+                graph->SCC();
+            }
+            //zad 4
+            case '5':
+            {
+                graph->GCP();
+            }
+        }
         if(*argv[1] == 'p')
         {
             graph->printSearchTree();
