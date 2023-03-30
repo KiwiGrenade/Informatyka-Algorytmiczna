@@ -23,10 +23,9 @@ private:
     bool TPSVisit(size_t s, std::vector<size_t>& topOrder) noexcept;
     void SCCVisit(size_t s, std::stack<size_t> &finVertices) noexcept;
     void transpose() noexcept;
-    void printSearchOrder() noexcept;
     void addEdge(size_t V1, size_t V2) noexcept;
-
 public:
+
     explicit Graph(std::ifstream &graphDefinition) noexcept;
     //zad 1
     void BFS() noexcept;
@@ -38,6 +37,7 @@ public:
     //zad 4
     void GCP() noexcept;
     void printSearchTree() noexcept;
+    void printSearchOrder() noexcept;
 };
 
 

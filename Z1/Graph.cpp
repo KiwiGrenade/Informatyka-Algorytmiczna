@@ -15,7 +15,6 @@ Graph::Graph(std::ifstream &graphDefinition) noexcept
     getline(graphDefinition, line);
     n = std::stol(line);
     getline(graphDefinition, line);
-    m = std::stol(line);
 
 
     visited.resize(n+1, false);
@@ -47,11 +46,10 @@ void Graph::BFS() noexcept
     visited.clear();
     visited.resize(n+1, false);
     searchOrder.clear();
-    searchOrder.reserve(n+1);
     //mark the first vertex to access as visited
 
     //create a que of vertices yet to be fully marked
-    std::list<size_t> queue(n+1);
+    std::list<size_t> queue;
 
     for(size_t i = 1; i <=n; i++)
     {
@@ -87,7 +85,6 @@ void Graph::DFS() noexcept
     visited.clear();
     visited.resize(n+1, false);
     searchOrder.clear();
-    searchOrder.reserve(n+1);
 
     for (size_t i = 1; i <= n; i++)
     {
@@ -249,11 +246,11 @@ void Graph::SCCVisit(size_t s, std::stack<size_t> &finVertices) noexcept
 
 void Graph::printSearchOrder() noexcept
 {
+    std::cout << "Search order: " << std::endl;
     for (size_t vertex:searchOrder)
     {
-        std::cout << vertex << " ";
+        std::cout << vertex << std::endl;
     }
-    std::cout << std::endl;
 }
 
 void Graph::GCP() noexcept
@@ -334,6 +331,10 @@ void Graph::transpose() noexcept
 
 void Graph::printSearchTree() noexcept
 {
+    if(n > 200)
+    {
+        return;
+    }
     std::cout << "Tree:" << std::endl;
     for (size_t i = 1; i <= n; i++ )
     {
