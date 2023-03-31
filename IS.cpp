@@ -4,6 +4,31 @@
 #include <iostream>
 #include <random>
 
+void printArr(size_t* arr, size_t n)
+{
+    for (size_t i = 0; i < n; i++)
+    {
+        std::cout << *(arr+i) << std::endl;
+    }
+}
+
+void printArrState(size_t* arr, size_t n)
+{
+    for (size_t i = 0; i < n; i++)
+    {
+        std::cout << *(arr+i) << " ";
+    }
+    std::cout << std::endl;
+}
+
+size_t nSwap = 0;
+size_t nComp = 0;
+bool comp(size_t arr_j, size_t x)
+{
+    nComp++;
+    return arr_j > x;
+}
+
 int main(int argc, char* argv[])
 {
     std::string line;
@@ -15,30 +40,44 @@ int main(int argc, char* argv[])
         std::cin >> line;
         i = stol(line);
     }
-    std::cout << std::endl << "RNG array:" << std::endl;
-    for (size_t i : arr)
+    if(n < 40)
     {
-        std::cout << i << std::endl;
+        std::cout << "Random numbers:" << std::endl;
+        printArr(arr, n);
     }
+
 
     for(size_t i = 1 ; i < n ;i++)
     {
-        size_t j = i - 1;
+        long j = i - 1;
         size_t x = arr[i];
-        while(arr[j] > x && j > 0)
+
+        if(n < 40)
+        {
+            printArrState(arr, n);
+        }
+        while(comp(arr[j], x) && j >= 0)
         {
             arr[j+1] = arr[j];
             j--;
+            if(n < 40)
+            {
+                printArrState(arr,n);
+            }
         }
+        //TODO check if nSwap is correct
+        nSwap++;
         arr[j+1] = x;
     }
 
     std::cout << std::endl << "Sorted array:" << std::endl;
 
-    for(size_t &i : arr)
+    if(n < 40)
     {
-        std::cout << i << std::endl;
+        printArr(arr, n);
     }
+    std::cout << "Number of comparisons: " << nComp << std::endl;
+    std::cout << "Number of swaps: " << nSwap << std::endl;
 
 
     return 0;
