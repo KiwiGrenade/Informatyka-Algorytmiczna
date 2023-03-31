@@ -3,6 +3,7 @@
 //
 #include <iostream>
 #include <random>
+#include <list>
 
 void printArr(size_t* arr, size_t n)
 {
@@ -12,11 +13,10 @@ void printArr(size_t* arr, size_t n)
     }
 }
 
-void printArrState(size_t* arr, size_t n)
-{
+void printArrState(size_t* arr, size_t n) noexcept {
     for (size_t i = 0; i < n; i++)
     {
-        std::cout << *(arr+i) << " ";
+        std::cout << *(arr + i) << " ";
     }
     std::cout << std::endl;
 }
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
             j--;
             if(n < 40)
             {
-                printArrState(arr,n);
+                printArrState(arr, n);
             }
         }
         //TODO check if nSwap is correct
