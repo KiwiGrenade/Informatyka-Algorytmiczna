@@ -4,17 +4,17 @@
 #include <iostream>
 #include <random>
 #include <list>
-void printList(std::list<size_t> &list) noexcept
+void printList(const std::vector<size_t>& vec) noexcept
 {
-    for (size_t i : list)
+    for (size_t i : vec)
     {
         std::cout << i << std::endl;
     }
 }
 
-void printListState(std::list<size_t> &list) noexcept
+void printListState(const std::vector<size_t>& vec) noexcept
 {
-    for (size_t i : list)
+    for (size_t i : vec)
     {
         std::cout << i << " ";
     }
@@ -29,23 +29,31 @@ bool comp(size_t arr_j, size_t x)
     return arr_j > x;
 }
 
-std::list<size_t> mergeSort(std::list<size_t> list) noexcept
+//TODO
+std::vector<size_t> merge(const std::vector<size_t>& left, const std::vector<size_t>& right) noexcept
 {
-    if(list.size() == 1)
+    std::vector<size_t> merged;
+    for (size_t i = 0; i < left.size(); i++)
     {
-        return list;
+        if (left[i] < right[i])
     }
-    size_t p = floor(list.size()/2);
-    std::list<size_t> left, right;
-    std::list<size_t>::iterator lit, pit;
-    std::advance(lit, p);
-    std::advance(pit, p+1);
-    left.splice(left.begin(), list, list.begin(), lit);
-    right.splice(right.begin(), list, list.begin(), pit);
-    mergeSort(left);
-    mergeSort(right);
-    left.merge(right);
-    return left;
+}
+
+std::vector<size_t> mergeSort(std::vector<size_t> vec) noexcept
+{
+    if(vec.size() == 1)
+    {
+        return vec;
+    }
+    size_t p = floor(vec.size()/2);
+    std::vector<size_t> left = std::vector<size_t>(vec.begin(), vec.begin() + p),
+                        right= std::vector<size_t>(vec.begin() + p, vec.end()),
+                        merged;
+    //TODO Create custom merger that uses nSwaps and nComp
+    std::merge(left.begin(), left.end(), right.begin(), right.end(), std::back_inserter(merged));
+    left = mergeSort(left);
+    right = mergeSort(right);
+    return merge(left, right);
 }
 
 int main(int argc, char* argv[])
@@ -53,25 +61,26 @@ int main(int argc, char* argv[])
     std::string line;
     std::cin >> line;
     size_t n = std::stol(line);
-    std::list<size_t> list, sortedList;
+    std::vector<size_t> vec;
+    std::vector<size_t> sortedVec;
     for (size_t i = 0; i < n; i++)
     {
         std::cin >> line;
-        list.push_back(stol(line));
+        vec.push_back(stol(line));
     }
     if(n < 40)
     {
         std::cout << "Random numbers:" << std::endl;
-        printList(list);
+        printList(vec);
     }
 
-    sortedList = mergeSort(list);
+    sortedVec = mergeSort(vec);
 
     std::cout << std::endl << "Sorted array:" << std::endl;
 
     if(n < 40)
     {
-        printList(sortedList);
+        printList(sortedVec);
     }
     std::cout << "Number of comparisons: " << nComp << std::endl;
     std::cout << "Number of swaps: " << nSwap << std::endl;
