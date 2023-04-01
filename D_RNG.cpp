@@ -1,6 +1,3 @@
-//
-// Created by Grim Reaper on 30.03.2023.
-//
 #include <iostream>
 #include <chrono>
 #include <random>
@@ -17,6 +14,7 @@ int main(int argc, char* argv[])
     }
     std::sort(arr, arr + n, std::greater<>());
 
+    std::cout << n << std::endl;
     for (size_t& i : arr)
     {
         std::cout << i << std::endl;

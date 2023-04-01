@@ -1,90 +1,112 @@
-//
-// Created by Grim Reaper on 30.03.2023.
-//
 #include <iostream>
 #include <random>
-#include <list>
-void printList(const std::vector<size_t>& vec) noexcept
+void printArr(size_t arr[], size_t n) noexcept
 {
-    for (size_t i : vec)
+    for (int i = 0; i < n; i++)
     {
-        std::cout << i << std::endl;
+        std::cout << arr[i] << std::endl;
     }
 }
 
-void printListState(const std::vector<size_t>& vec) noexcept
+void printArrState(size_t arr[], size_t n) noexcept
 {
-    for (size_t i : vec)
+    for (int i = 0; i < n; i++)
     {
-        std::cout << i << " ";
+        std::cout << arr[i] << " ";
     }
     std::cout << std::endl;
 }
 
-size_t nSwap = 0;
-size_t nComp = 0;
-bool comp(size_t arr_j, size_t x)
+int nSwap = 0;
+int nComp = 0;
+void merge(size_t arr[], size_t p, size_t q, size_t r) noexcept
 {
-    nComp++;
-    return arr_j > x;
-}
+    size_t lenLeft = q - p + 1;
+    size_t lenRight = r - q;
+    size_t left[lenLeft];
+    size_t right[lenRight];
 
-//TODO
-std::vector<size_t> merge(const std::vector<size_t>& left, const std::vector<size_t>& right) noexcept
-{
-    std::vector<size_t> merged;
-    for (size_t i = 0; i < left.size(); i++)
+    for(int i = 0; i < lenLeft; i++)
     {
-        if (left[i] < right[i])
+        left[i] = arr[p + i];
+    }
+    for(int j = 0; j < lenRight; j++)
+    {
+        right[j] = arr[q + j + 1];
+    }
+
+    size_t i = 0;
+    size_t j = 0;
+    size_t k = p;
+    for(;i < lenLeft && j < lenRight; k++, nComp++, nSwap++)
+    {
+        if(left[i] <= right[j])
+        {
+            arr[k] = left[i];
+            i++;
+        }
+        else
+        {
+            arr[k] = right[j];
+            j++;
+        }
+    }
+    for(;i < lenLeft; k++, i++)
+    {
+        nSwap++;
+        arr[k] = left[i];
+    }
+    for(;j < lenRight; k++, j++)
+    {
+        nSwap++;
+        arr[k] = right[j];
     }
 }
 
-std::vector<size_t> mergeSort(std::vector<size_t> vec) noexcept
+void mergeSort(size_t arr[], int p, int r, int n) noexcept
 {
-    if(vec.size() == 1)
+    if(p < r)
     {
-        return vec;
+        int q = std::floor((p+r)/2);
+        mergeSort(arr, p, q, n);
+        mergeSort(arr, q + 1, r, n);
+        merge(arr, p, q, r);
+        if(n < 40)
+        {
+            printArrState(arr, n);
+        }
     }
-    size_t p = floor(vec.size()/2);
-    std::vector<size_t> left = std::vector<size_t>(vec.begin(), vec.begin() + p),
-                        right= std::vector<size_t>(vec.begin() + p, vec.end()),
-                        merged;
-    //TODO Create custom merger that uses nSwaps and nComp
-    std::merge(left.begin(), left.end(), right.begin(), right.end(), std::back_inserter(merged));
-    left = mergeSort(left);
-    right = mergeSort(right);
-    return merge(left, right);
 }
 
-int main(int argc, char* argv[])
+int main()
 {
     std::string line;
     std::cin >> line;
-    size_t n = std::stol(line);
-    std::vector<size_t> vec;
-    std::vector<size_t> sortedVec;
-    for (size_t i = 0; i < n; i++)
+    size_t n = std::stoi(line);
+    size_t arr[n];
+    for (int i = 0; i < n; i++)
     {
         std::cin >> line;
-        vec.push_back(stol(line));
+        arr[i] = stol(line);
     }
+
     if(n < 40)
     {
         std::cout << "Random numbers:" << std::endl;
-        printList(vec);
+        printArr(arr, n);
+        printArrState(arr, n);
     }
 
-    sortedVec = mergeSort(vec);
-
-    std::cout << std::endl << "Sorted array:" << std::endl;
+    mergeSort(arr, 0, n-1, n);
 
     if(n < 40)
     {
-        printList(sortedVec);
+        std::cout << std::endl << "Sorted array:" << std::endl;
+        printArr(arr, n);
     }
     std::cout << "Number of comparisons: " << nComp << std::endl;
     std::cout << "Number of swaps: " << nSwap << std::endl;
-
+    std::cout << "Is array sorted: " << std::is_sorted(arr,arr+n-1) << std::endl;
 
     return 0;
 }
