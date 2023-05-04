@@ -61,21 +61,10 @@ long partition(std::size_t A[], long p, long r, std::size_t n) noexcept
     }
     nSwap++;
     std::swap(A[i + 1], A[r]);
-    if(n < 50)
-    {
-        std::cout << "After selectPartition: " << std::endl;
-        printArrState(A, n);
-    }
     return i+1;
 }
 long selectPartition(size_t A[], long p, long r, std::size_t q, std::size_t n)
 {
-    if(n < 50)
-    {
-        std::cout << std::endl  << "Selected pivot: " << A[q] << std::endl
-                  << "Before selectPartition: " << std::endl;
-        printArrState(A, n);
-    }
     nSwap++;
     std::swap(A[q], A[r]);
     return partition(A, p, r, n);
@@ -158,10 +147,17 @@ std::size_t select(size_t A[], std::size_t p, std::size_t r, std::size_t i, std:
 
 void showResults(std::size_t A[], std::size_t n, std::size_t k) {
 
+    if(n < 50)
+    {
+        std::cout << "Number we're looking for: " << k << std::endl;
+
+        std::cout << "Array before select: " << std::endl;
+        printArrState(A, n);
+    }
     std::size_t stat = select(A, 0, n - 1, k, n);
     if(n < 50)
     {
-        std::cout << std::endl << std::endl << "Array after select: " << std::endl;
+        std::cout << "Array after select: " << std::endl;
         printArrState(A, n);
     }
     std::cout << "Found " << k << "-th statistic: " << stat << std::endl;
@@ -187,10 +183,6 @@ int main(int argc, char* argv[])
         std::cout << "Error: Parameter K should be from threshold: 1 =< k =< n" << std::endl;
         return -1;
     }
-
-
-    std::cout << "Number we're looking for: " << k << std::endl;
-
     // initialize array
     for (std::size_t i = 0; i < n; i++)
     {
