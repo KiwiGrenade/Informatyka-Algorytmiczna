@@ -13,23 +13,25 @@ void count(size_t arr[], long low, long high, size_t n) noexcept {
     // bigger pivot
     long lowMid = std::floor((low + high) / 2);
     long p = DSelect::choosePivot(arr, low, lowMid);
-    // smaller pivot
-    long q = DSelect::choosePivot(arr,lowMid + 1, high) ;
-
+    long q = DSelect::choosePivot(arr,lowMid + 1, high);
     long idxP = std::distance(arr, std::find(arr+low, arr+lowMid, p));
-
     long idxQ = std::distance(arr, std::find(arr + lowMid + 1, arr+high, q));
-    nComp++;
+    std::swap(arr[low], arr[idxP]);
+    std::swap(arr[high], arr[idxQ]);
 
-    //p is always smaller
-    if(p > q)
+    nComp++;
+    if(arr[high] < arr[low])
     {
-        long temp = p;
-        p = q;
-        q = temp;
+        p = arr[high];
+        q = arr[low];
     }
-    long i = idxP + 1;
-    long k = idxQ - 1;
+    else
+    {
+        p = arr[low];
+        q = arr[high];
+    }
+    long i = low + 1;
+    long k = high - 1;
     long j = i;
     long d = 0;
     while(j <= k)
@@ -85,9 +87,9 @@ void count(size_t arr[], long low, long high, size_t n) noexcept {
         }
     }
     nSwap += 4;
-    arr[idxP] = arr[i-1];
+    arr[low] = arr[i-1];
     arr[i-1] = p;
-    arr[idxQ] = arr[k+1];
+    arr[high] = arr[k+1];
     arr[k+1] = q;
     if(n < 40)
     {
