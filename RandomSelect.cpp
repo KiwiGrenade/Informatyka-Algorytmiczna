@@ -1,19 +1,13 @@
 #include <iostream>
 #include <chrono>
 #include <random>
+#include "DSelect.h"
+#include "RandomSelect.h"
 
-std::size_t nComp = 0;
-std::size_t nSwap = 0;
+std::size_t RandomSelect::nComp = 0;
+std::size_t RandomSelect::nSwap = 0;
 
-void printArrState(std::size_t arr[], std::size_t n) noexcept
-{
-    for (std::size_t i = 0; i < n; i++)
-    {
-        std::cout << arr[i] << " ";
-    }
-    std::cout << std::endl;
-}
-long partition(std::size_t A[], long p, long r, long n) noexcept
+long RandomSelect::partition(std::size_t A[], long p, long r, long n) noexcept
 {
     //i can be negatice
     long pivot = A[r];
@@ -33,11 +27,11 @@ long partition(std::size_t A[], long p, long r, long n) noexcept
     if(n < 50)
     {
         std::cout << "After selectPartition: " << std::endl;
-        printArrState(A, n);
+        DSelect::printArrState(A, n);
     }
     return i+1;
 }
-long randomSelectPartition(std::size_t A[], long p, long r, std::size_t n)
+long RandomSelect::randomSelectPartition(std::size_t A[], long p, long r, std::size_t n)
 {
 
     size_t seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -48,13 +42,13 @@ long randomSelectPartition(std::size_t A[], long p, long r, std::size_t n)
     {
         std::cout << std::endl  << "Selected pivot: " << A[i] << std::endl
                                 << "Before selectPartition: " << std::endl;
-        printArrState(A, n);
+        DSelect::printArrState(A, n);
     }
     std::swap(A[i], A[r]);
     return partition(A, p, r, n);
 }
 
-std::size_t randomSelect(size_t A[], std::size_t p, std::size_t r, const std::size_t i, std::size_t n)
+std::size_t RandomSelect::randomSelect(size_t A[], std::size_t p, std::size_t r, const std::size_t i, std::size_t n)
 {
     nComp++;
     if(p == r)
@@ -80,53 +74,25 @@ std::size_t randomSelect(size_t A[], std::size_t p, std::size_t r, const std::si
     }
 }
 
-void showResults(std::size_t A[], std::size_t n, std::size_t k) {
+void RandomSelect::showResults(std::size_t A[], std::size_t n, std::size_t k) {
 
     std::cout << "Array before select: " << std::endl;
     std::size_t stat = randomSelect(A, 0, n-1, k, n);
     if(n < 50)
     {
         std::cout << std::endl << std::endl << "Array after select: " << std::endl;
-        printArrState(A, n);
+        DSelect::printArrState(A, n);
 
     }
     std::cout << "Found " << k << "-th statistic: " << stat << std::endl;
     std::sort(A, A + n);
-    std::cout << "Sorted array: " << std::endl;
-    printArrState(A, n);
+    if(n < 50)
+    {
+        std::cout << "Sorted array: " << std::endl;
+        DSelect::printArrState(A, n);
+    }
     std::cout << "Number of swaps: " << nSwap << std::endl;
     std::cout << "Number of comparisons: " << nComp << std::endl;
 
-}
-
-int main(int argc, char* argv[])
-{
-    //k-th order
-    std::size_t k = std::stol(argv[1]);
-    std::string line;
-    std::cin >> line;
-    std::size_t n = std::stol(line);
-    std::size_t A[n];
-
-    //check K
-    if(k < 1 || k > n)
-    {
-        std::cout << "Error: Parameter K should be from threshold: 1 =< k =< n" << std::endl;
-        return -1;
-    }
-
-
-    std::cout << "Number we're looking for: " << k << std::endl;
-
-    // initialize array
-    for (std::size_t i = 0; i < n; i++)
-    {
-        std::cin >> line;
-        A[i] = stol(line);
-    }
-
-    showResults(A, n, k);
-
-    return 0;
 }
 

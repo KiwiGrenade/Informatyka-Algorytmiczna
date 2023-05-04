@@ -1,5 +1,6 @@
+//
+// Created by mango on 04.05.23.
 #include <iostream>
-#include "DSelect.h"
 #include "RandomSelect.h"
 int main(int argc, char* argv[])
 {
@@ -9,7 +10,6 @@ int main(int argc, char* argv[])
     std::cin >> line;
     std::size_t n = std::stol(line);
     std::size_t A[n];
-    std::size_t B[n];
 
     //check K
     if(k < 1 || k > n)
@@ -17,18 +17,18 @@ int main(int argc, char* argv[])
         std::cout << "Error: Parameter K should be from threshold: 1 =< k =< n" << std::endl;
         return -1;
     }
+
+
+    std::cout << "Number we're looking for: " << k << std::endl;
+
     // initialize array
     for (std::size_t i = 0; i < n; i++)
     {
         std::cin >> line;
         A[i] = stol(line);
     }
-    for (std::size_t i = 0; i < n; i++)
-    {
-        B[i] = A[i];
-    }
 
-    DSelect::showResults(A, n, k);
-    RandomSelect::showResults(B, n, k);
+    RandomSelect::showResults(A, n, k);
+
     return 0;
 }

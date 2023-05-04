@@ -140,3 +140,24 @@ std::size_t DSelect::partition(std::size_t A[], long p, long r, std::size_t q, s
     std::swap(A[i + 1], A[r]);
     return i+1;
 }
+
+void DSelect::showResults(std::size_t *A, std::size_t n, std::size_t k) {
+    if(n < 50)
+    {
+        std::cout << "Number we're looking for: " << k << std::endl;
+
+        std::cout << "Array before select: " << std::endl;
+        DSelect::printArrState(A, n);
+    }
+    std::size_t stat = DSelect::select(A, 0, n - 1, k, n);
+    if(n < 50)
+    {
+        std::cout << "Array after select: " << std::endl;
+        DSelect::printArrState(A, n);
+    }
+    std::cout << "Found " << k << "-th statistic: " << stat << std::endl;
+    std::nth_element(A, A+k-1, A+n);
+    std::cout << "Should be: " << A[k-1] << std::endl;
+    std::cout << "Number of swaps: " << DSelect::nSwap << std::endl;
+    std::cout << "Number of comparisons: " << DSelect::nComp << std::endl;
+}

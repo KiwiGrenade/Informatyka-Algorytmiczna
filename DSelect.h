@@ -15,6 +15,7 @@ public:
     static std::size_t nComp;
     static std::size_t nSwap;
 
+    static void showResults(std::size_t A[], std::size_t n, std::size_t k);
     static void printArr(std::size_t arr[], std::size_t p, std::size_t r) noexcept;
     static void printArrState(std::size_t arr[], std::size_t n) noexcept;
 
