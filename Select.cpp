@@ -1,5 +1,4 @@
 #include <iostream>
-#include <chrono>
 #include <random>
 
 std::size_t nComp = 0;
@@ -13,7 +12,39 @@ void printArrState(std::size_t arr[], std::size_t n) noexcept
     }
     std::cout << std::endl;
 }
-long partition(std::size_t A[], long p, long r, long n) noexcept
+
+void arrState(std::size_t arr[], std::size_t p, std::size_t r) noexcept
+{
+    for (std::size_t i = p; i < r; i++)
+    {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+}
+
+bool comp(size_t arr_j, size_t x)
+{
+    nComp++;
+    return arr_j > x;
+}
+
+void insertionSort(std::size_t A[], std::size_t p, std::size_t r)
+{
+    for(size_t i = 1 ; i < r-p ;i++)
+    {
+        //j can be negative
+        long j = i - 1;
+        size_t x = A[i];
+        for (; comp(A[j], x) && j >= 0; nSwap++)
+        {
+            A[j + 1] = A[j];
+            j--;
+        }
+        A[j + 1] = x;
+    }
+}
+
+long partition(std::size_t A[], long p, long r, std::size_t n) noexcept
 {
     //i can be negatice
     long pivot = A[r];
@@ -32,36 +63,81 @@ long partition(std::size_t A[], long p, long r, long n) noexcept
     std::swap(A[i + 1], A[r]);
     if(n < 50)
     {
-        std::cout << "After partition: " << std::endl;
+        std::cout << "After selectPartition: " << std::endl;
         printArrState(A, n);
     }
     return i+1;
 }
-long randomSelectPartition(std::size_t A[], long p, long r, std::size_t n)
+long selectPartition(size_t A[], long p, long r, std::size_t q, std::size_t n)
 {
-
-    size_t seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::mt19937 generator (seed);
-    std::uniform_int_distribution<> distribution (p, r);
-    std::size_t i = distribution(generator);
     if(n < 50)
     {
-        std::cout << std::endl  << "Selected pivot: " << A[i] << std::endl
-                  << "Before partition: " << std::endl;
+        std::cout << std::endl  << "Selected pivot: " << A[q] << std::endl
+                  << "Before selectPartition: " << std::endl;
         printArrState(A, n);
     }
-    std::swap(A[i], A[r]);
+    nSwap++;
+    std::swap(A[q], A[r]);
     return partition(A, p, r, n);
 }
 
-std::size_t randomSelect(size_t A[], std::size_t p, std::size_t r, const std::size_t i, std::size_t n)
+std::size_t computeMedian(size_t A[], size_t p, size_t r)
+{
+    insertionSort(A, p, r);
+    // A.len() is even -> choose the average of 2 values
+    if((r-p) % 2 == 0)
+    {
+        unsigned short middle = std::floor((r+p-1)/2);
+        return A[middle];
+    }
+
+    // A.len() is odd -> choose the middle point
+    else
+    {
+        return A[(r + p) / 2];
+    }
+}
+
+std::size_t choosePivot(std::size_t A[], std::size_t p, std::size_t r)
+{
+    std::size_t nMedians = std::ceil((r-p+1)/5);
+    std::size_t C[nMedians], k, i;
+
+    //base case
+    if(r-p < 10)
+    {
+        return computeMedian(A, p, r);
+    }
+
+    if((r-p+1) % 5 == 0)
+    {
+        for(i = 0, k = 0; i < nMedians; i++, k += 5)
+        {
+            C[i] = computeMedian(A, p+k, p+k+5);
+        }
+    }
+    else
+    {
+        for(i = 0, k = 0; i < nMedians-1; i++, k += 5)
+        {
+            C[i] = computeMedian(A, p+k, p+k+5);
+        }
+        C[i] = computeMedian(A, p+k, p + k + (r-p+1) % 5);
+
+    }
+
+    return choosePivot(C,0,nMedians);
+}
+
+std::size_t select(size_t A[], std::size_t p, std::size_t r, std::size_t i, std::size_t n)
 {
     nComp++;
     if(p == r)
     {
         return A[p];
     }
-    long q = randomSelectPartition(A, p, r, n);
+    std::size_t q = std::distance(A, std::find(A + p, A + r, choosePivot(A, p, r)));
+    q = selectPartition(A, p, r, q, n);
     long k = q - p + 1;
     if (i == k)
     {
@@ -71,29 +147,26 @@ std::size_t randomSelect(size_t A[], std::size_t p, std::size_t r, const std::si
     else if(i < k)
     {
         nComp += 2;
-        return randomSelect(A, p, q-1, i, n);
+        return select(A, p, q - 1, i, n);
     }
     else
     {
         nComp += 2;
-        return randomSelect(A,q+1, r,i-k, n);
+        return select(A, q + 1, r, i - k, n);
     }
 }
 
 void showResults(std::size_t A[], std::size_t n, std::size_t k) {
 
-    std::cout << "Array before select: " << std::endl;
-    std::size_t stat = randomSelect(A, 0, n-1, k, n);
+    std::size_t stat = select(A, 0, n - 1, k, n);
     if(n < 50)
     {
         std::cout << std::endl << std::endl << "Array after select: " << std::endl;
         printArrState(A, n);
-
     }
     std::cout << "Found " << k << "-th statistic: " << stat << std::endl;
-    std::sort(A, A + n);
-    std::cout << "Sorted array: " << std::endl;
-    printArrState(A, n);
+    std::nth_element(A, A+k-1, A+n);
+    std::cout << "Should be: " << A[k-1] << std::endl;
     std::cout << "Number of swaps: " << nSwap << std::endl;
     std::cout << "Number of comparisons: " << nComp << std::endl;
 

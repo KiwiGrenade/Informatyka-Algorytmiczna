@@ -32,7 +32,7 @@ long partition(std::size_t A[], long p, long r, long n) noexcept
     std::swap(A[i + 1], A[r]);
     if(n < 50)
     {
-        std::cout << "After partition: " << std::endl;
+        std::cout << "After selectPartition: " << std::endl;
         printArrState(A, n);
     }
     return i+1;
@@ -47,7 +47,7 @@ long randomSelectPartition(std::size_t A[], long p, long r, std::size_t n)
     if(n < 50)
     {
         std::cout << std::endl  << "Selected pivot: " << A[i] << std::endl
-                                << "Before partition: " << std::endl;
+                                << "Before selectPartition: " << std::endl;
         printArrState(A, n);
     }
     std::swap(A[i], A[r]);
