@@ -1,0 +1,32 @@
+This file documents rand and grid generators.
+
+-------------------------------------------------------------
+FILE DESCRIPTION
+
+  Generator files
+    sprand.c       random graph generator
+    spgrid.c       grid graph generator
+    sphard.c       hard problem generator
+    random.c       random number generator (for portability)
+    
+------------------------------------------------------------
+PROGRAM PARAMETERS
+
+  sprand
+    takes five parameters, N, M, L, H, S
+      * N is the number of nodes
+      * M is the number of arcs
+      * L is the lower bound on arc lengths
+      * H is the upper bound on arc lengths
+      * S is the pseudorandom number generator seed
+
+  spgrid
+    takes seven parameters, X, xL, xH, Y, yL, yH, S
+      * X  is the grid length
+      * xL is the lower bound on the horizontal arc length
+      * xU is the upper bound on the horizontal arc length
+      * Y  is the grid height
+      * yL is the lower bound on the vertical arc length
+      * yU is the upper bound on the vertical arc length
+      * S  is the pseudorandom number generator seed
+

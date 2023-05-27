@@ -1,0 +1,5 @@
+This directory contains useful utilities
+
+potTrans.exe <M> <seed>
+  Takes two parameters, a transformation magnitude and a seed.
+  Reads a graph from stdin, writes a transofrmed graph to stdout.

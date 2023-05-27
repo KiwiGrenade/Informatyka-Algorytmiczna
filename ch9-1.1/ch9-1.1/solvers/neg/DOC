@@ -1,0 +1,22 @@
+This file documents the BFCT/GORC solvers
+
+PROGRAMS
+  bfct, bfctC: Tarjan's algorithm
+  gorc, gorcC: Goldberg-Radzik Algorithm
+
+------------------------------------------------------------
+MAKE OPTIONS FOR SHORTEST PATH CODES
+
+  CHECKSUM
+     computes checksum (expensive), used in bfctC/gorcC
+
+------------------------------------------------------------
+PROGRAM PARAMETERS
+  * Given a single parameter (graph file name), the programs assume
+    the input is a negative cycle detection problem.
+  * Given two parameters (graph file name and auxiliary file name),
+    the programs assume the input is a single-source shortest path
+    problem.
+  
+
+

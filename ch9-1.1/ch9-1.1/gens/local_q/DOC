@@ -1,0 +1,9 @@
+
+The mb.exe program takes four arguments.
+-- file prefix (adds .gr to get the input file name)
+-- the number of sources to try
+-- log_2 of the initial Dijkstra rank range
+-- generator seed
+
+The output is a set of files, each with a query for each source
+with the same Dijkstra rank range.

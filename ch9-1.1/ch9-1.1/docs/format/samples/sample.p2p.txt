@@ -1,0 +1,10 @@
+c Sample point-to-point aux file
+c
+p aux sp p2p 3
+c contains 3 query pairs
+c
+q 1 5
+q 5 1
+q 1 2
+
+

@@ -1,0 +1,316 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>9th DIMACS Implementation Challenge: Shortest Paths
+</title>
+<LINK REL=stylesheet HREF="ch9style.css" TYPE="text/css">
+</head>
+
+<body bgcolor="#FFFFFF">
+<p>
+<table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#DDDDDD">
+  <tr>
+    <td>
+      <p class="sectitle">File formats for the 9th DIMACS Implementation Challenge</p>
+    </td>
+  </tr>
+</table>
+<p>In this page we describe the standard file format conventions for the <a href="http://www.dis.uniroma1.it/%7Echallenge9">9th 
+  DIMACS Implementation Challenge</a>. To accommodate different problem types, 
+  we specify a problem using a graph file and zero or more problem-specific auxiliary 
+  files. For each specification file we use the following conventions:</p>
+<p><img src="images/bullet-orange.gif" width="8" height="10"> Files consist of 
+  ASCII characters (plain text files)<br>
+  <img src="images/bullet-orange.gif" width="8" height="10"> The file content 
+  consists of several types of <i>lines</i><br>
+  <img src="images/bullet-orange.gif" width="8" height="10"> Each line begins 
+  with a one-character line type designator <br>
+  <img src="images/bullet-orange.gif" width="8" height="10"> Line fields are separated 
+  by at least one blank space<br>
+  <img src="images/bullet-orange.gif" width="8" height="10"> Each line ends with 
+  a newline separator<br>
+  <img src="images/bullet-orange.gif" width="8" height="10"> Numerical values 
+  stored in the file (e.g., arc weights, node ids, etc.) may be strings of digits 
+  of any length. Programs should make sure to load them into large enough memory 
+  words (e.g., 32 or 64 bits depending on the context).</p>
+<table width="100%" border="0" cellspacing="1" cellpadding="3">
+  <tr> 
+    <td bgcolor="#BBBBBB" colspan="2"> 
+      <p class="sectitle">Input graph (.gr files)
+    </td>
+    <td bgcolor="#BBBBBB"> 
+      <div align="center"><a href="samples/sample.gr.txt">View sample.gr</a></div>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE">
+    <td class="small" colspan="3">
+      <img src="images/bullet-orange.gif" width="8" height="10"> A graph contains 
+        <i> n </i> nodes and <i> m </i> arcs<br>
+        <img src="images/bullet-orange.gif" width="8" height="10"> Nodes are identified 
+        by integers 1...<i>n</i><br>
+        <img src="images/bullet-orange.gif" width="8" height="10"> Graphs can 
+        be interpreted as directed or undirected, depending on the problem being 
+        studied<br>
+        <img src="images/bullet-orange.gif" width="8" height="10"> Graphs can 
+        have parallel arcs and self-loops<br>
+      <img src="images/bullet-orange.gif" width="8" height="10"> Arc weights are 
+      signed integers</td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" colspan="3">By convention, shortest path graph file names 
+      should have the suffix <b>.gr</b>. Line types are as follows. In the format 
+      descriptions below, bold characters should appear exactly as typed:</td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" align="center"> <font color="#FF0000"><b>Comment<br>
+      lines</b></font> </td>
+    <td class="small"> These lines begin with a lower-case character <i>c</i> 
+      and can appear anywhere. Comment lines are ignored by programs.</td>
+    <td class="small"> 
+      <table width="200" border="0" cellspacing="0" cellpadding="4" bgcolor="#FFFFCC">
+        <tr> 
+          <td class="small"><b>c</b> This is a comment</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" align="center"> <font color="#FF0000"><b>Problem<br>
+      line</b></font></td>
+    <td class="small"> The problem line is unique and must appear as the first 
+      non-comment line. This line has the format on the right, where <i> n </i> 
+      and <i> m </i> are the number of nodes and the number of arcs, respectively. 
+    </td>
+    <td class="small"> 
+      <table width="200" border="0" cellspacing="0" cellpadding="4" bgcolor="#FFFFCC">
+        <tr> 
+          <td class="small"><b>p sp</b> <i> n m </i></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" align="center"> <font color="#FF0000"><b>Arc<br>
+      descriptor lines</b></font></td>
+    <td class="small"> Arc descriptors are of the form on the right, where SRC 
+      and DST are the tail and the head node ids, respectively, and LEN is the 
+      arc weight. </td>
+    <td class="small"> 
+      <table width="200" border="0" cellspacing="0" cellpadding="4" bgcolor="#FFFFCC">
+        <tr> 
+          <td class="small"><b>a</b> SRC DST LEN</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<p>
+<table width="100%" border="0" cellspacing="1" cellpadding="3">
+  <tr> 
+    <td bgcolor="#BBBBBB" colspan="2"> 
+      <p class="sectitle">Node coordinates (.co files)
+    </td>
+    <td bgcolor="#BBBBBB"> 
+      <div align="center"><a href="samples/sample.co.txt">View sample.co</a></div>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" colspan="3">X-Y coordinates in the plane associated with 
+      nodes of the graph can be stored in an auxiliary file having the same name 
+      of the graph file it is related to and extension <b>.co</b>. For instance, 
+      file <i>mygraph.co</i> would contain the node coordinates of graph <i>mygraph.gr</i>. 
+      Line types are as follows. In the format descriptions below, bold characters 
+      should appear exactly as typed:</td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" align="center"> <font color="#FF0000"><b>Comment<br>
+      lines</b></font> </td>
+    <td class="small"> These lines begin with a lower-case character <i>c</i> 
+      and can appear anywhere. Comment lines are ignored by programs.</td>
+    <td class="small"> 
+      <table width="200" border="0" cellspacing="0" cellpadding="4" bgcolor="#FFFFCC">
+        <tr> 
+          <td class="small"><b>c</b> This is a comment</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" align="center"> <font color="#FF0000"><b>Problem<br>
+      line</b></font></td>
+    <td class="small"> The problem line is unique and must appear as the first 
+      non-comment line. This line has the format on the right, where <i> n </i> 
+      is the number of coordinate lines that follow.</td>
+    <td class="small"> 
+      <table width="200" border="0" cellspacing="0" cellpadding="4" bgcolor="#FFFFCC">
+        <tr> 
+          <td class="small"><b>p aux sp co</b> <i> n </i></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" align="center"> <font color="#FF0000"><b>Coord<br>
+      lines</b></font></td>
+    <td class="small"> Coordinate lines are of the form on the right, where <i> 
+      id</i> , <i>X </i>and <i>Y</i> are the id of the node, its X-coordinate, 
+      and its Y-coordinate, respectively.</td>
+    <td class="small"> 
+      <table width="200" border="0" cellspacing="0" cellpadding="4" bgcolor="#FFFFCC">
+        <tr> 
+          <td class="small"><b>v</b> <i> id X Y</i> </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<p><table width="100%" border="0" cellspacing="1" cellpadding="3">
+  <tr> 
+    <td bgcolor="#BBBBBB" colspan="2"> 
+      <p class="sectitle">Single-source shortest path problem (.ss files)
+    </td>
+    <td bgcolor="#BBBBBB"> 
+      <div align="center"><a href="samples/sample.ss.txt">View sample.ss</a></div>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" colspan="3">The goal of the SSSP problem is to find shortest 
+      paths between a specified source node and all other nodes in the input graph. 
+      The auxiliary file for the problem should have the extension <b>.ss</b>. 
+      Line types are as follows. In the format descriptions below, bold characters 
+      should appear exactly as typed:</td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" align="center"> <font color="#FF0000"><b>Comment<br>
+      lines</b></font> </td>
+    <td class="small"> These lines begin with a lower-case character <i>c</i> 
+      and can appear anywhere. Comment lines are ignored by programs.</td>
+    <td class="small"> 
+      <table width="200" border="0" cellspacing="0" cellpadding="4" bgcolor="#FFFFCC">
+        <tr> 
+          <td class="small"><b>c</b> This is a comment</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" align="center"> <font color="#FF0000"><b>Problem<br>
+      line</b></font></td>
+    <td class="small"> The problem line is unique and must appear as the first 
+      non-comment line. This line has the format on the right, where <i> n </i> 
+      is the number of source lines that follow.</td>
+    <td class="small"> 
+      <table width="200" border="0" cellspacing="0" cellpadding="4" bgcolor="#FFFFCC">
+        <tr> 
+          <td class="small"><b>p aux sp ss</b> <i> n </i></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" align="center"> <font color="#FF0000"><b>Source<br>
+      lines</b></font></td>
+    <td class="small"> Source lines are of the form on the right, where <i> S 
+      </i> is the id of the source node. If more than one source line in file.ss 
+      is specified, each line defines a new problem on the same graph with a different 
+      source. </td>
+    <td class="small"> 
+      <table width="200" border="0" cellspacing="0" cellpadding="4" bgcolor="#FFFFCC">
+        <tr> 
+          <td class="small"><b>s</b> <i> S </i> </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE" align="left"> 
+    <td class="small" colspan="3"> For the NSSSP problem, the format is the same 
+      as for the more general SSP problem, with the understanding that all arc 
+      lengths are nonnegative. </td>
+  </tr>
+</table>
+<p>
+<table width="100%" border="0" cellspacing="1" cellpadding="3">
+  <tr> 
+    <td bgcolor="#BBBBBB" colspan="2"> 
+      <p class="sectitle">Point-to-point shortest path problem (.p2p files)
+    </td>
+    <td bgcolor="#BBBBBB"> 
+      <div align="center"><a href="samples/sample.p2p.txt">View sample.p2p</a></div>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" colspan="3">The goal of the P2P problem is to find a shortest 
+      path between a specified pair of nodes in the input graph. The auxiliary 
+      file for this problem should have the extension <b>.p2p</b>. Line types 
+      are as follows. In the format descriptions below, bold characters should 
+      appear exactly as typed:</td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" align="center"> <font color="#FF0000"><b>Comment<br>
+      lines</b></font> </td>
+    <td class="small"> These lines begin with a lower-case character <i>c</i> 
+      and can appear anywhere. Comment lines are ignored by programs.</td>
+    <td class="small"> 
+      <table width="200" border="0" cellspacing="0" cellpadding="4" bgcolor="#FFFFCC">
+        <tr> 
+          <td class="small"><b>c</b> This is a comment</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" align="center"> <font color="#FF0000"><b>Problem<br>
+      line</b></font></td>
+    <td class="small"> The problem line is unique and must appear as the first 
+      non-comment line. This line has the format on the right, where <i> n </i> 
+      is the number of query lines that follow.</td>
+    <td class="small"> 
+      <table width="200" border="0" cellspacing="0" cellpadding="4" bgcolor="#FFFFCC">
+        <tr> 
+          <td class="small"><b>p aux sp p2p</b> <i> n </i></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small" align="center"> <font color="#FF0000"><b>Query<br>
+      lines</b></font></td>
+    <td class="small"> Query lines are of the form on the right, where <i> S, 
+      T </i> are the ids of the source and the destination nodes, respectively. 
+      Each query line defines a new problem on the same graph. </td>
+    <td class="small"> 
+      <table width="200" border="0" cellspacing="0" cellpadding="4" bgcolor="#FFFFCC">
+        <tr> 
+          <td class="small"><b>q</b> <i> S T </i> </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<p>
+<table width="100%" border="0" cellspacing="1" cellpadding="3">
+  <tr> 
+    <td bgcolor="#BBBBBB"> 
+      <p class="sectitle">All-pairs shortest path problem
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small">The goal of the APSP problem is to find shortest paths between 
+      each pair of nodes in the input graph. This problem is completely specified 
+      by the graph. No auxiliary file is used. </td>
+  </tr>
+</table>
+<p><table width="100%" border="0" cellspacing="1" cellpadding="3">
+  <tr> 
+    <td bgcolor="#BBBBBB"> 
+      <p class="sectitle">Negative cycle detection problem
+    </td>
+  </tr>
+  <tr bgcolor="#EEEEEE"> 
+    <td class="small">The goal of the NCD problem is to find a negative cycle 
+      in the input graph, if one exists. This problem is completely specified 
+      by the graph. No auxiliary file is used. </td>
+  </tr>
+</table>
+</body></html>
+
