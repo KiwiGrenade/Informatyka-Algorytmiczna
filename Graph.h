@@ -8,38 +8,31 @@
 #include <vector>
 #include <list>
 #include <stack>
+#include <cstring>
+#include <queue>
+#include <limits>
 class Graph
 {
 private:
-    bool isDirected;
+    size_t maxWeight = 1;
+    // adjacency list with weights
+    std::list <std::pair<size_t, size_t>>* adjacencyList;
+    std::vector<size_t> dijkstra(size_t source);
+    std::vector<size_t> dial(size_t source);
+    std::vector<size_t> radixheap(size_t source);
+public:
     // number of nodes
     size_t n;
     // number of arcs
     size_t m;
-//    std::vector <size_t> visited;
-//    std::vector <size_t> finished;
-//    std::vector <size_t> searchOrder;
-    std::vector <std::vector<std::pair<size_t, size_t>>> adjacencyList;
-
-//    void DFSVisit(size_t s) noexcept;
-//    bool TPSVisit(size_t s, std::vector<size_t>& topOrder) noexcept;
-//    void SCCVisit(size_t s, std::stack<size_t> &finVertices) noexcept;
-//    void transpose() noexcept;
-    void addEdge(size_t V1, size_t V2, size_t cost) noexcept;
-public:
+    // min cost in gprah
+    size_t minCost;
+    // max cost in graph
+    size_t maxCost;
+    std::vector<size_t> getDistance(short alg, size_t V1) noexcept;
+    void addEdge(size_t V1, size_t V2, size_t weight) noexcept;
 
     explicit Graph(std::ifstream &graphDefinition) noexcept;
-//    //zad 1
-//    void BFS() noexcept;
-//    void DFS() noexcept;
-//    //zad 2
-//    void TPS() noexcept;
-//    //zad 3
-//    void SCC() noexcept;
-//    //zad 4
-//    void GCP() noexcept;
-//    void printSearchTree() noexcept;
-//    void printSearchOrder() noexcept;
 };
 
 

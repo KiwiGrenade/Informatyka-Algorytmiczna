@@ -8,6 +8,8 @@
 #include "fstream"
 Graph::Graph(std::ifstream &graphDefinition) noexcept
 {
+    minCost = std::numeric_limits<size_t>::max();
+    maxCost = 0;
     std::string line;
     // create the graph from graphDefinition file
     while(getline(graphDefinition, line))
@@ -19,16 +21,22 @@ Graph::Graph(std::ifstream &graphDefinition) noexcept
                 size_t i;
 
                 i = line.find(' ', 5);
-                Graph::n = std::stol(line.substr(5, i));
-                Graph::m = std::stol(line.substr(5, std::string::npos));
-                adjacencyList.resize(n + 1);
-
+                n = std::stol(line.substr(5, i));
+                m = std::stol(line.substr(5, std::string::npos));
+                adjacencyList = new std::list<std::pair<size_t, size_t>>[n+1];
                 break;
             }
             case 'a':
             {
                 size_t i, j, v1, v2, cost;
-
+                if(cost < minCost)
+                {
+                    minCost = cost;
+                }
+                if(cost > maxCost)
+                {
+                    maxCost = cost;
+                }
                 // omit first space |a v1 v2 cost|
                 i = line.find(' ', 2);
                 v1 = std::stol(line.substr(2, i));
@@ -43,316 +51,144 @@ Graph::Graph(std::ifstream &graphDefinition) noexcept
         }
     }
 }
-//
-void Graph::addEdge(size_t V1, size_t V2, size_t cost) noexcept
+void Graph::addEdge(size_t V1, size_t V2, size_t weight) noexcept
 {
-    //add vertex V2 with it's cost to list of vertices adjacent to V1
-    Graph::adjacencyList[V1].push_back(std::pair(V2, cost));
+    adjacencyList[V1].push_back(std::make_pair(V2, weight));
+    // add vertex V2 with it's cost to list of vertices adjacent to V1
 }
-//
-//void Graph::BFS() noexcept
-//{
-//    visited.clear();
-//    visited.resize(n+1, false);
-//    searchOrder.clear();
-//    //mark the first vertex to access as visited
-//
-//    //create a que of vertices yet to be fully marked
-//    std::list<size_t> queue;
-//
-//    for(size_t i = 1; i <=n; i++)
-//    {
-//        if(!visited[i])
-//        {
-//            visited[i] = true;
-//            queue.push_back(i);
-//            while(!queue.empty())
-//            {
-//                //mark first vertex in queue
-//                size_t v = queue.front();
-//                searchOrder.push_back(v);
-//                queue.pop_front();
-//
-//                //traverse all adjacent vertices of s
-//                for (size_t adjacent:adjacencyList[v])
-//                {
-//                    //if vertex hasn't been visited
-//                    if(!visited[adjacent])
-//                    {
-//                        //visit it and queue to be marked (and printed)
-//                        visited[adjacent] = true;
-//                        queue.push_back(adjacent);
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//void Graph::DFS() noexcept
-//{
-//    visited.clear();
-//    visited.resize(n+1, false);
-//    searchOrder.clear();
-//
-//    for (size_t i = 1; i <= n; i++)
-//    {
-//        if(!visited[i])
-//        {
-//            DFSVisit(i);
-//        }
-//    }
-//}
-//
-//void Graph::DFSVisit(size_t s) noexcept
-//{
-//    visited[s] = true;
-//    searchOrder.push_back(s);
-//
-//    for (size_t adjacent:adjacencyList[s])
-//    {
-//        if(!visited[adjacent])
-//        {
-//            DFSVisit(adjacent);
-//        }
-//    }
-//}
-//
-//
-//void Graph::TPS() noexcept
-//{
-//    if(!isDirected)
-//    {
-//        std::cout << "Error: Can't TPS an undirected graph!" << std::endl;
-//    }
-//    visited.clear();
-//    visited.resize(n+1, false);
-//    finished.clear();
-//    finished.resize(n+1, false);
-//    time = 0;
-//    searchOrder.clear();
-//
-//    std::vector<size_t> topOrder;
-//
-//    //search the vertex if unvisited
-//    for (size_t i = 1; i <= n; i++)
-//    {
-//        if(!visited[i])
-//        {
-//            if(!TPSVisit(i, topOrder))
-//            {
-//                std::cout << "There exists a directed cycle!" << std::endl;
-//                return;
-//            }
-//        }
-//    }
-//    std::cout << "Graph is acyclic!" << std::endl;
-//    if(n <= 200)
-//    {
-//        for(size_t i = 0; i < n; i++)
-//        {
-//            std::cout << topOrder[i] << " ";
-//        }
-//        std::cout << std::endl;
-//    }
-//}
-//
-//bool Graph::TPSVisit(size_t s, std::vector<size_t>& topOrder) noexcept
-//{
-//    time++;
-//
-//    visited[s] = time;
-//    searchOrder.push_back(s);
-//
-//    for (size_t adjacent:adjacencyList[s])
-//    {
-//        if(!visited[adjacent])
-//        {
-//            TPSVisit(adjacent, topOrder);
-//        }
-////        else if(adjacent == s || ((finished[adjacent] > 0) && (finished[adjacent] > time+1)))
-//        else if(finished[adjacent] == 0)
-//        {
-//            return false;
-//        }
-//    }
-//    time++;
-//    finished[s] = time;
-//    topOrder.push_back(s);
-//    return true;
-//}
-//
-//
-//void Graph::SCC() noexcept
-//{
-//    std::vector<std::vector<size_t>> sccList;
-//    std::stack <size_t> finVertices;
-//
-//    visited.clear();
-//    visited.resize(n+1, false);
-//    searchOrder.clear();
-//
-//
-//    if(!isDirected)
-//    {
-//        std::cout << "Error: Graph is undirected!" << std::endl;
-//        return;
-//    }
-//    for(size_t i = 1; i <= n; i++)
-//    {
-//        if(!visited[i])
-//        {
-//            SCCVisit(i, finVertices);
-//        }
-//    }
-//
-//    transpose();
-//
-//    visited.clear();
-//    visited.resize(n+1, false);
-//    searchOrder.clear();
-//
-//    if(n <= 200)
-//    {
-//        std::cout << "Strongly connected components:" << std::endl;
-//    }
-//
-//    while(!finVertices.empty())
-//    {
-//        if(!visited[finVertices.top()])
-//        {
-//            searchOrder.clear();
-//            DFSVisit(finVertices.top());
-//            if(n <= 200)
-//            {
-//                printSearchOrder();
-//            }
-//            sccList.push_back(searchOrder);
-//        }
-//        finVertices.pop();
-//    }
-//    std::cout << "Number of SCC: " << sccList.size() << std::endl;
-//    std::cout << "Numbers of vertices in SCCs:" << std::endl;
-//    for(const std::vector<size_t>& i : sccList)
-//    {
-//        std::cout << i.size() << std::endl;
-//    }
-//}
-//
-//void Graph::SCCVisit(size_t s, std::stack<size_t> &finVertices) noexcept
-//{
-//    visited[s] = true;
-//    searchOrder.push_back(s);
-//    for (size_t adjacent:adjacencyList[s])
-//    {
-//        if(!visited[adjacent])
-//        {
-//            SCCVisit(adjacent, finVertices);
-//        }
-//    }
-//    finVertices.push(s);
-//}
-//
-//void Graph::printSearchOrder() noexcept
-//{
-//    std::cout << "Search order: " << std::endl;
-//    for (size_t vertex:searchOrder)
-//    {
-//        std::cout << vertex << std::endl;
-//    }
-//}
-//
-//void Graph::GCP() noexcept
-//{
-//    std::vector<int> color;
-//    color.resize(n+1, 0);
-//    std::list<size_t> queue(n+1);
-//
-//    for(size_t i = 1; i <= n; i++)
-//    {
-//        if(color[i] == 0)
-//        {
-//            color[i] = 1;
-//            queue.push_back(i);
-//            while(!queue.empty())
-//            {
-//                //mark first vertex in queue
-//                size_t v = queue.front();
-//                queue.pop_front();
-//
-//                size_t nRed = 0;
-//                size_t nGreen = 0;
-//                //traverse all adjacent vertices of s
-//                for (size_t adjacent:adjacencyList[v])
-//                {
-//                    //if vertex hasn't been visited
-//                    if(color[adjacent] == color[v])
-//                    {
-//                        std::cout << "Graph can't be 2-colored!" << std::endl;
-//                        return;
-//                    }
-//                    else if(color[adjacent] == 0)
-//                    {
-//                        color[adjacent] = -color[v];
-//                        queue.push_back(adjacent);
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    std::cout << "Graph can be 2-colored!" << std::endl;
-//    if(n <= 200)
-//    {
-//        std::cout << "Red vertices:" << std::endl;
-//        for(int i = 1; i <= n; i++)
-//        {
-//            if(color[i] == 1)
-//            {
-//                std::cout << i << " ";
-//            }
-//        }
-//        std::cout << std::endl << "Green vertices:" << std::endl;
-//        for(int i = 1; i <= n; i++)
-//        {
-//            if(color[i] == -1)
-//            {
-//                std::cout << i << " ";
-//            }
-//        }
-//        std::cout << std::endl;
-//    }
-//}
-//
-//
-//void Graph::transpose() noexcept
-//{
-//    std::vector<std::vector<size_t>> T;
-//    T.resize(n + 1);
-//    for (size_t i = 0 ;i < n + 1; i++)
-//    {
-//        for(size_t j : adjacencyList[i])
-//        {
-//            T[j].push_back(i);
-//        }
-//    }
-//    adjacencyList = T;
-//}
-//
-//void Graph::printSearchTree() noexcept
-//{
-//    if(n > 200)
-//    {
-//        return;
-//    }
-//    std::cout << "Tree:" << std::endl;
-//    for (size_t i = 1; i <= n; i++ )
-//    {
-//        std::cout << i << " --> ";
-//        for(size_t v : adjacencyList[i])
-//        {
-//            std::cout << v << " ";
-//        }
-//        std::cout << std::endl;
-//    }
-//}
 
+std::vector<size_t> Graph::getDistance(short alg, size_t V1) noexcept {
+    std::vector<size_t> result;
+    switch(alg)
+    {
+        case 0:
+        {
+            result = dijkstra(V1);
+            break;
+        }
+        case 1:
+        {
+            result = dial(V1);
+            break;
+        }
+        default:
+        {
+            std::cout << "Wrong algorithm!" << std::endl;
+        }
+    }
+    return result;
+}
+
+std::vector<size_t> Graph::dijkstra(size_t source)
+{
+    // priority queue with access to smallest element
+    std::priority_queue<
+            std::pair<size_t, size_t>,
+            std::vector<std::pair<size_t, size_t>>,
+            std::greater<>
+    > priorityQueue;
+
+    std::vector<size_t> distanceList(n, std::numeric_limits<size_t>::max());
+
+    // initialize priorityQueue and distance with 0
+    priorityQueue.emplace(0, source);
+    distanceList[source] = 0;
+
+
+    while (priorityQueue.empty() == false){
+
+        // get tops weight
+        size_t u = priorityQueue.top().second;
+        // pop top
+        priorityQueue.pop();
+
+        std::list<std::pair<size_t, size_t>>::iterator i;
+        for (i = adjacencyList[u].begin(); i != adjacencyList[u].end(); ++i) {
+            // Get vertex label and weight of current
+            // adjacent of u.
+            size_t v = (*i).first;
+            size_t weight = (*i).second;
+
+            // If there is shorted path to v through u.
+            if (distanceList[v] > distanceList[u] + weight) {
+                // Updating distanceList of v
+                distanceList[v] = distanceList[u] + weight;
+                priorityQueue.emplace(distanceList[v], v);
+            }
+        }
+    }
+    return distanceList;
+}
+
+std::vector<size_t> Graph::dial(size_t source)
+{
+    std::cout << source << std::endl;
+    std::vector<std::pair<size_t, std::list<size_t>::iterator>> distance(n);
+
+    for (size_t i = 0; i < n; i++) {
+        distance[i].first = std::numeric_limits<size_t>::max();
+    }
+
+    distance[source].first = 0;
+
+    // buckets number = max arc cost
+    std::vector<std::list<size_t>> buckets(maxCost);
+    buckets[0].push_back(source);
+    long unsigned long idx = 0;
+    std::cout << buckets.size() << std::endl;
+
+    while(true) {
+        // find first empty bucket
+        std::cout << buckets.size() << std::endl;
+        while(!buckets[idx].empty() < buckets.size())
+        {
+            idx++;
+        }
+        if(idx == buckets.size())
+        {
+            break;
+        }
+
+        // take top vertex and pop it
+        size_t u = buckets[idx].front();
+        buckets[idx].pop_front();
+
+        // process all neigbours of u and update if required
+        for(auto i = adjacencyList[u].begin(); i != adjacencyList[u].end(); ++i){
+            size_t v = (*i).first;
+            size_t vWeight = (*i).second;
+
+            size_t du = distance[u].first;
+            size_t dv = distance[v].first;
+
+            // if there is a shorter path to v thtough u
+            if(dv > du + vWeight)
+            {
+                // if dv != INF it must be in bucket[dv]
+                if (dv != std::numeric_limits<size_t>::max()) {
+                    buckets[dv].erase(distance[v].second);
+                }
+
+                // update the distance
+                distance[v].first = du + vWeight;
+                dv = distance[v].first;
+
+                // if the distance is greater than the bucket size, resize the bucket
+                if(dv > buckets.size()){
+                    buckets.resize(dv + maxWeight * 2);
+                }
+                std::cout << buckets[dv].size() << std::endl;
+                // push v into proper bucket
+                buckets[dv].push_front(v);
+                // update the v's distance
+                distance[v].second = buckets[dv].begin();
+            }
+        }
+    }
+
+    std::vector<size_t> d(n);
+    for(size_t i = 0; i < n; ++i){
+        d[i] = distance[i].first;
+    }
+    return d;
+}
