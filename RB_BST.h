@@ -9,10 +9,10 @@
 
 struct Node
 {
-    bool isRed;
-    Node* parent;
-    Node* left;
-    Node* right;
+    bool isRed = true;
+    Node* parent = nullptr;
+    Node* left = nullptr;
+    Node* right = nullptr;
     size_t key;
 };
 

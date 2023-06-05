@@ -27,27 +27,30 @@ int main(int argc, char** argv)
         deleteList[i] = std::stol(line);
     }
     Splay_node* root = NULL;
-//    for(size_t i : insertList)
-    for(size_t i = 0; i < n; i++)
+    for(size_t i : insertList)
     {
-        root = Splay_insert(root, insertList[i]);
+        root = Splay_insert(root, i);
         if( n < 50)
         {
             printf("Insert %lu\n", i);
             Splay_print(root);
             printf("\n\n");
         }
+        size_t height = Splay_height(root);
+        printf("Height: %lu\n", height);
+        printf("\n\n");
     }
-    for(size_t i = 0; i < n; i++)
-//    for(size_t i : deleteList)
+    for(size_t i : deleteList)
     {
-        root = Splay_delete(root, deleteList[i]);
+        root = Splay_delete(root, i);
         if( n < 50)
         {
             printf("Delete %lu\n", i);
             Splay_print(root);
-            printf("\n\n");
         }
+        size_t height = Splay_height(root);
+        printf("Height: %lu\n", height);
+        printf("\n\n");
     }
 
     Splay_clean(root);
