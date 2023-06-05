@@ -20,6 +20,7 @@ void BST::insert(size_t val) noexcept
 
     z->key = val;
 
+    swapOrView++;
     while(x != nullptr)
     {
         swapOrView++;
@@ -33,8 +34,7 @@ void BST::insert(size_t val) noexcept
     swapOrView++;
     z->parent = y;
 
-    swapOrView++;
-    swapOrView++;
+    swapOrView+=2;
     if (y == nullptr)
         root = z;
     else if(compare(z->key, y->key))
@@ -46,6 +46,7 @@ void BST::insert(size_t val) noexcept
 Node * BST::deleteFirstOf(size_t val) noexcept
 {
     Node* z = iterativeTreeSearch(root, val);
+    swapOrView++;
     if(z == nullptr)
     {
         return nullptr;
@@ -53,7 +54,7 @@ Node * BST::deleteFirstOf(size_t val) noexcept
 
     Node *y, *x;
 
-    swapOrView++;
+    swapOrView+=2;
     if(z->left == nullptr || z->right == nullptr)
         y = z;
     else
@@ -66,11 +67,12 @@ Node * BST::deleteFirstOf(size_t val) noexcept
     else
         x = y->right;
     swapOrView++;
-    if(x != nullptr)
+    if(x != nullptr) {
+        swapOrView++;
         x->parent = y->parent;
+    }
 
-    swapOrView++;
-    swapOrView++;
+    swapOrView+=2;
     if (y->parent == nullptr)
         root = x;
     else if(y == y->parent->left)
@@ -79,8 +81,9 @@ Node * BST::deleteFirstOf(size_t val) noexcept
         y->parent->right = x;
 
     swapOrView++;
-    if (y != z)
+    if (y != z) {
         z->key = y->key;
+    }
 
     return y;
 }
@@ -101,6 +104,7 @@ size_t BST::height(Node *node) noexcept
 
 Node *BST::iterativeTreeSearch(Node *x, size_t k) noexcept
 {
+    swapOrView++;
     while(x != nullptr && k != x->key)
     {
         swapOrView++;
@@ -119,9 +123,10 @@ Node *BST::successor(Node *x) noexcept
         return minimum(x->right);
 
     Node* y = x->parent;
+    swapOrView++;
     while(y != nullptr && x == y->right)
     {
-        swapOrView++;
+        swapOrView+=2;
         x = y;
         y = y->parent;
     }
@@ -130,6 +135,7 @@ Node *BST::successor(Node *x) noexcept
 
 Node *BST::minimum(Node *x) noexcept
 {
+    swapOrView++;
     while (x->left != nullptr)
         swapOrView++;
         x = x->left;
@@ -138,6 +144,7 @@ Node *BST::minimum(Node *x) noexcept
 
 Node *BST::maximum(Node *x) noexcept
 {
+    swapOrView++;
     while (x->right != nullptr)
         swapOrView++;
         x = x->right;
