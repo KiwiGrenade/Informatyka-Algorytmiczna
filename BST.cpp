@@ -34,6 +34,7 @@ void BST::insert(size_t val) noexcept
     z->parent = y;
 
     swapOrView++;
+    swapOrView++;
     if (y == nullptr)
         root = z;
     else if(compare(z->key, y->key))

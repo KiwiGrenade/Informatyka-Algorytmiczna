@@ -15,6 +15,7 @@ bool compare(int a, int b){
 }
 
 int swapOrView = 0;
+//
 
 static void print_BST(Splay_node* root, int depth,char prefix){
     if( root == NULL ) return;
