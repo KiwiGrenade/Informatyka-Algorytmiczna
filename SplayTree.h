@@ -12,6 +12,9 @@ struct SplayNode{
     Splay_node* right;
 };
 
+int comparisions = 0;
+int swapOrView = 0;
+
 Splay_node* Splay_insert(Splay_node* root, size_t data);
 
 Splay_node* Splay_delete(Splay_node* root, size_t data);

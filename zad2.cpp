@@ -1,59 +1,63 @@
-//
-// Created by mango on 04.06.23.
-//
 #include <iostream>
-#include "RB_BST.h"
+#include <cstdio>
+#include <zconf.h>
+#include "RB_BSTree.h"
 int main(int argc, char* argv[])
 {
     char *leftTrace, *rightTrace;
     std::string line;
     std::cin >> line;
-    size_t n = std::stol(line);
+    size_t n = std::stoull(line);
 
-    size_t  insertList[n],
+    size_t insertList[n],
             deleteList[n];
     // get keys to insert
     for(size_t i = 0; i < n; i++)
     {
         std::cin >> line;
-        insertList[i]= std::stol(line);
+        insertList[i]= std::stoull(line);
     }
     // get keys to delete
     for(size_t i = 0; i < n; i++)
     {
         std::cin >> line;
-        deleteList[i] = std::stol(line);
+        deleteList[i] = std::stoull(line);
     }
-
-    leftTrace = (char*) malloc(n * sizeof (char));
-    rightTrace = (char*) malloc(n * sizeof (char));
-    RB_BST* tree = new RB_BST();
-    for(size_t i : insertList)
+    ////////////////////////////////////////////////////
+    RBTree * tree = static_cast<RBTree *>(malloc(sizeof(RBTree*)));
+    Node * nil = static_cast<Node *>(malloc(sizeof(Node)));
+    *nil = (Node){.key = 0,  .left = NULL, .right = NULL, .parent = NULL, .color = BLACK};
+    tree->NIL = nil;
+    tree->root = tree->NIL;
+    for (size_t i : insertList)
     {
-        tree->insert(i);
+        insert(tree, i);
         if( n < 50)
         {
-            std::cout << "Insert: " << i << std::endl;
-            std::cout << "Tree: " << std::endl;
-            tree->print(tree->root, 0, '-', leftTrace, rightTrace);
-            printf("\n\n");
+            printf("Insert %lu\n", i);
+            print(tree);
         }
+        size_t h = height(tree);
+        printf("Height: %lu", h);
+        printf("\n\n");
     }
-    std::cout << "Koniec insertu" << std::endl;
+    sleep(1);
     for(size_t i : deleteList)
     {
-        tree->deleteFirstOf(i);
+        nodeDelete(tree, i);
         if( n < 50)
         {
-            std::cout << "Delete: " << i << std::endl;
-            std::cout << "Tree: " << std::endl;
-            tree->print(tree->root, 0, '-', leftTrace, rightTrace);
-            printf("\n\n");
+            printf("Insert %lu\n", i);
+            print(tree);
         }
+        size_t h = height(tree);
+        printf("Height: %lu", h);
+        printf("\n\n");
     }
-    std::cout << "chuj";
-    free(leftTrace);
-    free(rightTrace);
-    free(tree);
+
+    std::cout << "Comparisons: " << comparisions << std::endl;
+    std::cout << "Swap or view: " << swapOrView << std::endl;
+
+    BSClean(tree);
     return 0;
 }

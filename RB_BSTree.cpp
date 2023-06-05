@@ -4,13 +4,10 @@
 #include "queue.h"
 
 
-int comparisions = 0;
 bool compare(int a, int b){
     comparisions++;
     return a < b;
 }
-
-int swapOrView = 0;
 
 static Node* newNode(size_t data){
     Node* node = static_cast<Node *>(malloc(sizeof(Node)));
@@ -34,25 +31,22 @@ static Node* minimum(RBTree* T, Node* node) {
 
 // Replace node u with node v
 static void transplant(RBTree* T, Node* u, Node* v) {
-    swapOrView++;
-    swapOrView++;
     if (u->parent == T->NIL)
         T->root = v;
-    else if (u == u->parent->left) {
-        swapOrView++;
+    else if (u == u->parent->left)
         u->parent->left = v;
-    }
-    else {
-        swapOrView++;
+    else
         u->parent->right = v;
-    }
+    swapOrView++;
+
     swapOrView++;
     v->parent = u->parent;
 }
 
 
 static void print_BST(RBTree* T, Node* root, int depth, char prefix, char* left_trace, char* right_trace){
-    if( root == T->NIL ) return;
+    if( root == T->NIL )
+        return;
     if( root->left != T->NIL ){
         print_BST(T, root->left, depth+1, '/', left_trace, right_trace);
     }
@@ -83,7 +77,7 @@ static void print_BST(RBTree* T, Node* root, int depth, char prefix, char* left_
 
 // Function to perform left rotation
 static void leftRotate(RBTree* T, Node* x) {
-    swapOrView++;
+    swapOrView += 2;
     Node* y = x->right;
     x->right = y->left;
 
@@ -97,8 +91,8 @@ static void leftRotate(RBTree* T, Node* x) {
     y->parent = x->parent;
 
     swapOrView++;
-    swapOrView++;
     if (x->parent == T->NIL) {
+        swapOrView++;
         T->root = y;
     }
     else if (x == x->parent->left) {

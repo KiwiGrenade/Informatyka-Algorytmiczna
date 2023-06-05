@@ -53,6 +53,10 @@ int main(int argc, char** argv)
         printf("\n\n");
     }
 
+
+    std::cout << "Comparisons: " << comparisions << std::endl;
+    std::cout << "Swap or view: " << swapOrView << std::endl;
+    
     Splay_clean(root);
     return 0;
 }

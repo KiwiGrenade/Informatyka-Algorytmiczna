@@ -8,13 +8,11 @@
 static char* left_trace; // needs to be allocaded with size
 static char* right_trace; // needs to be allocaded with size
 
-int comparisions = 0;
 bool compare(int a, int b){
     comparisions++;
     return a < b;
 }
 
-int swapOrView = 0;
 
 static void print_BST(Splay_node* root, int depth,char prefix){
     if( root == NULL ) return;
