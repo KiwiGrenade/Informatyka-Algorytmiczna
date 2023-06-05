@@ -4,6 +4,14 @@
 #include "queue.h"
 
 
+int comparisions = 0;
+bool compare(int a, int b){
+    comparisions++;
+    return a < b;
+}
+
+int swapOrView = 0;
+
 static Node* newNode(size_t data){
     Node* node = static_cast<Node *>(malloc(sizeof(Node)));
     *node = (Node){
@@ -15,20 +23,30 @@ static Node* newNode(size_t data){
 }
 
 static Node* minimum(RBTree* T, Node* node) {
-    while (node->left != T->NIL)
+    swapOrView++;
+    while (node->left != T->NIL) {
+        swapOrView++;
         node = node->left;
+    }
     return node;
 }
 
 
 // Replace node u with node v
 static void transplant(RBTree* T, Node* u, Node* v) {
+    swapOrView++;
+    swapOrView++;
     if (u->parent == T->NIL)
         T->root = v;
-    else if (u == u->parent->left)
+    else if (u == u->parent->left) {
+        swapOrView++;
         u->parent->left = v;
-    else
+    }
+    else {
+        swapOrView++;
         u->parent->right = v;
+    }
+    swapOrView++;
     v->parent = u->parent;
 }
 
@@ -65,42 +83,69 @@ static void print_BST(RBTree* T, Node* root, int depth, char prefix, char* left_
 
 // Function to perform left rotation
 static void leftRotate(RBTree* T, Node* x) {
+    swapOrView++;
     Node* y = x->right;
     x->right = y->left;
 
-    if (y->left != T->NIL)
+    swapOrView++;
+    if (y->left != T->NIL) {
+        swapOrView++;
         y->left->parent = x;
+    }
 
+    swapOrView++;
     y->parent = x->parent;
 
-    if (x->parent == T->NIL)
+    swapOrView++;
+    swapOrView++;
+    if (x->parent == T->NIL) {
         T->root = y;
-    else if (x == x->parent->left)
+    }
+    else if (x == x->parent->left) {
+        swapOrView++;
         x->parent->left = y;
-    else
+    }
+    else {
+        swapOrView++;
         x->parent->right = y;
+    }
 
+    swapOrView++;
+    swapOrView++;
     y->left = x;
     x->parent = y;
 }
 
 // Function to perform right rotation
 static void rightRotate(RBTree* T, Node* y) {
+    swapOrView++;
     Node* x = y->left;
     y->left = x->right;
 
-    if (x->right != T->NIL)
+    swapOrView++;
+    if (x->right != T->NIL) {
+        swapOrView++;
         x->right->parent = y;
+    }
 
+    swapOrView++;
     x->parent = y->parent;
 
+    swapOrView++;
+    swapOrView++;
     if (y->parent == T->NIL)
         T->root = x;
-    else if (y == y->parent->right)
+    else if (y == y->parent->right) {
+        swapOrView++;
         y->parent->right = x;
-    else
+    }
+    else {
+        swapOrView++;
         y->parent->left = x;
+    }
 
+    swapOrView++;
+    swapOrView++;
     x->right = y;
     y->parent = x;
 }
@@ -108,6 +153,7 @@ static void rightRotate(RBTree* T, Node* y) {
 // Function to fix the Red-Black Tree properties after insertion
 static void insertFixUp(RBTree* T, Node* z) {
     while(z->parent->color == RED) {
+        swapOrView++;
         if(z->parent == z->parent->parent->left) { //z.parent is the left child
 
             Node* y = z->parent->parent->right; //uncle of z
@@ -116,10 +162,13 @@ static void insertFixUp(RBTree* T, Node* z) {
                 z->parent->color = BLACK;
                 y->color = BLACK;
                 z->parent->parent->color = RED;
+                swapOrView++;
                 z = z->parent->parent;
             }
             else {
+                swapOrView++;
                 if(z == z->parent->right) {
+                    swapOrView++;
                     z = z->parent;
                     leftRotate(T, z);
                 }
@@ -136,10 +185,13 @@ static void insertFixUp(RBTree* T, Node* z) {
                 z->parent->color = BLACK;
                 y->color = BLACK;
                 z->parent->parent->color = RED;
+                swapOrView++;
                 z = z->parent->parent;
             }
             else {
+                swapOrView++;
                 if(z == z->parent->left) {
+                    swapOrView++;
                     z = z->parent;
                     rightRotate(T, z);
                 }
@@ -153,29 +205,36 @@ static void insertFixUp(RBTree* T, Node* z) {
 }
 
 static void deleteFixUp(RBTree* T, Node* x){
+    swapOrView++;
     while (x != T->root && x->color == BLACK) {
+        swapOrView++;
+        swapOrView++;
         if (x == x->parent->left) {
             Node* w = x->parent->right;
             if (w->color == RED) {
                 w->color = BLACK;
                 x->parent->color = RED;
                 leftRotate(T, x->parent);
+                swapOrView++;
                 w = x->parent->right;
             }
             if (w->left->color == BLACK && w->right->color == BLACK) {
                 w->color = RED;
+                swapOrView++;
                 x = x->parent;
             } else {
                 if (w->right->color == BLACK) {
                     w->left->color = BLACK;
                     w->color = RED;
                     rightRotate(T, w);
+                    swapOrView++;
                     w = x->parent->right;
                 }
                 w->color = x->parent->color;
                 x->parent->color = BLACK;
                 w->right->color = BLACK;
                 leftRotate(T, x->parent);
+                swapOrView++;
                 x = T->root;
             }
         } else{
@@ -184,22 +243,26 @@ static void deleteFixUp(RBTree* T, Node* x){
                 w->color = BLACK;
                 x->parent->color = RED;
                 rightRotate(T, x->parent);
+                swapOrView++;
                 w = x->parent->left;
             }
             if (w->left->color == BLACK && w->right->color == BLACK) {
                 w->color = RED;
+                swapOrView++;
                 x = x->parent;
             } else {
                 if (w->left->color == BLACK) {
                     w->right->color = BLACK;
                     w->color = RED;
                     leftRotate(T, w);
+                    swapOrView++;
                     w = x->parent->left;
                 }
                 w->color = x->parent->color;
                 x->parent->color = BLACK;
                 w->left->color = BLACK;
                 rightRotate(T, x->parent);
+                swapOrView++;
                 x = T->root;
             }
         }
@@ -210,39 +273,55 @@ static void deleteFixUp(RBTree* T, Node* x){
 void nodeDelete(RBTree* T, size_t key)
 {
     Node* z = T->root;
+    swapOrView++;
     while (z != T->NIL) {
-        if (key < z->key)
+        if (compare(key , z->key)) {
             z = z->left;
-        else if (key > z->key)
+        }
+        else if (compare(z->key, key)) {
+            swapOrView++;
             z = z->right;
+        }
         else
             break;
     }
 
+    swapOrView++;
     if (z == T->NIL)
         return;
 
     Node* y = z;
     color_t y_col = y->color;
     Node* x;
+    swapOrView++;
+    swapOrView++;
     if(z->left == T->NIL){
         x = z->right;
         transplant(T, z, z->right);
     } else if(z->right == T->NIL){
+        swapOrView++;
         x = z->left;
         transplant(T, z, z->left);
     } else{
+        swapOrView++;
         y = minimum(T, z->right);
         y_col = y->color;
         x = y->right;
-        if(y->parent == z)
+        swapOrView++;
+        if(y->parent == z) {
+            swapOrView++;
             x->parent = y;
+        }
         else{
             transplant(T, y, y->right);
+            swapOrView++;
+            swapOrView++;
             y->right = z->right;
             y->right->parent = y;
         }
         transplant(T, z, y);
+        swapOrView++;
+        swapOrView++;
         y->left = z->left;
         y->left->parent = y;
         y->color = z->color;
@@ -259,23 +338,30 @@ void insert(RBTree* T, size_t data) {
     Node* y = T->NIL;
     Node* temp = T->root;
 
+    swapOrView++;
     while(temp != T->NIL) {
+        swapOrView++;
         y = temp;
         if(z->key < temp->key)
             temp = temp->left;
         else
             temp = temp->right;
     }
+    swapOrView++;
     z->parent = y;
 
+    swapOrView++;
     if(y == T->NIL) { //newly added node is root
+        swapOrView++;
         T->root = z;
     }
-    else if(z->key < y->key) //key of child is less than its parent, left child
+    else if(compare(z->key , y->key)) //key of child is less than its parent, left child
         y->left = z;
     else
         y->right = z;
 
+    swapOrView++;
+    swapOrView++;
     z->right = T->NIL;
     z->left = T->NIL;
 
