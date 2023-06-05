@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <zconf.h>
 #include "RB_BSTree.h"
+
 int main(int argc, char* argv[])
 {
     char *leftTrace, *rightTrace;
@@ -38,8 +39,8 @@ int main(int argc, char* argv[])
             print(tree);
         }
         size_t h = height(tree);
-        printf("Height: %lu", h);
-        printf("\n\n");
+//        printf("Height: %lu", h);
+//        printf("\n\n");
     }
     sleep(1);
     for(size_t i : deleteList)
@@ -51,8 +52,8 @@ int main(int argc, char* argv[])
             print(tree);
         }
         size_t h = height(tree);
-        printf("Height: %lu", h);
-        printf("\n\n");
+//        printf("Height: %lu", h);
+//        printf("\n\n");
     }
 
     std::cout << "Comparisons: " << comparisions << std::endl;

@@ -3,6 +3,8 @@
 #include "RB_BSTree.h"
 #include "queue.h"
 
+size_t comparisions = 0;
+size_t swapOrView = 0;
 
 bool compare(int a, int b){
     comparisions++;

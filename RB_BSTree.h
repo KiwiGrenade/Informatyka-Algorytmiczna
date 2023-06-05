@@ -25,8 +25,8 @@ typedef struct RBTree{
     Node* NIL;
 }RB_tree;
 
-int comparisions = 0;
-int swapOrView = 0;
+extern size_t comparisions;
+extern size_t swapOrView;
 
 void insert(RBTree* T, size_t data);
 

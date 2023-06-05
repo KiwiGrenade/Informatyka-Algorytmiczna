@@ -8,6 +8,10 @@
 static char* left_trace; // needs to be allocaded with size
 static char* right_trace; // needs to be allocaded with size
 
+
+long long comparisions = 0;
+long long swapOrView = 0;
+
 bool compare(int a, int b){
     comparisions++;
     return a < b;

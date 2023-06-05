@@ -12,8 +12,8 @@ struct SplayNode{
     Splay_node* right;
 };
 
-int comparisions = 0;
-int swapOrView = 0;
+extern long long comparisions;
+extern long long swapOrView;
 
 Splay_node* Splay_insert(Splay_node* root, size_t data);
 
