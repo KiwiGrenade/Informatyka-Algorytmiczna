@@ -10,7 +10,7 @@ struct queue{
 
 void queue_enqueue(Queue** q, void* data)
 {
-    Queue* newElem = malloc(sizeof(*newElem));
+    Queue* newElem = static_cast<Queue *>(malloc(sizeof(*newElem)));
     *newElem = (Queue){.data = data, .next = NULL};
     if(*q == NULL) {
         *q = newElem;

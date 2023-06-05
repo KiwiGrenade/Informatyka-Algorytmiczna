@@ -2,7 +2,6 @@
 #include <cstdio>
 #include <zconf.h>
 #include "RedBlackBSTree.h"
-
 int main(int argc, char* argv[])
 {
     char *leftTrace, *rightTrace;
@@ -25,14 +24,14 @@ int main(int argc, char* argv[])
         deleteList[i] = std::stoull(line);
     }
     ////////////////////////////////////////////////////
-    RB_tree* tree = static_cast<RB_tree *>(malloc(sizeof(*tree)));
-    RB_BST_node* nil = static_cast<RB_BST_node *>(malloc(sizeof(*nil)));
+    auto tree = static_cast<RB_tree *>(malloc(sizeof(RB_tree*)));
+    auto nil = static_cast<RB_BST_node *>(malloc(sizeof(RB_BST_node*)));
     *nil = (RB_BST_node){.data = 0,  .left = NULL, .right = NULL, .parent = NULL, .color = BLACK};
     tree->NIL = nil;
     tree->root = tree->NIL;
     for (size_t i = 0; i < n; i++)
     {
-        RB_BSTree_insert(tree, (size_t)insertList[i]);
+        RB_BSTree_insert(tree, insertList[i]);
         printf("Insert %zu\n", insertList[i]);
         RedBlackBStree_print(tree);
     }

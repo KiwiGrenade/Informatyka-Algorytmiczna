@@ -39,6 +39,7 @@ int main(int argc, char* argv[])
             printf("\n\n");
         }
     }
+    std::cout << "Koniec insertu" << std::endl;
     for(size_t i : deleteList)
     {
         tree->deleteFirstOf(i);
@@ -50,6 +51,7 @@ int main(int argc, char* argv[])
             printf("\n\n");
         }
     }
+    std::cout << "chuj";
     free(leftTrace);
     free(rightTrace);
     free(tree);

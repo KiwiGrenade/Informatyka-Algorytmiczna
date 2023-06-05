@@ -1,8 +1,10 @@
-//
-// Created by mango on 04.06.23.
-//
-
 #include "RB_BST.h"
+
+RB_BST::RB_BST() noexcept
+{
+    NIL = new Node{false, NIL, NIL, NIL, 0};
+    root = NIL;
+}
 
 void RB_BST::leftRotate(Node *x) noexcept
 {
@@ -22,7 +24,6 @@ void RB_BST::leftRotate(Node *x) noexcept
     y->left = x;
     x->parent = y;
 }
-
 void RB_BST::rightRotate(Node *x) noexcept
 {
     Node* y = x->left;
@@ -70,60 +71,12 @@ void RB_BST::insert(size_t val) noexcept
 
     insertFixUp(z);
 }
+
 void RB_BST::insertFixUp(Node *z) noexcept
 {
-    while (z->parent->isRed)
-    {
-        if(z->parent == z->parent->parent->left)
-        {
-            Node* y = z->parent->parent->right;
-            if (y->isRed)
-            {
-                z->parent->isRed = false;
-                y->isRed = false;
-                z->parent->parent->isRed = true;
-                z = z->parent->parent;
-            }
-            else
-            {
-                if (z == z->parent->right)
-                {
-                    z = z->parent;
-                    leftRotate(z);
-                }
-                z->parent->isRed = false;
-                z->parent->parent->isRed = true;
-                rightRotate(z->parent->parent);
-            }
-        }
-        else
-        {
-            Node* y = z->parent->parent->left;
-            if (y->isRed)
-            {
-                z->parent->isRed = false;
-                y->isRed = false;
-                z->parent->parent->isRed = true;
-                z = z->parent->parent;
-            }
-            else
-            {
-                if (z == z->parent->left)
-                {
-                    z = z->parent;
-                    rightRotate(z);
-                }
-                z->parent->isRed = false;
-                z->parent->parent->isRed = true;
-                leftRotate(z->parent->parent);
-            }
-        }
-    }
-    root->isRed = false;
-//    z->isRed = true;
-//    while(z != root && z->parent->isRed)
+//    while (z->parent->isRed)
 //    {
-//        if (z->parent == z->parent->parent->left)
+//        if(z->parent == z->parent->parent->left)
 //        {
 //            Node* y = z->parent->parent->right;
 //            if (y->isRed)
@@ -148,7 +101,7 @@ void RB_BST::insertFixUp(Node *z) noexcept
 //        else
 //        {
 //            Node* y = z->parent->parent->left;
-//            if (y != NIL && y->isRed)
+//            if (y->isRed)
 //            {
 //                z->parent->isRed = false;
 //                y->isRed = false;
@@ -163,22 +116,83 @@ void RB_BST::insertFixUp(Node *z) noexcept
 //                    rightRotate(z);
 //                }
 //                z->parent->isRed = false;
-//                z->parent->parent->isRed = false;
+//                z->parent->parent->isRed = true;
 //                leftRotate(z->parent->parent);
 //            }
 //        }
 //    }
 //    root->isRed = false;
+    z->isRed = true;
+    while(z != root && z->parent->isRed)
+    {
+        if (z->parent == z->parent->parent->left)
+        {
+            Node* y = z->parent->parent->right;
+            if (y->isRed)
+            {
+                z->parent->isRed = false;
+                y->isRed = false;
+                z->parent->parent->isRed = true;
+                z = z->parent->parent;
+            }
+            else
+            {
+                if (z == z->parent->right)
+                {
+                    z = z->parent;
+                    leftRotate(z);
+                }
+                z->parent->isRed = false;
+                z->parent->parent->isRed = true;
+                rightRotate(z->parent->parent);
+            }
+        }
+        else
+        {
+            Node* y = z->parent->parent->left;
+            if (y != NIL && y->isRed)
+            {
+                z->parent->isRed = false;
+                y->isRed = false;
+                z->parent->parent->isRed = true;
+                z = z->parent->parent;
+            }
+            else
+            {
+                if (z == z->parent->left)
+                {
+                    z = z->parent;
+                    rightRotate(z);
+                }
+                z->parent->isRed = false;
+                z->parent->parent->isRed = false;
+                leftRotate(z->parent->parent);
+            }
+        }
+    }
+    root->isRed = false;
 }
 
 void RB_BST::deleteFirstOf(size_t val) noexcept
 {
-    Node* z = iterativeTreeSearch(root, val);
+    Node* z = root;
+    while(z != NIL)
+    {
+        if(val < z->key)
+            z = z->left;
+        else if(val > z->key)
+            z = z->right;
+        else
+            break;
+    }
+
     if(z == NIL)
         return;
-    Node *y = z;
-    Node *x;
+
+    Node* y = z;
     bool yOriginalColor = y->isRed;
+    Node* x;
+
     if(z->left == NIL)
     {
         x = z->right;
@@ -284,7 +298,7 @@ void RB_BST::deleteFixUp(Node *x) noexcept
 
 void RB_BST::transplant(Node *u, Node *v) noexcept
 {
-    if (u->parent == NIL)
+    if (u->parent == nullptr)
         root = v;
     else if (u == u->parent->left)
         u->parent->left = v;
@@ -312,9 +326,10 @@ Node * RB_BST::minimum(Node *x) noexcept
     return x;
 }
 
+
 void RB_BST::print(Node *node, int depth, char prefix, char *leftTrace, char *rightTrace) noexcept
 {
-    if (node == NIL || leftTrace == nullptr || rightTrace == nullptr)
+    if (node == NIL || node == nullptr|| leftTrace == nullptr || rightTrace == nullptr)
         return;
     if (node->left != NIL)
         print(node->left, depth + 1, '/', leftTrace, rightTrace);
@@ -343,7 +358,6 @@ void RB_BST::print(Node *node, int depth, char prefix, char *leftTrace, char *ri
     }
 }
 
-
 size_t RB_BST::height(Node *node) noexcept
 {
     if(root == NIL)
@@ -357,7 +371,6 @@ size_t RB_BST::height(Node *node) noexcept
     else
         return hRight + 1;
 }
-
 void RB_BST::deleteTree(Node *node) noexcept
 {
     if(node == NIL)
@@ -368,13 +381,8 @@ void RB_BST::deleteTree(Node *node) noexcept
 
     delete node;
 }
+
 RB_BST::~RB_BST() noexcept
 {
     deleteTree(root);
-}
-
-RB_BST::RB_BST() noexcept
-{
-    NIL = new Node{false, NIL, NIL, NIL, 0};
-    root = NIL;
 }
