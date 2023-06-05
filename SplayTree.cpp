@@ -15,7 +15,6 @@ bool compare(int a, int b){
 }
 
 int swapOrView = 0;
-//
 
 static void print_BST(Splay_node* root, int depth,char prefix){
     if( root == NULL ) return;
@@ -69,27 +68,37 @@ static Splay_node* splay(Splay_node* root, size_t key)
     Splay_node* left_max = dummy_node;
     Splay_node* right_min = dummy_node;
     Splay_node* current = root;
+    swapOrView++;
 
     while (1) {
-        if (key < current->data) {
+        if (compare(key, current->data)) {
+            swapOrView++;
             if (current->left == NULL)
                 break;
-            if (key < current->left->data) {
+            swapOrView++;
+            if (compare(key, current->left->data)) {
                 current = rotate_right(current);
+                swapOrView++;
                 if (current->left == NULL)
                     break;
             }
+            swapOrView++;
+            swapOrView++;
             right_min->left = current;
             right_min = current;
             current = current->left;
-        } else if (key > current->data) {
+        } else if (compare(current->data, key)) {
+            swapOrView++;
             if (current->right == NULL)
                 break;
-            if (key > current->right->data) {
+            if (compare(current->right->data, key)) {
                 current = rotate_left(current);
+                swapOrView++;
                 if (current->right == NULL)
                     break;
             }
+            swapOrView++;
+            swapOrView++;
             left_max->right = current;
             left_max = current;
             current = current->right;
@@ -98,6 +107,10 @@ static Splay_node* splay(Splay_node* root, size_t key)
         }
     }
 
+    swapOrView++;
+    swapOrView++;
+    swapOrView++;
+    swapOrView++;
     left_max->right = current->left;
     right_min->left = current->right;
     current->left = dummy_node->right;
@@ -109,6 +122,9 @@ static Splay_node* splay(Splay_node* root, size_t key)
 
 Splay_node* Splay_insert(Splay_node* root, size_t data) {
     if (root == NULL) {
+        swapOrView++;
+        swapOrView++;
+        swapOrView++;
         Splay_node* newNode= static_cast<Splay_node *>(malloc(sizeof(Splay_node)));
         *newNode= (Splay_node){
             .data = data, .left = NULL ,.right = NULL
@@ -119,16 +135,24 @@ Splay_node* Splay_insert(Splay_node* root, size_t data) {
     root = splay(root, data);
 
 
+    swapOrView++;
+    swapOrView++;
+    swapOrView++;
     Splay_node* new_node = static_cast<Splay_node *>(malloc(sizeof(Splay_node)));
     *new_node = (Splay_node){
             .data = data, .left =NULL, .right =NULL
     };
 
+    comparisions++;
     if (data <= root->data) {
+        swapOrView++;
+        swapOrView++;
         new_node->left = root->left;
         new_node->right = root;
         root->left = NULL;
     } else {
+        swapOrView++;
+        swapOrView++;
         new_node->right = root->right;
         new_node->left = root;
         root->right = NULL;
@@ -143,13 +167,18 @@ Splay_node* Splay_delete(Splay_node* root, size_t data){
 
     root = splay(root, data);
 
+    comparisions++;
     if (root->data != data)
         return root; // Value not found
 
     Splay_node* tmp = root;
-    if(root->left == NULL)
+    swapOrView++;
+    if(root->left == NULL) {
+        swapOrView++;
         root = root->right;
+    }
     else{
+        swapOrView++;
         root = splay(root->left, data);
         root->right = tmp->right;
     }
