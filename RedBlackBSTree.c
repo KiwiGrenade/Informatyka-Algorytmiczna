@@ -4,7 +4,7 @@
 #include "queue.h"
 
 
-static RB_BST_node* RB_new_node(uint64_t data){
+static RB_BST_node* RB_new_node(size_t data){
     RB_BST_node* node = malloc(sizeof(*node));
     *node = (RB_BST_node){
         .data = data,
@@ -207,13 +207,13 @@ static void fixViolation_delete(RB_tree* T, RB_BST_node* x){
     x->color = BLACK;
 }
 
-void RB_BSTree_delete(RB_tree* T, uint64_t data)
+void RB_BSTree_delete(RB_tree* T, size_t key)
 {
     RB_BST_node* z = T->root;
     while (z != T->NIL) {
-        if (data < z->data)
+        if (key < z->data)
             z = z->left;
-        else if (data > z->data)
+        else if (key > z->data)
             z = z->right;
         else
             break;
@@ -253,7 +253,7 @@ void RB_BSTree_delete(RB_tree* T, uint64_t data)
 
 
 // Function to insert a node in the Red-Black Tree
-void RB_BSTree_insert(RB_tree* T, uint64_t data) {
+void RB_BSTree_insert(RB_tree* T, size_t data) {
     RB_BST_node* z = RB_new_node(data);
 
     RB_BST_node* y = T->NIL;

@@ -25,9 +25,9 @@ typedef struct RB_tree{
     RB_BST_node* NIL;
 }RB_tree;
 
-void RB_BSTree_insert(RB_tree* T, uint64_t data);
+void RB_BSTree_insert(RB_tree* T, size_t data);
 
-void RB_BSTree_delete(RB_tree* T, uint64_t key);
+void RB_BSTree_delete(RB_tree* T, size_t key);
 
 size_t RB_BSTree_height(RB_tree* T);
 
