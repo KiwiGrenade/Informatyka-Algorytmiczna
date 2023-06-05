@@ -8,8 +8,13 @@
 static char* left_trace; // needs to be allocaded with size
 static char* right_trace; // needs to be allocaded with size
 
-static size_t nSwap = 0;
-static size_t nComp = 0;
+int comparisions = 0;
+bool compare(int a, int b){
+    comparisions++;
+    return a < b;
+}
+
+int swapOrView = 0;
 
 static void print_BST(Splay_node* root, int depth,char prefix){
     if( root == NULL ) return;
@@ -40,7 +45,7 @@ static Splay_node* rotate_left(Splay_node* x) {
     x->right = y->left;
     y->left = x;
 
-    nSwap += 2;
+    swapOrView += 2;
 
     return y;
 }
@@ -49,13 +54,12 @@ static Splay_node* rotate_right(Splay_node* x) {
     Splay_node* y = x->left;
     x->left = y->right;
     y->right = x;
-    nSwap += 2;
+    swapOrView += 2;
     return y;
 }
 
 static Splay_node* splay(Splay_node* root, size_t key)
 {
-    nComp++;
     if (root == NULL || root->data == key)
         return root;
 

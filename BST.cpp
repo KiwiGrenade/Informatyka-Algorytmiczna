@@ -4,6 +4,14 @@
 
 #include "BST.h"
 
+int comparisions = 0;
+bool compare(int a, int b){
+    comparisions++;
+    return a < b;
+}
+
+int swapOrView = 0;
+
 void BST::insert(size_t val) noexcept
 {
     Node* y = nullptr;
@@ -14,18 +22,21 @@ void BST::insert(size_t val) noexcept
 
     while(x != nullptr)
     {
+        swapOrView++;
         y = x;
-        if(z->key < x->key)
+        if(compare(z->key, x->key))
             x = x->left;
         else
             x = x->right;
     }
 
+    swapOrView++;
     z->parent = y;
 
+    swapOrView++;
     if (y == nullptr)
         root = z;
-    else if(z->key < y->key)
+    else if(compare(z->key, y->key))
         y->left = z;
     else
         y->right = z;
@@ -41,19 +52,24 @@ Node * BST::deleteFirstOf(size_t val) noexcept
 
     Node *y, *x;
 
+    swapOrView++;
     if(z->left == nullptr || z->right == nullptr)
         y = z;
     else
         y = successor(z);
 
 
+    swapOrView++;
     if(y->left != nullptr)
         x = y->left;
     else
         x = y->right;
+    swapOrView++;
     if(x != nullptr)
         x->parent = y->parent;
 
+    swapOrView++;
+    swapOrView++;
     if (y->parent == nullptr)
         root = x;
     else if(y == y->parent->left)
@@ -61,6 +77,7 @@ Node * BST::deleteFirstOf(size_t val) noexcept
     else
         y->parent->right = x;
 
+    swapOrView++;
     if (y != z)
         z->key = y->key;
 
@@ -69,7 +86,7 @@ Node * BST::deleteFirstOf(size_t val) noexcept
 
 size_t BST::height(Node *node) noexcept
 {
-    if(root == nullptr)
+    if(node == nullptr)
         return 0;
 
     size_t hLeft = height(node->left);
@@ -85,7 +102,8 @@ Node *BST::iterativeTreeSearch(Node *x, size_t k) noexcept
 {
     while(x != nullptr && k != x->key)
     {
-        if(k < x->key)
+        swapOrView++;
+        if(compare(k,x->key))
             x = x->left;
         else
             x = x->right;
@@ -95,12 +113,14 @@ Node *BST::iterativeTreeSearch(Node *x, size_t k) noexcept
 
 Node *BST::successor(Node *x) noexcept
 {
+    swapOrView++;
     if(x->right != nullptr)
         return minimum(x->right);
 
     Node* y = x->parent;
     while(y != nullptr && x == y->right)
     {
+        swapOrView++;
         x = y;
         y = y->parent;
     }
@@ -110,6 +130,7 @@ Node *BST::successor(Node *x) noexcept
 Node *BST::minimum(Node *x) noexcept
 {
     while (x->left != nullptr)
+        swapOrView++;
         x = x->left;
     return x;
 }
@@ -117,6 +138,7 @@ Node *BST::minimum(Node *x) noexcept
 Node *BST::maximum(Node *x) noexcept
 {
     while (x->right != nullptr)
+        swapOrView++;
         x = x->right;
     return x;
 }

@@ -1,5 +1,13 @@
 #include "RB_BST.h"
 
+int comparisions = 0;
+bool compare(int a, int b){
+    comparisions++;
+    return a < b;
+}
+
+int swapOrView = 0;
+
 RB_BST::RB_BST() noexcept
 {
     NIL = new Node{false, nullptr, nullptr, nullptr, 0};
@@ -8,14 +16,19 @@ RB_BST::RB_BST() noexcept
 
 void RB_BST::leftRotate(Node *x) noexcept
 {
+    swapOrView++;
     Node* y = x->right;
     x->right = y->left;
 
+    swapOrView++;
     if (y->left != NIL)
         y->left->parent = x;
 
+    swapOrView++;
     y->parent = x->parent;
 
+    swapOrView++;
+    swapOrView++;
     if (x->parent == NIL)
         root = y;
     else if (x == x->parent->left)
@@ -23,19 +36,26 @@ void RB_BST::leftRotate(Node *x) noexcept
     else
         x->parent->right = y;
 
+    swapOrView++;
+    swapOrView++;
     y->left = x;
     x->parent = y;
 }
 void RB_BST::rightRotate(Node *x) noexcept
 {
+    swapOrView++;
     Node* y = x->left;
     x->left = y->right;
 
+    swapOrView++;
     if(y->right != NIL)
         y->right->parent = x;
 
+    swapOrView++;
     y->parent = x->parent;
 
+    swapOrView++;
+    swapOrView++;
     if (x->parent == NIL)
         root = y;
     else if (x == x->parent->right)
@@ -43,6 +63,8 @@ void RB_BST::rightRotate(Node *x) noexcept
     else
         x->parent->left = y;
 
+    swapOrView++;
+    swapOrView++;
     y->right = x;
     x->parent = y;
 }
@@ -54,22 +76,28 @@ void RB_BST::insert(size_t val) noexcept
 
     while(x != NIL)
     {
+        swapOrView++;
         y = x;
-        if(z->key < x->key)
+        if(compare(z->key, x->key))
             x = x->left;
         else
             x = x->right;
     }
 
+    swapOrView++;
     z->parent = y;
 
+    swapOrView++;
+    swapOrView++;
     if (y == NIL)
         root = z;
-    else if(z->key < y->key)
+    else if(compare(z->key, y->key))
         y->left = z;
     else
         y->right = z;
 
+    swapOrView++;
+    swapOrView++;
     z->right = NIL;
     z->left = NIL;
 
@@ -80,11 +108,18 @@ void RB_BST::insertFixUp(Node *z) noexcept
 {
     while (z->parent->isRed)
     {
+        swapOrView++;
+        swapOrView++;
         if(z->parent == z->parent->parent->left)
         {
+            swapOrView++;
             Node* y = z->parent->parent->right;
             if (y->isRed)
             {
+                swapOrView++;
+                swapOrView++;
+                swapOrView++;
+                swapOrView++;
                 z->parent->isRed = false;
                 y->isRed = false;
                 z->parent->parent->isRed = true;
@@ -92,11 +127,15 @@ void RB_BST::insertFixUp(Node *z) noexcept
             }
             else
             {
+                swapOrView++;
                 if (z == z->parent->right)
                 {
+                    swapOrView++;
                     z = z->parent;
                     leftRotate(z);
                 }
+                swapOrView++;
+                swapOrView++;
                 z->parent->isRed = false;
                 z->parent->parent->isRed = true;
                 rightRotate(z->parent->parent);
@@ -104,9 +143,14 @@ void RB_BST::insertFixUp(Node *z) noexcept
         }
         else
         {
+            swapOrView++;
             Node* y = z->parent->parent->left;
             if (y->isRed)
             {
+                swapOrView++;
+                swapOrView++;
+                swapOrView++;
+                swapOrView++;
                 z->parent->isRed = false;
                 y->isRed = false;
                 z->parent->parent->isRed = true;
@@ -116,110 +160,87 @@ void RB_BST::insertFixUp(Node *z) noexcept
             {
                 if (z == z->parent->left)
                 {
+                    swapOrView++;
                     z = z->parent;
                     rightRotate(z);
                 }
+                swapOrView++;
+                swapOrView++;
                 z->parent->isRed = false;
                 z->parent->parent->isRed = true;
                 leftRotate(z->parent->parent);
             }
         }
     }
+    swapOrView++;
     root->isRed = false;
-//    while(z != root && z->parent->isRed)
-//    {
-//        if (z->parent == z->parent->parent->left)
-//        {
-//            Node* y = z->parent->parent->right;
-//            if (y->isRed)
-//            {
-//                z->parent->isRed = false;
-//                y->isRed = false;
-//                z->parent->parent->isRed = true;
-//                z = z->parent->parent;
-//            }
-//            else
-//            {
-//                if (z == z->parent->right)
-//                {
-//                    z = z->parent;
-//                    leftRotate(z);
-//                }
-//                z->parent->isRed = false;
-//                z->parent->parent->isRed = true;
-//                rightRotate(z->parent->parent);
-//            }
-//        }
-//        else
-//        {
-//            Node* y = z->parent->parent->left;
-//            if (y != NIL && y->isRed)
-//            {
-//                z->parent->isRed = false;
-//                y->isRed = false;
-//                z->parent->parent->isRed = true;
-//                z = z->parent->parent;
-//            }
-//            else
-//            {
-//                if (z == z->parent->left)
-//                {
-//                    z = z->parent;
-//                    rightRotate(z);
-//                }
-//                z->parent->isRed = false;
-//                z->parent->parent->isRed = false;
-//                leftRotate(z->parent->parent);
-//            }
-//        }
-//    }
-//    root->isRed = false;
 }
 
 void RB_BST::deleteFirstOf(size_t val) noexcept
 {
+    swapOrView++;
     Node* z = root;
     while(z != NIL)
     {
-        if(val < z->key)
+        swapOrView++;
+        if(compare(val, z->key)) {
+            swapOrView++;
             z = z->left;
-        else if(val > z->key)
+        }
+        else if(compare(z->key,val)) {
+            swapOrView++;
             z = z->right;
+        }
         else
             break;
     }
 
+    swapOrView++;
     if(z == NIL)
         return;
 
+    swapOrView++;
     Node* y = z;
     bool yOriginalColor = y->isRed;
     Node* x;
 
+    swapOrView++;
     if(z->left == NIL)
     {
+        swapOrView++;
         x = z->right;
         transplant(z, z->right);
     }
     else if(z->right == NIL)
     {
+        swapOrView++;
+        swapOrView++;
         x = z->left;
         transplant(z, z->left);
     }
     else
     {
+        swapOrView++;
         y = minimum(z->right);
         yOriginalColor = y->isRed;
         x = y->right;
 
-        if(y->parent == z)
+        swapOrView++;
+        if(y->parent == z) {
+            swapOrView++;
             x->parent = z;
+        }
         else
         {
+            swapOrView++;
+            swapOrView++;
             transplant( y, y->right);
             y->right = z->right;
             y->right->parent = y;
         }
+        swapOrView++;
+        swapOrView++;
+        swapOrView++;
         transplant(z, y);
         y->left = z->left;
         y->left->parent = y;
@@ -233,30 +254,47 @@ void RB_BST::deleteFixUp(Node *x) noexcept
 {
     while(x != root && !x->isRed)
     {
+        swapOrView++;
+        swapOrView++;
         if(x == x->parent->left)
         {
+            swapOrView++;
             Node *w = x->parent->right;
             if(w->isRed)
             {
+                swapOrView++;
+                swapOrView++;
+                swapOrView++;
                 w->isRed = false;
                 x->parent->isRed = true;
                 leftRotate(x->parent);
                 w = x->parent->right;
             }
+            swapOrView++;
             if(!w->left->isRed && !w->right->isRed)
             {
+                swapOrView++;
+                swapOrView++;
                 w->isRed = true;
                 x = x->parent;
             }
             else
             {
+                swapOrView++;
                 if(!w->right->isRed)
                 {
+                    swapOrView++;
+                    swapOrView++;
+                    swapOrView++;
                     w->left->isRed = false;
                     w->isRed = true;
                     rightRotate(w);
                     w = x->parent->right;
                 }
+                swapOrView++;
+                swapOrView++;
+                swapOrView++;
+                swapOrView++;
                 w->isRed = x->parent->isRed;
                 x->parent->isRed = false;
                 w->right->isRed = false;
@@ -266,28 +304,43 @@ void RB_BST::deleteFixUp(Node *x) noexcept
         }
         else
         {
+            swapOrView++;
             Node *w = x->parent->left;
             if(w->isRed)
             {
+                swapOrView++;
+                swapOrView++;
+                swapOrView++;
                 w->isRed = false;
                 x->parent->isRed = true;
                 rightRotate(x->parent);
                 w = x->parent->left;
             }
+            swapOrView++;
             if(!w->right->isRed && !w->left->isRed)
             {
+                swapOrView++;
+                swapOrView++;
                 w->isRed = true;
                 x = x->parent;
             }
             else
             {
+                swapOrView++;
                 if(!w->left->isRed)
                 {
+                    swapOrView++;
+                    swapOrView++;
+                    swapOrView++;
                     w->right->isRed = false;
                     w->isRed = true;
                     leftRotate(w);
                     w = x->parent->left;
                 }
+                swapOrView++;
+                swapOrView++;
+                swapOrView++;
+                swapOrView++;
                 w->isRed = x->parent->isRed;
                 x->parent->isRed = false;
                 w->left->isRed = false;
@@ -296,25 +349,37 @@ void RB_BST::deleteFixUp(Node *x) noexcept
             }
         }
     }
+    swapOrView++;
     x->isRed = false;
 }
 
 void RB_BST::transplant(Node *u, Node *v) noexcept
 {
-    if (u->parent == NIL)
+    swapOrView++;
+    if (u->parent == NIL) {
+        swapOrView++;
         root = v;
-    else if (u == u->parent->left)
+    }
+    else if (u == u->parent->left) {
+        swapOrView++;
+        swapOrView++;
         u->parent->left = v;
-    else
+    }
+    else {
+        swapOrView++;
         u->parent->right = v;
+    }
+    swapOrView++;
     v->parent = u->parent;
 }
 
 Node *RB_BST::iterativeTreeSearch(Node *x, size_t k) noexcept
 {
+    swapOrView++;
     while(x != NIL && k != x->key)
     {
-        if(k < x->key)
+        swapOrView++;
+        if(compare(k, x->key))
             x = x->left;
         else
             x = x->right;
@@ -325,6 +390,8 @@ Node *RB_BST::iterativeTreeSearch(Node *x, size_t k) noexcept
 Node * RB_BST::minimum(Node *x) noexcept
 {
     while (x->left != NIL)
+        swapOrView++;
+        swapOrView++;
         x = x->left;
     return x;
 }

@@ -34,7 +34,9 @@ int main(int argc, char* argv[])
             std::cout << "Insert: " << i << std::endl;
             std::cout << "Tree: " << std::endl;
             tree->print(tree->root, 0, '-', leftTrace, rightTrace);
+            std::cout<<"Height: " << tree->height(tree->root) << std::endl;
             printf("\n\n");
+
         }
     }
     for(size_t i : deleteList)
@@ -45,6 +47,8 @@ int main(int argc, char* argv[])
             std::cout << "Delete: " << i << std::endl;
             std::cout << "Tree: " << std::endl;
             tree->print(tree->root, 0, '-', leftTrace, rightTrace);
+            std::cout<<"Height: " << tree->height(tree->root) << std::endl;
+
             printf("\n\n");
         }
     }
