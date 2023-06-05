@@ -1,5 +1,5 @@
 #include <iostream>
-#include "BST.h"
+#include "BinarySearchTree.h"
 int main(int argc, char* argv[])
 {
     char *leftTrace, *rightTrace;
@@ -22,42 +22,37 @@ int main(int argc, char* argv[])
         deleteList[i] = std::stol(line);
     }
 
-    leftTrace = (char*) malloc(n * sizeof (char));
-    rightTrace = (char*) malloc(n * sizeof (char));
-    BST* tree = new BST();
+    BSTree_node* root = NULL;
 
     for(size_t i : insertList)
     {
-        tree->insert(i);
+        root = BST_insert(root, i);
         if( n < 50)
         {
             std::cout << "Insert: " << i << std::endl;
             std::cout << "Tree: " << std::endl;
-            tree->print(tree->root, 0, '-', leftTrace, rightTrace);
-            std::cout<<"Height: " << tree->height(tree->root) << std::endl;
+            BSTprint(root);
             printf("\n\n");
-
         }
+        std::cout << "Height: " << BST_height(root) << std::endl;
     }
     for(size_t i : deleteList)
     {
-        tree->deleteFirstOf(i);
+        root = BST_delete(root, i);
         if( n < 50)
         {
             std::cout << "Delete: " << i << std::endl;
             std::cout << "Tree: " << std::endl;
-            tree->print(tree->root, 0, '-', leftTrace, rightTrace);
-            std::cout<<"Height: " << tree->height(tree->root) << std::endl;
-
+            BSTprint(root);
             printf("\n\n");
         }
+        std::cout << "Height: " << BST_height(root) << std::endl;
     }
 
-    std::cout << std::endl << "Comparisons: " << tree->comparisions << std::endl;
-    std::cout << std::endl << "Swaps or views: " << tree->swapOrView << std::endl;
+    std::cout << std::endl << "Comparisons: " << comparisions << std::endl;
+    std::cout << std::endl << "Swaps or views: " << swapOrView << std::endl;
 
-    free(leftTrace);
-    free(rightTrace);
-    free(tree);
+    BSTree_clean(root);
+
     return 0;
 }
