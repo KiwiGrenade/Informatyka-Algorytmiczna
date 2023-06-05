@@ -16,18 +16,23 @@ struct Node {
 
 class BST {
 private:
-    static Node* successor(Node* x) noexcept;
-    static Node* iterativeTreeSearch(Node* x, size_t k) noexcept;
-    static Node* minimum(Node* x) noexcept;
-    static Node* maximum(Node* x) noexcept;
+    Node* successor(Node* x) noexcept;
+    Node* iterativeTreeSearch(Node* x, size_t k) noexcept;
+    Node* minimum(Node* x) noexcept;
+    Node* maximum(Node* x) noexcept;
     void deleteTree(Node *node) noexcept;
+    bool compare(size_t a, size_t b);
 
 public:
+    int swapOrView;
+    int comparisions;
     Node* root;
+    BST() noexcept;
     ~BST() noexcept;
     void insert(size_t val) noexcept;
     Node * deleteFirstOf(size_t val) noexcept;
     size_t height(Node *node) noexcept;
+
     void print(Node *node, int depth, char prefix, char *leftTrace, char *rightTrace) noexcept;
 };
 

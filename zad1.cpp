@@ -52,6 +52,10 @@ int main(int argc, char* argv[])
             printf("\n\n");
         }
     }
+
+    std::cout << std::endl << "Comparisons: " << tree->comparisions << std::endl;
+    std::cout << std::endl << "Swaps or views: " << tree->swapOrView << std::endl;
+
     free(leftTrace);
     free(rightTrace);
     free(tree);

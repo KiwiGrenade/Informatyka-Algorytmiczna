@@ -4,13 +4,32 @@
 
 #include "BST.h"
 
-int comparisions = 0;
-bool compare(int a, int b){
+BST::BST() noexcept {
+    comparisions = 0;
+    swapOrView = 0;
+}
+
+
+BST::~BST() noexcept
+{
+    deleteTree(root);
+}
+
+void BST::deleteTree(Node *node) noexcept
+{
+    if(node == nullptr)
+        return;
+
+    deleteTree(node->left);
+    deleteTree(node->right);
+
+    delete node;
+}
+
+bool BST::compare(size_t a, size_t b){
     comparisions++;
     return a < b;
 }
-
-int swapOrView = 0;
 
 void BST::insert(size_t val) noexcept
 {
@@ -173,20 +192,4 @@ void BST::print(Node *node, int depth, char prefix, char *leftTrace, char *right
         rightTrace[depth]='|';
         print(node->right, depth + 1, '\\', leftTrace, rightTrace);
     }
-}
-
-BST::~BST() noexcept
-{
-    deleteTree(root);
-}
-
-void BST::deleteTree(Node *node) noexcept
-{
-    if(node == nullptr)
-        return;
-
-    deleteTree(node->left);
-    deleteTree(node->right);
-
-    delete node;
 }
