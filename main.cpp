@@ -123,15 +123,15 @@ int main(int argc, char *argv[]) {
                 mode = 2;
             }
             auto start = std::chrono::steady_clock::now();
-            while(!sourceList.empty())
+            size_t listSize = sourceList.size();
+            for(auto s : sourceList)
             {
-                size_t s = sourceList.back();
                 std::cout << "Working on source: " << s << std::endl;
                 sourceList.pop_back();
-                std::cout << "sourcesLeft: " << sourceList.size() << std::endl;
                 graph->getDistance(mode, s);
             }
             auto end = std::chrono::steady_clock::now();
+
             double t = (double) std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() / (double)sourceList.size();
             resultsFile << "p res sp ss dijkstra\n";
             resultsFile << "f " << argv[3] << " " << argv[5] << '\n';

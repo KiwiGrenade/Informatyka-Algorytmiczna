@@ -135,12 +135,10 @@ std::vector<size_t> Graph::dial(size_t source)
     std::vector<std::list<size_t>> buckets(maxCost);
     buckets[0].push_back(source);
     long unsigned long idx = 0;
-    std::cout << buckets.size() << std::endl;
 
     while(true) {
         // find first empty bucket
-        std::cout << buckets.size() << std::endl;
-        while(!buckets[idx].empty() < buckets.size())
+        while(!buckets[idx].empty()  && idx < buckets.size())
         {
             idx++;
         }
@@ -177,7 +175,6 @@ std::vector<size_t> Graph::dial(size_t source)
                 if(dv > buckets.size()){
                     buckets.resize(dv + maxWeight * 2);
                 }
-                std::cout << buckets[dv].size() << std::endl;
                 // push v into proper bucket
                 buckets[dv].push_front(v);
                 // update the v's distance
