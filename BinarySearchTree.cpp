@@ -33,7 +33,7 @@ static void print_BST(BSTree_node * root, int depth,char prefix){
             printf("  ");
         }
     if( depth>0 ) printf("%c-", prefix);
-    printf("[%lu]\n", root->data);
+    printf("[%lu]\n", root->key);
     left_trace[depth]=' ';
     if( root->right != NULL ){
         right_trace[depth]='|';
@@ -42,10 +42,10 @@ static void print_BST(BSTree_node * root, int depth,char prefix){
 }
 
 
-BSTree_node* BST_insert(BSTree_node* root, uint64_t data)
+BSTree_node* BST_insert(BSTree_node* root, uint64_t val)
 {
     BSTree_node* node = static_cast<BSTree_node *>(malloc(sizeof(*node)));
-    *node = (BSTree_node){.data = data,
+    *node = (BSTree_node){.key = val,
             .left = NULL,
             .right = NULL
 
@@ -57,7 +57,7 @@ BSTree_node* BST_insert(BSTree_node* root, uint64_t data)
 
     BSTree_node* cur = root;
     while (1){
-        if(compare(data, cur->data)){
+        if(compare(val, cur->key)){
             swapOrView+=2;
             if(cur->left == NULL){
                 cur->left = node;
@@ -87,11 +87,11 @@ BSTree_node* BST_delete(BSTree_node* root, uint64_t key)
     BSTree_node* parent = NULL;
 
     swapOrView++;
-    while (current != NULL && current->data != key) {
+    while (current != NULL && current->key != key) {
         parent = current;
 
         swapOrView++;
-        if (compare(key , current->data)) {
+        if (compare(key , current->key)) {
             current = current->left;
         } else {
             current = current->right;
@@ -161,7 +161,7 @@ BSTree_node* BST_delete(BSTree_node* root, uint64_t key)
             successor = successor->left;
         }
 
-        current->data = successor->data;
+        current->key = successor->key;
 
         swapOrView+=2;
         if (successorParent->left == successor) {
@@ -176,7 +176,7 @@ BSTree_node* BST_delete(BSTree_node* root, uint64_t key)
     return root;
 }
 
-void BSTree_clean(BSTree_node* root){
+void BST_clean(BSTree_node* root){
     Queue* queue = NULL;
     size_t node_count;
     BSTree_node* cur;
@@ -229,7 +229,7 @@ size_t BST_height(BSTree_node* root){
 }
 
 
-void BSTprint(BSTree_node * root)
+void BST_print(BSTree_node * root)
 {
     right_trace = static_cast<char *>(malloc(50 * sizeof(char)));
     left_trace = static_cast<char *>(malloc(50 * sizeof(char)));

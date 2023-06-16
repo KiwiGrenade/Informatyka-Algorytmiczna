@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
 
     size_t  insertList[n],
             deleteList[n];
-    // get keys to insert
+    // get keys to RB_BST_insert
     for(size_t i = 0; i < n; i++)
     {
         std::cin >> line;
@@ -31,10 +31,9 @@ int main(int argc, char* argv[])
         {
             std::cout << "Insert: " << i << std::endl;
             std::cout << "Tree: " << std::endl;
-            BSTprint(root);
-            printf("\n\n");
+            BST_print(root);
+            std::cout << "Height: " << BST_height(root) << std::endl;
         }
-        std::cout << "Height: " << BST_height(root) << std::endl;
     }
     for(size_t i : deleteList)
     {
@@ -43,16 +42,15 @@ int main(int argc, char* argv[])
         {
             std::cout << "Delete: " << i << std::endl;
             std::cout << "Tree: " << std::endl;
-            BSTprint(root);
-            printf("\n\n");
+            BST_print(root);
+            std::cout << "Height: " << BST_height(root) << std::endl;
         }
-        std::cout << "Height: " << BST_height(root) << std::endl;
     }
 
     std::cout << std::endl << "Comparisons: " << comparisions << std::endl;
     std::cout << std::endl << "Swaps or views: " << swapOrView << std::endl;
 
-    BSTree_clean(root);
+    BST_clean(root);
 
     return 0;
 }

@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 
     size_t  insertList[n],
             deleteList[n];
-    // get keys to insert
+    // get keys to RB_BST_insert
     for(size_t i = 0; i < n; i++)
     {
         std::cin >> line;
@@ -34,11 +34,8 @@ int main(int argc, char** argv)
         {
             printf("Insert %lu\n", i);
             Splay_print(root);
-            printf("\n\n");
+            std::cout << std::endl << "Height: " << Splay_height << std::endl;
         }
-        size_t height = Splay_height(root);
-        printf("Height: %lu\n", height);
-        printf("\n\n");
     }
     for(size_t i : deleteList)
     {
@@ -47,10 +44,8 @@ int main(int argc, char** argv)
         {
             printf("Delete %lu\n", i);
             Splay_print(root);
+            std::cout << std::endl << "Height: " << Splay_height << std::endl;
         }
-        size_t height = Splay_height(root);
-        printf("Height: %lu\n", height);
-        printf("\n\n");
     }
 
 

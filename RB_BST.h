@@ -5,14 +5,14 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-typedef struct RedBlackBSTreeNode Node;
+typedef struct RB_BST_Node Node;
 
 typedef enum Color{
     RED,
     BLACK
 }color_t;
 
-struct RedBlackBSTreeNode{
+struct RB_BST_Node{
     uint64_t key;
     Node* left;
     Node* right;
@@ -20,7 +20,7 @@ struct RedBlackBSTreeNode{
     color_t color;
 };
 
-typedef struct RBTree{
+typedef struct RB_BST{
     Node* root;
     Node* NIL;
 }RB_tree;
@@ -28,14 +28,14 @@ typedef struct RBTree{
 extern size_t comparisions;
 extern size_t swapOrView;
 
-void insert(RBTree* T, size_t data);
+void RB_BST_insert(RB_BST* T, size_t data);
 
-void nodeDelete(RBTree* T, size_t key);
+void RB_BST_delete(RB_BST* T, size_t key);
 
-size_t height(RBTree* T);
+size_t RB_BST_height(RB_BST* T);
 
-void BSClean(RBTree* T);
+void RB_BST_clean(RB_BST* T);
 
-void print(RBTree* T);
+void RB_BST_print(RB_BST* T);
 
 #endif //AISD_REDBLACKBSTREE_H

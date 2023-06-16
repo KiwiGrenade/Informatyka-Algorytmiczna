@@ -4,14 +4,14 @@
 #include "queue.h"
 
 struct queue{
-    void* data;
+    void* key;
     Queue* next;
 };
 
 void queue_enqueue(Queue** q, void* data)
 {
     Queue* newElem = static_cast<Queue *>(malloc(sizeof(*newElem)));
-    *newElem = (Queue){.data = data, .next = NULL};
+    *newElem = (Queue){.key = data, .next = NULL};
     if(*q == NULL) {
         *q = newElem;
         return;
@@ -26,7 +26,7 @@ void* queue_dequeue(Queue** q)
 {
     if(*q == NULL)
         return NULL;
-    void* data = (*q)->data;
+    void* data = (*q)->key;
     Queue* tmp = (*q)->next;
     free(*q);
     *q = tmp;
@@ -50,5 +50,5 @@ size_t queue_size(Queue* q){
 }
 
 void* queue_front(Queue* q){
-    return q->data;
+    return q->key;
 }

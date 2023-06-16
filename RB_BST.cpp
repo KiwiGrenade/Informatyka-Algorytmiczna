@@ -1,6 +1,6 @@
 #include "stdio.h"
 
-#include "RB_BSTree.h"
+#include "RB_BST.h"
 #include "queue.h"
 
 size_t comparisions = 0;
@@ -21,7 +21,7 @@ static Node* newNode(size_t data){
     return node;
 }
 
-static Node* minimum(RBTree* T, Node* node) {
+static Node* minimum(RB_BST* T, Node* node) {
     swapOrView++;
     while (node->left != T->NIL) {
         swapOrView++;
@@ -32,7 +32,7 @@ static Node* minimum(RBTree* T, Node* node) {
 
 
 // Replace node u with node v
-static void transplant(RBTree* T, Node* u, Node* v) {
+static void transplant(RB_BST* T, Node* u, Node* v) {
     if (u->parent == T->NIL)
         T->root = v;
     else if (u == u->parent->left)
@@ -46,7 +46,7 @@ static void transplant(RBTree* T, Node* u, Node* v) {
 }
 
 
-static void print_BST(RBTree* T, Node* root, int depth, char prefix, char* left_trace, char* right_trace){
+static void print_BST(RB_BST* T, Node* root, int depth, char prefix, char* left_trace, char* right_trace){
     if( root == T->NIL )
         return;
     if( root->left != T->NIL ){
@@ -78,7 +78,7 @@ static void print_BST(RBTree* T, Node* root, int depth, char prefix, char* left_
 
 
 // Function to perform left rotation
-static void leftRotate(RBTree* T, Node* x) {
+static void leftRotate(RB_BST* T, Node* x) {
     swapOrView += 2;
     Node* y = x->right;
     x->right = y->left;
@@ -113,7 +113,7 @@ static void leftRotate(RBTree* T, Node* x) {
 }
 
 // Function to perform right rotation
-static void rightRotate(RBTree* T, Node* y) {
+static void rightRotate(RB_BST* T, Node* y) {
     swapOrView++;
     Node* x = y->left;
     y->left = x->right;
@@ -147,7 +147,7 @@ static void rightRotate(RBTree* T, Node* y) {
 }
 
 // Function to fix the Red-Black Tree properties after insertion
-static void insertFixUp(RBTree* T, Node* z) {
+static void insertFixUp(RB_BST* T, Node* z) {
     while(z->parent->color == RED) {
         swapOrView++;
         if(z->parent == z->parent->parent->left) { //z.parent is the left child
@@ -200,7 +200,7 @@ static void insertFixUp(RBTree* T, Node* z) {
     T->root->color = BLACK;
 }
 
-static void deleteFixUp(RBTree* T, Node* x){
+static void deleteFixUp(RB_BST* T, Node* x){
     swapOrView++;
     while (x != T->root && x->color == BLACK) {
         swapOrView++;
@@ -266,7 +266,7 @@ static void deleteFixUp(RBTree* T, Node* x){
     x->color = BLACK;
 }
 
-void nodeDelete(RBTree* T, size_t key)
+void RB_BST_delete(RB_BST* T, size_t key)
 {
     Node* z = T->root;
     swapOrView++;
@@ -327,8 +327,8 @@ void nodeDelete(RBTree* T, size_t key)
 }
 
 
-// Function to insert a node in the Red-Black Tree
-void insert(RBTree* T, size_t data) {
+// Function to RB_BST_insert a node in the Red-Black Tree
+void RB_BST_insert(RB_BST* T, size_t data) {
     Node* z = newNode(data);
 
     Node* y = T->NIL;
@@ -364,7 +364,7 @@ void insert(RBTree* T, size_t data) {
     insertFixUp(T, z);
 }
 
-size_t height(RBTree* T)
+size_t RB_BST_height(RB_BST* T)
 {
     Queue* queue = NULL;
     size_t height = 0;
@@ -393,7 +393,7 @@ size_t height(RBTree* T)
 }
 
 
-void BSClean(RBTree* T)
+void RB_BST_clean(RB_BST* T)
 {
     Queue* queue = NULL;
     size_t node_count;
@@ -427,11 +427,11 @@ void BSClean(RBTree* T)
     free(T);
 }
 
-void print(RBTree* T){
+void RB_BST_print(RB_BST* T){
     char* right_trace = static_cast<char *>(malloc(100 * sizeof(char)));
     char* left_trace = static_cast<char *>(malloc(100 * sizeof(char)));
     print_BST(T,T->root, 0, '-', left_trace, right_trace);
-    size_t h = height(T);
+    size_t h = RB_BST_height(T);
     for (size_t i = 0; i < h; ++i) {
         printf("====");
     }
