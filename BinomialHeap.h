@@ -27,7 +27,7 @@ class BinomialHeap {
     // points to node with smallest value
     BinNode *min;
 
-    static void linkTrees(BinNode *, BinNode *);
+    static void combineTrees(BinNode *y, BinNode *z);
 
     static BinNode *combineHeaps(BinomialHeap *x, BinomialHeap *y);
 
