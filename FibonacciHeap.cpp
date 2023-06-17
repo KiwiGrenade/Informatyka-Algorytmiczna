@@ -1,5 +1,7 @@
 #include "FibonacciHeap.h"
 
+size_t FibonacciHeap::nComp;
+
 FibonacciHeap::FibonacciHeap() {
     this->min = nullptr;
     this->N = 0;
@@ -11,6 +13,7 @@ FibonacciHeap::FibonacciHeap(FibNode *n) {
     n->p = n->c = nullptr;
 
     this->N = 1;
+
 }
 
 bool FibonacciHeap::isEmpty() {
@@ -36,7 +39,9 @@ void FibonacciHeap::merge(FibonacciHeap *h) {
     last1->f = first2;
     first2->b = last1;
     last2->f = first1;
-    if (h->min->key < this->min->key) this->min = h->min;
+    nComp++;
+    if (h->min->key < this->min->key)
+        this->min = h->min;
 }
 
 FibNode *FibonacciHeap::extractMin() {
@@ -92,6 +97,7 @@ FibNode *FibonacciHeap::extractMin() {
                 FibNode *Q = aux[deg];
                 aux[deg] = nullptr;
 
+                nComp++;
                 if (P->key > Q->key) {
                     FibNode *tmp = P;
                     P = Q;
@@ -125,7 +131,10 @@ FibNode *FibonacciHeap::extractMin() {
             if (aux[i] != nullptr) {
                 previous->f = aux[i];
                 aux[i]->b = previous;
-                if (aux[i]->key < this->min->key) this->min = aux[i];
+
+                nComp++;
+                if (aux[i]->key < this->min->key)
+                    this->min = aux[i];
                 previous = aux[i];
             }
         }

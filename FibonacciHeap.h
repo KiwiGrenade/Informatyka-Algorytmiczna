@@ -18,9 +18,9 @@
 #include <complex>
 
 struct FibNode {
-    int key;
+    size_t key;
     bool marked;
-    int degree;
+    size_t degree;
     FibNode *b, *f, *p, *c;
 
     FibNode() {
@@ -40,11 +40,18 @@ struct FibNode {
 
 class FibonacciHeap {
     FibNode *min;
-    int N;
+    size_t N;
 
     bool isEmpty();
 
 public:
+
+    static size_t nComp;
+
+    static inline void initComp() {
+        nComp = 0;
+    }
+
     FibonacciHeap();
 
     FibonacciHeap(FibNode *);

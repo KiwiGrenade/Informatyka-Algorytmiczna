@@ -22,7 +22,7 @@ struct BinNode {
 };
 
 class BinomialHeap {
-    BinNode *roots;
+    BinNode *trees;
     BinNode *min;
 
     static void linkTrees(BinNode *, BinNode *);
@@ -30,6 +30,13 @@ class BinomialHeap {
     static BinNode *mergeRoots(BinomialHeap *, BinomialHeap *);
 
 public:
+
+    static size_t nComp;
+
+    static inline void initComp() {
+        nComp = 0;
+    }
+
     BinomialHeap();
 
     BinomialHeap(BinNode *);
