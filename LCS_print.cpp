@@ -83,10 +83,12 @@ int main(int argc, char* argv[])
     std::string line;
     std::cin >> line;
     size_t n = std::stol(line);
+
     char X[n+1];
     char Y[n+1];
     X[n] = 0;
     Y[n] = 0;
+
     // initialize array X
     for (size_t i = 0; i < n; i++)
     {
