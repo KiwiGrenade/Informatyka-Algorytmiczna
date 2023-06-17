@@ -3,94 +3,97 @@
 size_t FibonacciHeap::nComp;
 
 FibonacciHeap::FibonacciHeap() {
-    this->min = nullptr;
-    this->N = 0;
+    min = nullptr;
+    nNodes = 0;
 }
 
 FibonacciHeap::FibonacciHeap(FibNode *n) {
-    this->min = n;
-    n->b = n->f = n;
-    n->p = n->c = nullptr;
+    min = n;
+    n->right = n->left = n;
+    n->parent = n->child = nullptr;
 
-    this->N = 1;
+    nNodes = 1;
 
-}
-
-bool FibonacciHeap::isEmpty() {
-    return (this->min == nullptr);
 }
 
 void FibonacciHeap::insert(FibNode *n) {
-    this->merge(new FibonacciHeap(n));
+    merge(new FibonacciHeap(n));
 }
 
 void FibonacciHeap::merge(FibonacciHeap *h) {
-    this->N += h->N;
-    if (h->isEmpty()) return;
-    if (this->isEmpty()) {
-        this->min = h->min;
+    nNodes += h->nNodes;
+    if (h->min == nullptr)
+        return;
+    if (min == nullptr) {
+        min = h->min;
         return;
     }
-    FibNode *first1 = this->min;
-    FibNode *last1 = this->min->b;
+    FibNode *first1 = min;
+    FibNode *last1 = min->right;
     FibNode *first2 = h->min;
-    FibNode *last2 = h->min->b;
-    first1->b = last2;
-    last1->f = first2;
-    first2->b = last1;
-    last2->f = first1;
+    FibNode *last2 = h->min->right;
+    first1->right = last2;
+    last1->left = first2;
+    first2->right = last1;
+    last2->left = first1;
     nComp++;
-    if (h->min->key < this->min->key)
-        this->min = h->min;
+    if (h->min->key < min->key)
+        min = h->min;
 }
 
 FibNode *FibonacciHeap::extractMin() {
-    FibNode *ret = this->min;
-    this->N = this->N - 1;
+    // minimumNode
+    FibNode *minNode = min;
+    nNodes--;
 
-    if (ret->f == ret) {
-        this->min = nullptr;
+    // minNode is nullptr
+    if (minNode->left == minNode) {
+        min = nullptr;
     } else {
-        FibNode *prev = ret->b;
-        FibNode *next = ret->f;
-        prev->f = next;
-        next->b = prev;
-        this->min = next; // Not necessarily a minimum. This is for assisting with the unionHeap w/ min's children.
+        FibNode *prev = minNode->right;
+        FibNode *next = minNode->left;
+        prev->left = next;
+        next->right = prev;
+        min = next; // Not necessarily a minimum. This is for assisting with the unionHeap w/ min's children.
     }
 
-    if (ret->c != nullptr) {
-        FibNode *firstChd = ret->c;
-        FibNode *currChd = firstChd;
+    // minNode has children
+    if (minNode->child != nullptr) {
+        FibNode *firstChild = minNode->child;
+        FibNode *currChild = firstChild;
 
+        // set the parent of every minChild to nullptr
         do {
-            currChd->p = nullptr;
-            currChd = currChd->f;
-        } while (currChd != firstChd);
+            currChild->parent = nullptr;
+            currChild = currChild->left;
+        }
+        while (currChild != firstChild);
 
-        if (this->isEmpty()) {
-            this->min = firstChd;
+        // set the min as first(smallest) child
+        if (min == nullptr) {
+            min = firstChild;
         } else {
-            FibNode *first1 = this->min;
-            FibNode *last1 = this->min->b;
-            FibNode *first2 = firstChd;
-            FibNode *last2 = firstChd->b;
-            first1->b = last2;
-            last1->f = first2;
-            first2->b = last1;
-            last2->f = first1;
+            FibNode *first1 = min;
+            FibNode *last1 = min->right;
+            FibNode *first2 = firstChild;
+            FibNode *last2 = firstChild->right;
+            first1->right = last2;
+            last1->left = first2;
+            first2->right = last1;
+            last2->left = first1;
         }
     }
 
-    if (this->min != nullptr) {
-        size_t maxAuxSize = 5 * (((size_t) log2(this->N + 1)) + 1);
+    if (min != nullptr) {
+        size_t maxAuxSize = 5 * (((size_t) log2(nNodes + 1)) + 1);
         FibNode *aux[maxAuxSize + 1];
         for (size_t i = 0; i <= maxAuxSize; i++) aux[i] = nullptr;
         size_t maxDegree = 0;
 
-        FibNode *curr = this->min;
+        FibNode *curr = min;
 
         do {
-            FibNode *next = curr->f;
+            FibNode *next = curr->left;
             size_t deg = curr->degree;
             FibNode *P = curr;
             while (aux[deg] != nullptr) {
@@ -104,16 +107,16 @@ FibNode *FibonacciHeap::extractMin() {
                     Q = tmp;
                 }
 
-                Q->p = P;
-                if (P->c == nullptr) {
-                    P->c = Q;
-                    Q->b = Q->f = Q;
+                Q->parent = P;
+                if (P->child == nullptr) {
+                    P->child = Q;
+                    Q->right = Q->left = Q;
                 } else {
-                    FibNode *last = P->c->b;
-                    last->f = Q;
-                    Q->b = last;
-                    P->c->b = Q;
-                    Q->f = P->c;
+                    FibNode *last = P->child->right;
+                    last->left = Q;
+                    Q->right = last;
+                    P->child->right = Q;
+                    Q->left = P->child;
                 }
 
                 deg++;
@@ -122,25 +125,25 @@ FibNode *FibonacciHeap::extractMin() {
             aux[deg] = P;
             if (deg > maxDegree) maxDegree = deg;
             curr = next;
-        } while (curr != this->min);
+        } while (curr != min);
 
 
         FibNode *previous = aux[maxDegree];
-        this->min = previous;
+        min = previous;
         for (size_t i = 0; i <= maxDegree; i++) {
             if (aux[i] != nullptr) {
-                previous->f = aux[i];
-                aux[i]->b = previous;
+                previous->left = aux[i];
+                aux[i]->right = previous;
 
                 nComp++;
-                if (aux[i]->key < this->min->key)
-                    this->min = aux[i];
+                if (aux[i]->key < min->key)
+                    min = aux[i];
                 previous = aux[i];
             }
         }
 
     }
 
-    return ret;
+    return minNode;
 }
 

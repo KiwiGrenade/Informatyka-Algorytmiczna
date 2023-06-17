@@ -1,48 +1,34 @@
 #ifndef AISD_5_FIBONACCIHEAP_H
 #define AISD_5_FIBONACCIHEAP_H
 
-#include <cmath>
-#include <cstdlib>
-#include <cstdio>
-#include <cmath>
-#include <cstring>
-#include <ctime>
 #include <iostream>
-#include <vector>
-#include <list>
-#include <string>
-#include <queue>
-#include <stack>
-#include <set>
-#include <map>
-#include <complex>
+#include <cmath>
+
 
 struct FibNode {
     size_t key;
     bool marked;
     size_t degree;
-    FibNode *b, *f, *p, *c;
+    FibNode *right, *left, *parent, *child;
 
     FibNode() {
         this->key = 0;
         this->marked = false;
         this->degree = 0;
-        this->b = this->f = this->p = this->c = nullptr;
+        this->right = this->left = this->parent = this->child = nullptr;
     }
 
     FibNode(size_t key) {
         this->key = key;
         this->marked = false;
         this->degree = 0;
-        this->b = this->f = this->p = this->c = nullptr;
+        this->right = this->left = this->parent = this->child = nullptr;
     }
 };
 
 class FibonacciHeap {
     FibNode *min;
-    size_t N;
-
-    bool isEmpty();
+    size_t nNodes;
 
 public:
 
