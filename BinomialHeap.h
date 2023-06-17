@@ -6,28 +6,30 @@
 struct BinNode {
     size_t key;
     size_t degree;
-    BinNode *f, *p, *c;
+    BinNode *sibling, *parent, *child;
 
     BinNode() {
         this->key = 0;
         this->degree = 0;
-        this->f = this->p = this->c = nullptr;
+        this->sibling = this->parent = this->child = nullptr;
     }
 
     BinNode(size_t key) {
         this->key = key;
         this->degree = 0;
-        this->f = this->p = this->c = nullptr;
+        this->sibling = this->parent = this->child = nullptr;
     }
 };
 
 class BinomialHeap {
-    BinNode *trees;
+    // points to leftmost tree
+    BinNode *head;
+    // points to node with smallest value
     BinNode *min;
 
     static void linkTrees(BinNode *, BinNode *);
 
-    static BinNode *mergeRoots(BinomialHeap *, BinomialHeap *);
+    static BinNode *combineHeaps(BinomialHeap *x, BinomialHeap *y);
 
 public:
 
@@ -43,7 +45,7 @@ public:
 
     void insert(BinNode *);
 
-    void merge(BinomialHeap *);
+    void unionHeap(BinomialHeap *heap);
 
     BinNode *first();
 

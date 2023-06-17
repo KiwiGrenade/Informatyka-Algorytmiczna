@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
         }
 
 
-        bh1->merge(bh2);
+        bh1->unionHeap(bh2);
 
         // extract all nodes from merged heap
         size_t arr[2 * n];
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
         }
 
 
-        // merge fh1 to fh2
+        // unionHeap fh1 to fh2
         fh1->merge(fh2);
 
         // extract all nodes from merged heap

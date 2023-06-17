@@ -4,98 +4,110 @@
 size_t BinomialHeap::nComp;
 
 BinomialHeap::BinomialHeap() {
-    this->trees = nullptr;
+    this->head = nullptr;
     this->min = nullptr;
 }
 
 BinomialHeap::BinomialHeap(BinNode *x) {
-    this->trees = x;
+    this->head = x;
     this->min = x;
 }
 
 void BinomialHeap::insert(BinNode *x) {
-    this->merge(new BinomialHeap(x));
+    this->unionHeap(new BinomialHeap(x));
 }
 
 void BinomialHeap::linkTrees(BinNode *y, BinNode *z) {
     // Precondition: y -> key >= z -> key
-    y->p = z;
-    y->f = z->c;
-    z->c = y;
+    y->parent = z;
+    y->sibling = z->child;
+    z->child = y;
     z->degree = z->degree + 1;
 }
 
-BinNode *BinomialHeap::mergeRoots(BinomialHeap *x, BinomialHeap *y) {
+BinNode *BinomialHeap::combineHeaps(BinomialHeap *x, BinomialHeap *y) {
     BinNode *ret = new BinNode();
     BinNode *end = ret;
 
-    BinNode *L = x->trees;
-    BinNode *R = y->trees;
+    BinNode *L = x->head;
+    BinNode *R = y->head;
     if (L == nullptr) return R;
     if (R == nullptr) return L;
     while (L != nullptr || R != nullptr) {
         if (L == nullptr) {
-            end->f = R;
-            end = end->f;
-            R = R->f;
+            end->sibling = R;
+            end = end->sibling;
+            R = R->sibling;
         } else if (R == nullptr) {
-            end->f = L;
-            end = end->f;
-            L = L->f;
+            end->sibling = L;
+            end = end->sibling;
+            L = L->sibling;
         } else {
             if (L->degree < R->degree) {
-                end->f = L;
-                end = end->f;
-                L = L->f;
+                end->sibling = L;
+                end = end->sibling;
+                L = L->sibling;
             } else {
-                end->f = R;
-                end = end->f;
-                R = R->f;
+                end->sibling = R;
+                end = end->sibling;
+                R = R->sibling;
             }
         }
     }
-    return (ret->f);
+    return (ret->sibling);
 }
 
-void BinomialHeap::merge(BinomialHeap *bh) {
-    BinomialHeap *H = new BinomialHeap();
-    H->trees = mergeRoots(this, bh);
+void BinomialHeap::unionHeap(BinomialHeap *heap) {
+    BinomialHeap *finalHeap = new BinomialHeap();
+    finalHeap->head = combineHeaps(this, heap);
 
-    if (H->trees == nullptr) {
-        this->trees = nullptr;
+    // both heaps are empty - result is empty
+    if (finalHeap->head == nullptr) {
+        this->head = nullptr;
         this->min = nullptr;
         return;
     }
 
-    BinNode *prevX = nullptr;
-    BinNode *x = H->trees;
-    BinNode *nextX = x->f;
-    while (nextX != nullptr) {
-        if (x->degree != nextX->degree || (nextX->f != nullptr && nextX->f->degree == x->degree)) {
-            prevX = x;
-            x = nextX;
-        } else if (x->key <= nextX->key) {
+    // initialize pointers
+    BinNode *prev = nullptr;
+    BinNode *curr = finalHeap->head;
+    BinNode *next = curr->sibling;
+
+    // check four cases for
+    while (next != nullptr) {
+//        // go to another sibling
+//        if(curr->degree != next->degree)
+//        {
+//            prev = curr;
+//            curr = next;
+//        }
+        if (curr->degree != next->degree ||
+            (next->sibling != nullptr && next->sibling->degree == curr->degree)) {
+            prev = curr;
+            curr = next;
+        } else if (curr->key <= next->key) {
             nComp++;
-            x->f = nextX->f;
-            linkTrees(nextX, x);
+            curr->sibling = next->sibling;
+            linkTrees(next, curr);
         } else {
             nComp++;
-            if (prevX == nullptr) H->trees = nextX;
-            else prevX->f = nextX;
-            linkTrees(x, nextX);
-            x = nextX;
+            if (prev == nullptr) finalHeap->head = next;
+            else prev->sibling = next;
+            linkTrees(curr, next);
+            curr = next;
         }
-        nextX = x->f;
+        // go to another sibling
+        next = curr->sibling;
     }
 
-    this->trees = H->trees;
-    this->min = H->trees;
-    BinNode *cur = this->trees;
+    this->head = finalHeap->head;
+    this->min = finalHeap->head;
+    BinNode *cur = this->head;
     while (cur != nullptr) {
         nComp++;
                 if (cur->key < this->min->key)
             this->min = cur;
-        cur = cur->f;
+        cur = cur->sibling;
     }
 }
 
@@ -106,31 +118,31 @@ BinNode *BinomialHeap::first() {
 BinNode *BinomialHeap::extractMin() {
     BinNode *ret = this->first();
 
-    // delete ret from the list of trees
+    // delete ret from the list of head
     BinNode *prevX = nullptr;
-    BinNode *x = this->trees;
+    BinNode *x = this->head;
     while (x != ret) {
         prevX = x;
-        x = x->f;
+        x = x->sibling;
     }
     if (prevX == nullptr)
-        this->trees = x->f;
-    else prevX->f = x->f;
+        this->head = x->sibling;
+    else prevX->sibling = x->sibling;
 
     // reverse the list of ret children
     BinNode *revChd = nullptr;
-    BinNode *cur = ret->c;
+    BinNode *cur = ret->child;
     while (cur != nullptr) {
-        BinNode *next = cur->f;
-        cur->f = revChd;
+        BinNode *next = cur->sibling;
+        cur->sibling = revChd;
         revChd = cur;
         cur = next;
     }
 
-    // merge the two lists
+    // unionHeap the two lists
     BinomialHeap *H = new BinomialHeap();
-    H->trees = revChd;
-    this->merge(H);
+    H->head = revChd;
+    this->unionHeap(H);
 
     return ret;
 }

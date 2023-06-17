@@ -55,7 +55,7 @@ FibNode *FibonacciHeap::extractMin() {
         FibNode *next = ret->f;
         prev->f = next;
         next->b = prev;
-        this->min = next; // Not necessarily a minimum. This is for assisting with the merge w/ min's children.
+        this->min = next; // Not necessarily a minimum. This is for assisting with the unionHeap w/ min's children.
     }
 
     if (ret->c != nullptr) {
