@@ -117,6 +117,8 @@ void BinomialHeap::unionHeap(BinomialHeap *heap) {
         next = curr->sibling;
     }
     this->head = finalHeap->head;
+
+
     // Update minimum node
     this->min = finalHeap->head;
     BinNode *cur = this->head;

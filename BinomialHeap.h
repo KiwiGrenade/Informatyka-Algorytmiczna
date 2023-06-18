@@ -38,7 +38,6 @@ public:
     static inline void initComp() {
         nComp = 0;
     }
-
     BinomialHeap();
 
     BinomialHeap(BinNode *);

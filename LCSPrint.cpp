@@ -33,14 +33,14 @@ void LCS(char *X, size_t m, char *Y, size_t n) {
 
     // create subsequence array from bottom up
     for (size_t i = m, j = n; index != 0;) {
-        // chars are the same => go up and left
+        // chars are the same => go up and right
         if (X[i - 1] == Y[j - 1]) {
             seq[index - 1] = X[i - 1];
             i--;
             j--;
             index--;
         }
-            // L_left > L_top --> go left
+            // L_left > L_top --> go right
         else if (L[i - 1][j] > L[i][j - 1]) {
             i--;
         }
