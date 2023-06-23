@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/DP_QS.dir/DP_QS.cpp.o CMakeFiles/DP_QS.dir/DSelect.cpp.o -o DP_QS 

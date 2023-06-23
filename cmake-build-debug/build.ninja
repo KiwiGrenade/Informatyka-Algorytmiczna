@@ -179,6 +179,12 @@ build CMakeFiles/RS.dir/RandomSelect.cpp.o: CXX_COMPILER__RS_Debug /home/mango/R
   OBJECT_DIR = CMakeFiles/RS.dir
   OBJECT_FILE_DIR = CMakeFiles/RS.dir
 
+build CMakeFiles/RS.dir/RS.cpp.o: CXX_COMPILER__RS_Debug /home/mango/Repo/AISD/AISD_3/RS.cpp || cmake_object_order_depends_target_RS
+  DEP_FILE = CMakeFiles/RS.dir/RS.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++23
+  OBJECT_DIR = CMakeFiles/RS.dir
+  OBJECT_FILE_DIR = CMakeFiles/RS.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target RS
@@ -187,7 +193,7 @@ build CMakeFiles/RS.dir/RandomSelect.cpp.o: CXX_COMPILER__RS_Debug /home/mango/R
 #############################################
 # Link the executable RS
 
-build RS: CXX_EXECUTABLE_LINKER__RS_Debug CMakeFiles/RS.dir/RandomSelect.cpp.o
+build RS: CXX_EXECUTABLE_LINKER__RS_Debug CMakeFiles/RS.dir/RandomSelect.cpp.o CMakeFiles/RS.dir/RS.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/RS.dir
   POST_BUILD = :
@@ -210,6 +216,18 @@ build CMakeFiles/S.dir/Select.cpp.o: CXX_COMPILER__S_Debug /home/mango/Repo/AISD
   OBJECT_DIR = CMakeFiles/S.dir
   OBJECT_FILE_DIR = CMakeFiles/S.dir
 
+build CMakeFiles/S.dir/DSelect.cpp.o: CXX_COMPILER__S_Debug /home/mango/Repo/AISD/AISD_3/DSelect.cpp || cmake_object_order_depends_target_S
+  DEP_FILE = CMakeFiles/S.dir/DSelect.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++23
+  OBJECT_DIR = CMakeFiles/S.dir
+  OBJECT_FILE_DIR = CMakeFiles/S.dir
+
+build CMakeFiles/S.dir/RandomSelect.cpp.o: CXX_COMPILER__S_Debug /home/mango/Repo/AISD/AISD_3/RandomSelect.cpp || cmake_object_order_depends_target_S
+  DEP_FILE = CMakeFiles/S.dir/RandomSelect.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++23
+  OBJECT_DIR = CMakeFiles/S.dir
+  OBJECT_FILE_DIR = CMakeFiles/S.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target S
@@ -218,13 +236,87 @@ build CMakeFiles/S.dir/Select.cpp.o: CXX_COMPILER__S_Debug /home/mango/Repo/AISD
 #############################################
 # Link the executable S
 
-build S: CXX_EXECUTABLE_LINKER__S_Debug CMakeFiles/S.dir/Select.cpp.o
+build S: CXX_EXECUTABLE_LINKER__S_Debug CMakeFiles/S.dir/Select.cpp.o CMakeFiles/S.dir/DSelect.cpp.o CMakeFiles/S.dir/RandomSelect.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/S.dir
   POST_BUILD = :
   PRE_LINK = :
   TARGET_FILE = S
   TARGET_PDB = S.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target QS
+
+
+#############################################
+# Order-only phony target for QS
+
+build cmake_object_order_depends_target_QS: phony || CMakeFiles/QS.dir
+
+build CMakeFiles/QS.dir/QS.cpp.o: CXX_COMPILER__QS_Debug /home/mango/Repo/AISD/AISD_3/QS.cpp || cmake_object_order_depends_target_QS
+  DEP_FILE = CMakeFiles/QS.dir/QS.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++23
+  OBJECT_DIR = CMakeFiles/QS.dir
+  OBJECT_FILE_DIR = CMakeFiles/QS.dir
+
+build CMakeFiles/QS.dir/DSelect.cpp.o: CXX_COMPILER__QS_Debug /home/mango/Repo/AISD/AISD_3/DSelect.cpp || cmake_object_order_depends_target_QS
+  DEP_FILE = CMakeFiles/QS.dir/DSelect.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++23
+  OBJECT_DIR = CMakeFiles/QS.dir
+  OBJECT_FILE_DIR = CMakeFiles/QS.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target QS
+
+
+#############################################
+# Link the executable QS
+
+build QS: CXX_EXECUTABLE_LINKER__QS_Debug CMakeFiles/QS.dir/QS.cpp.o CMakeFiles/QS.dir/DSelect.cpp.o
+  FLAGS = -g
+  OBJECT_DIR = CMakeFiles/QS.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = QS
+  TARGET_PDB = QS.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target DP_QS
+
+
+#############################################
+# Order-only phony target for DP_QS
+
+build cmake_object_order_depends_target_DP_QS: phony || CMakeFiles/DP_QS.dir
+
+build CMakeFiles/DP_QS.dir/DP_QS.cpp.o: CXX_COMPILER__DP_QS_Debug /home/mango/Repo/AISD/AISD_3/DP_QS.cpp || cmake_object_order_depends_target_DP_QS
+  DEP_FILE = CMakeFiles/DP_QS.dir/DP_QS.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++23
+  OBJECT_DIR = CMakeFiles/DP_QS.dir
+  OBJECT_FILE_DIR = CMakeFiles/DP_QS.dir
+
+build CMakeFiles/DP_QS.dir/DSelect.cpp.o: CXX_COMPILER__DP_QS_Debug /home/mango/Repo/AISD/AISD_3/DSelect.cpp || cmake_object_order_depends_target_DP_QS
+  DEP_FILE = CMakeFiles/DP_QS.dir/DSelect.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++23
+  OBJECT_DIR = CMakeFiles/DP_QS.dir
+  OBJECT_FILE_DIR = CMakeFiles/DP_QS.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target DP_QS
+
+
+#############################################
+# Link the executable DP_QS
+
+build DP_QS: CXX_EXECUTABLE_LINKER__DP_QS_Debug CMakeFiles/DP_QS.dir/DP_QS.cpp.o CMakeFiles/DP_QS.dir/DSelect.cpp.o
+  FLAGS = -g
+  OBJECT_DIR = CMakeFiles/DP_QS.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = DP_QS
+  TARGET_PDB = DP_QS.dbg
 
 
 #############################################
@@ -261,7 +353,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /home/mango/Repo/AISD/AISD_3/cmake-build-debug
 
-build all: phony D_RNG RNG I_RNG BS RS S
+build all: phony D_RNG RNG I_RNG BS RS S QS DP_QS
 
 # =============================================================================
 # Built-in targets

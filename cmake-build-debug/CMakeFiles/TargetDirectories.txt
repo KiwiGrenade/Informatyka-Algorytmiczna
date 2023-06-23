@@ -1,8 +1,0 @@
-/home/mango/Repo/AISD/AISD_3/cmake-build-debug/CMakeFiles/D_RNG.dir
-/home/mango/Repo/AISD/AISD_3/cmake-build-debug/CMakeFiles/RNG.dir
-/home/mango/Repo/AISD/AISD_3/cmake-build-debug/CMakeFiles/I_RNG.dir
-/home/mango/Repo/AISD/AISD_3/cmake-build-debug/CMakeFiles/BS.dir
-/home/mango/Repo/AISD/AISD_3/cmake-build-debug/CMakeFiles/RS.dir
-/home/mango/Repo/AISD/AISD_3/cmake-build-debug/CMakeFiles/S.dir
-/home/mango/Repo/AISD/AISD_3/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/mango/Repo/AISD/AISD_3/cmake-build-debug/CMakeFiles/rebuild_cache.dir
