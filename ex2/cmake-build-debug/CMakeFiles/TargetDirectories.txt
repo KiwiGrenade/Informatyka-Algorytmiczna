@@ -1,0 +1,3 @@
+/home/mango/Repo/AOD/AOD_4/ex2/cmake-build-debug/CMakeFiles/ex2.dir
+/home/mango/Repo/AOD/AOD_4/ex2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/mango/Repo/AOD/AOD_4/ex2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
