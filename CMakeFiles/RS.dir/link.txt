@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/RS.dir/RandomSelect.cpp.o -o RS 

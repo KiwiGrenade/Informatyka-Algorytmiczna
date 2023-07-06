@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/S.dir/DSelect.cpp.o CMakeFiles/S.dir/Select.cpp.o -o S 

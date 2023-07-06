@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/RNG.dir/RNG.cpp.o -o RNG 

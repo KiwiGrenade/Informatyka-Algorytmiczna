@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/QS.dir/QS.cpp.o CMakeFiles/QS.dir/DSelect.cpp.o -o QS 
