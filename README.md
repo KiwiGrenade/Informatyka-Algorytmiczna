@@ -1,1 +1,0 @@
-# Author: Jakub Jaśków
