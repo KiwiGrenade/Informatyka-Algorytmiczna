@@ -1,9 +1,0 @@
-c Sample single-source aux file
-c
-p aux sp ss 3
-c contains 3 source lines
-c
-s 1
-s 3
-s 5
-
