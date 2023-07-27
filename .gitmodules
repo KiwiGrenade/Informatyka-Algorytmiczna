@@ -1,0 +1,3 @@
+[submodule "sem4/PiastCity"]
+	path = sem4/PiastCity
+	url = git@github.com:suchygracz/PiastCity
