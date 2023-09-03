@@ -7,3 +7,6 @@
 [submodule "sem4/WSI/15Puzzle"]
 	path = sem4/WSI/15Puzzle
 	url = https://github.com/KiwiGrenade/15Puzzle
+[submodule "sem2/PO/L6"]
+	path = sem2/PO/L6
+	url = https://github.com/KiwiGrenade/color-changing-tiles
