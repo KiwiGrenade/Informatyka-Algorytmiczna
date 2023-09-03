@@ -1,6 +1,9 @@
 [submodule "sem4/AM/PiastCity"]
 	path = sem4/AM/PiastCity
-	url = git@github.com:suchygracz/PiastCity
+	url = https://git@github.com:suchygracz/PiastCity.git
 [submodule "sem4/WSI/15Puzzle"]
 	path = sem4/WSI/15Puzzle
-	url = git@github.com:KiwiGrenade/15Puzzle.git
+	url = https://git@github.com:KiwiGrenade/15Puzzle.git
+[submodule "sem4/WSI/WSI_2"]
+	path = sem4/WSI/WSI_2
+	url = https://git@github.com/KiwiGrenade/WSI_2.git
