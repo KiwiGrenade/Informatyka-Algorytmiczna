@@ -1,3 +1,6 @@
-[submodule "sem4/PiastCity"]
-	path = sem4/PiastCity
+[submodule "sem4/AM/PiastCity"]
+	path = sem4/AM/PiastCity
 	url = git@github.com:suchygracz/PiastCity
+[submodule "sem4/WSI/15Puzzle"]
+	path = sem4/WSI/15Puzzle
+	url = git@github.com:KiwiGrenade/15Puzzle.git
