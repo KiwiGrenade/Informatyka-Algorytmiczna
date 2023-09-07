@@ -1,12 +1,18 @@
-[submodule "sem4/AM/PiastCity"]
+[submodule "PiastCity"]
 	path = sem4/AM/PiastCity
 	url = https://github.com/suchygracz/PiastCity
-[submodule "sem4/WSI/ATTTB"]
+[submodule "AlteredTicTacToeBot"]
 	path = sem4/WSI/WSI_2
 	url = https://github.com/KiwiGrenade/ATTTB
-[submodule "sem4/WSI/15Puzzle"]
+[submodule "15Puzzle"]
 	path = sem4/WSI/15Puzzle
 	url = https://github.com/KiwiGrenade/15Puzzle
-[submodule "sem2/PO/L6"]
+[submodule "Color-changing-tiles"]
 	path = sem2/PO/L6
 	url = https://github.com/KiwiGrenade/color-changing-tiles
+[submodule "Paint"]
+	path = sem2/PO/L5
+	url = https://github.com/KiwiGrenade/Paint
+[submodule "Checkers"]
+	path = sem3/TP/checkers
+	url = https://github.com/KiwiGrenade/Checkers
