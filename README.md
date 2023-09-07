@@ -1,7 +1,4 @@
-# Description
-This repository holds all the programming exercises from my time studying 
-Algorithmic Computer Science at Wroclaw University of Science and Technology.
-All the exercises that I haven't deleted that is.
+# Welcome!
 ---
 ## Worth taking a look
 Here is a list of exercises/projects from my curriculum that I deemed worthy
