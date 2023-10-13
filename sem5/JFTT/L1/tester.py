@@ -1,5 +1,5 @@
 from FA import *
-#from kmp import *
+from KMP import *
 
 NUM_OF_TESTS = 5
 
@@ -21,6 +21,7 @@ for i in range(1, NUM_OF_TESTS+1):
 
         comp = list(map(int, correct_result.split(','))) if len(correct_result) > 0 else []
         assert FA(pattern, text) == comp
+        assert KMP(pattern, text) == comp
 
     print("TESTSET ", i ," DONE")
 print("ALL TESTS PASSED SUCCESFULLY✅")
