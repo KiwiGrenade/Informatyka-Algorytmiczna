@@ -14,28 +14,26 @@ def comp_trans_func(P, m):
     return trans_func
 
 
-def FA():
-    args = sys.argv[1:]  # cut off script name
-    P = args[0]
+def FA(P, T):
     m = len(P)
-
-    transition_function = comp_trans_func(P, m)
-
-    # get text
-    file_name = args[1]
-    file = open(file_name)
-    T = file.read()
     n = len(T)
-
     q = 0
+    shiftList = []
+    transition_function = comp_trans_func(P, m)
 
     for i in range(n):
         q = transition_function[q][ord(T[i])]
         if q == m:
-            print(f'Pattern occurs with shift: {i + 1 - m}')
+            shiftList.append(i + 1 - m)
 
-    return 0
+    return shiftList
 
 
 if __name__ == '__main__':
-    FA()
+    args = sys.argv[1:]  # cut off script name
+    P = args[0]
+    file_name = args[1]
+
+    file = open(file_name)
+    T = file.read()
+    print(FA(P, T))
