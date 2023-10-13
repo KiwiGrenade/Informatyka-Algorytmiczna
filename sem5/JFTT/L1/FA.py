@@ -5,7 +5,7 @@ def comp_trans_func(P, m):
     utf8_len = 1112064 - 1
     # fuck python and those fucking shitty 2d lists. Who the fuck uses ShAloOw LiSt$
     trans_func = [[0 for i in range(utf8_len)] for j in range(m + 1)]  # counting 0 we have m+1 states
-    for q in range(m):
+    for q in range(m + 1):
         for a in range(utf8_len):
             k = min(m, q + 1)
             while not (str(P[:q] + chr(a)).endswith(P[:k])):
