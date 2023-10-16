@@ -3,13 +3,12 @@ import sys
 
 # FIXME: Fix indexing
 def compPrefixFunc(P, m):
-    prefixFunc = [0]
+    prefixFunc = [0] * m
     k = 0
-
     for q in range(1, m):
-        while k > 0 and P[k+1] != P[q]:
-            k = prefixFunc[k]
-        if P[k+1] == P[q]:
+        while k > 0 and P[k] != P[q]:
+            k = prefixFunc[k-1]
+        if P[k] == P[q]:
             k = k + 1
         prefixFunc[q] = k
     return prefixFunc
@@ -19,18 +18,20 @@ def KMP(P, T):
     m = len(P)
     n = len(T)
     shiftList = []
+    print(f'Pattern: {P}')
     prefixFunc = compPrefixFunc(P, m)
     q = 0
 
     # watch out for indexing
     for i in range(n):
-        while q > 0 and P[q + 1] != T[i]:
-            q = prefixFunc[q]
-        if P[q + 1] == T[i]:
+        while q > 0 and P[q] != T[i]:   # changed
+            q = prefixFunc[q-1]
+        if P[q] == T[i]:    # changed
             q = q + 1
         if q == m:
             shiftList.append(i + 1 - m)
-            q = prefixFunc[q]
+            q = prefixFunc[q-1]
+    print(f'Shifts: {shiftList}')
     return shiftList
 
 
