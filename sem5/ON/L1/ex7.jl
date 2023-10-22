@@ -1,13 +1,21 @@
 # Jakub Jaśków
 function f(x)
-    return Float64(Float64(sin(x)) + Float64(cos(3.0 * x)))
+    return sin(x) + cos(3.0 * x)
+end
+
+function fDev(x, h)
+    return Float64(Float64(f(Float64(x + h)) - f(x)) / h)
+end
+
+function df(x)
+    return Float64(cos(x) - Float64(3.0 * sin(Float64(3.0 * x))))
 end
 
 println("Zadanie 7\n")
+println(rpad('h', 15), rpad("df", 35), rpad("|fDev - df|", 35),rpad("1+h", 35))
+println('-'^85)
 for n = 0 : 54
-    h = Float64(2.0 ^ ((-1.0 * n)))
+    h = 2.0 ^ -n
     x_0 = Float64(1.0)
-    fDev = Float64(Float64(f(Float64(x_0 + h)) - f(x_0)) / h)
-    println("f`(", x_0, ") = ", fDev, ", h = ", h)
+    println(rpad("2.0^-$n", 15), rpad(fDev(x_0, h), 35), rpad(abs(Float64(fDev(x_0, h) - df(x_0))), 35),rpad(Float64(1+h), 35))
 end
-# TODO: Calculate abs(trueDev(f) - fDev)
