@@ -2,3 +2,6 @@ __pycache__/
 venv/
 cmake-build-debug/
 .idea/
+*.zip
+*.tar.gz
+
