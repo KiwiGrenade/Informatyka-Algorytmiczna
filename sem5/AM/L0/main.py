@@ -83,20 +83,24 @@ def plot_data(min_10_list, min_50_list, min_1000, file_name):
 
 def plot_path(G, path, file_name):
     print(f'Plotting path_{file_name}...')
-    path_graph = nx.path_graph(path, G)
-    nx.draw(path_graph, node_size=7)
+    H = G.edge_subgraph(path).copy()
+    nx.draw(H, nx.get_node_attributes(H, "coord"), node_size=7)
     plt.savefig(f'graphs/path_{file_name}')
     plt.show()
 
 
 def plot_MST(G, file_name):
-    print(f'Plotting MST{file_name}...')
+    # print(f'Plotting MST{file_name}...')
     # create MST, draw and save
     MST = nx.minimum_spanning_tree(G)
-    nx.draw(MST, node_size=5)
+    nx.draw(MST, nx.get_node_attributes(MST, "coord"), node_size=5)
+    plt.xlabel(MST.size(weight="weight"))
     plt.savefig(f'graphs/MST_{file_name}')
     plt.show()
+    print(f'{file_name} = ', MST.size(weight="weight"))
+    return MST
 
+# TODO: Get nodes from edges, permutate them and place the results on one graph
 for file_name in os.listdir('inputs'):
     # load problem from .tsp file
     # file_name = "xqf131.tsp"
@@ -106,10 +110,12 @@ for file_name in os.listdir('inputs'):
 
     file_name = file_name[:-4]
 
-    print("Getting path...")
-    path = nx.algorithms.approximation.traveling_salesman_problem(G)
-    path = path[:-1]
-    # plot_MST(G, file_name)
+    # print("Getting path...")
+    # path = nx.algorithms.approximation.traveling_salesman_problem(G)
+    # path = path[:-1]
+    MST = plot_MST(G, file_name)
+    path = nx.dfs_edges(MST)
+    plot_path(G, path, file_name)
     # plot_path(G, path, file_name)
-    min_10_list, min_50_list, min_1000 = get_minimums(G, path)
-    plot_data(min_10_list, min_50_list, min_1000, file_name)
+    # min_10_list, min_50_list, min_1000 = get_minimums(G, path)
+    # plot_data(min_10_list, min_50_list, min_1000, file_name)
