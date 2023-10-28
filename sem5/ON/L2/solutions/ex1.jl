@@ -5,7 +5,7 @@ function forwards(x, y, type, n)
     for i = 1:n
         S = type(S + type(x[i] * y[i]))
     end
-    return S
+    return type(S)
 end
 
 # B) 
@@ -14,7 +14,7 @@ function backwards(x, y, type, n)
     for i = n:-1:1
         S = type(S + type(x[i] * y[i]))
     end
-    return S
+    return type(S)
 end
 
 # C -> negate => maxToMax, -> !negate => minToMin
@@ -38,7 +38,7 @@ function maxToMax(x, y, type, negate)
     end
 
     sum = type(posSum + negSum)
-    return sum
+    return type(sum)
 end
 
 floatTypes = [Float32, Float64]
@@ -50,9 +50,9 @@ Y = [1486.2497,878366.9879,−(22.37492),4773714.647,0.000185049]
 
 println("Zadanie 1")
 for type in floatTypes
-    x = Array{type, 1}(Vx)
-    y = Array{type, 1}(Vy)
-    
+    oldX = Array{type, 1}(oldX)
+    newX = Array{type, 1}(newX)
+    y = Array{type, 1}(Y)
     oldVal = []
     newVal = []
 
