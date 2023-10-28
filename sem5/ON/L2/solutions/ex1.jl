@@ -50,21 +50,21 @@ Y = [1486.2497,878366.9879,−(22.37492),4773714.647,0.000185049]
 
 println("Zadanie 1")
 for type in floatTypes
-    oldX = Array{type, 1}(oldX)
-    newX = Array{type, 1}(newX)
+    oldX_ = Array{type, 1}(oldX)
+    newX_ = Array{type, 1}(newX)
     y = Array{type, 1}(Y)
     oldVal = []
     newVal = []
 
-    push!(oldVal, forwards(oldX, y, type, 5))
-    push!(oldVal, backwards(oldX, y, type, 5))
-    push!(oldVal, maxToMax(oldX, y, type, false))
-    push!(oldVal, maxToMax(oldX, y, type, true))
+    push!(oldVal, forwards(oldX_, y, type, 5))
+    push!(oldVal, backwards(oldX_, y, type, 5))
+    push!(oldVal, maxToMax(oldX_, y, type, false))
+    push!(oldVal, maxToMax(oldX_, y, type, true))
 
-    push!(newVal, forwards(newX, y, type, 5))
-    push!(newVal, backwards(newX, y, type, 5))
-    push!(newVal, maxToMax(newX, y, type, false))
-    push!(newVal, maxToMax(newX, y, type, true))
+    push!(newVal, forwards(newX_, y, type, 5))
+    push!(newVal, backwards(newX_, y, type, 5))
+    push!(newVal, maxToMax(newX_, y, type, false))
+    push!(newVal, maxToMax(newX_, y, type, true))
 
     println(type)
     dist1 = 20
