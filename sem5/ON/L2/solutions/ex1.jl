@@ -48,7 +48,7 @@ Y = [1486.2497,878366.9879,−(22.37492),4773714.647,0.000185049]
 
 
 
-println("Zadanie 1")
+println("\nZadanie 1")
 for type in floatTypes
     oldX_ = Array{type, 1}(oldX)
     newX_ = Array{type, 1}(newX)

@@ -1,4 +1,4 @@
-# # Jakub Jaśków - 268416
+# # Jakub Jaśków 268416
 include("utils/hilb.jl")
 include("utils/matcond.jl")
 
@@ -19,7 +19,7 @@ function solveLinear(A, n, k)
         " & ", rpad(rank(A), 10), 
         " & ", rpad(errGaus, 25), 
         " & ", rpad(errInv, 25), 
-        " \\\\hline")
+        " \\\\\\hline")
     else
         println(rpad(n, 3), 
         " & ", rpad(cond(A), 25), 
@@ -27,26 +27,30 @@ function solveLinear(A, n, k)
         " & ", rpad(errGaus, 25), 
         " & ", rpad(errInv, 25), 
         " & ", rpad("10^$k", 6), 
-        " \\\\hline")
+        " \\\\\\hline")
     end
 end
 
+dist1 = 3
+dist2 = 25
+dist3 = 10
+println("\nZadanie 3")
 println("########### Hilbert's Matrix ###########")
-println(rpad("n", 3), 
-" & ", rpad("cond(A)", 25), 
-" & ", rpad("rank(A)", 10), 
-" & ", rpad("Gauss Relative Error", 25), 
-" & ", rpad("Invert Relative Error", 25))
+println(rpad("n", dist1), 
+" & ", rpad("cond(A)", dist2), 
+" & ", rpad("rank(A)", dist3), 
+" & ", rpad("Gauss Relative Error", dist2), 
+" & ", rpad("Invert Relative Error", dist2))
 for i in 1:4:64
     solveLinear(hilb(i), i, -1)
 end
 
 println("########### Random Matrix ###########")
-println(rpad("n", 3), 
-" & ", rpad("cond(A)", 25), 
-" & ", rpad("rank(A)", 10), 
-" & ", rpad("Gauss Relative Error", 25), 
-" & ", rpad("Invert Relative Error", 25), 
+println(rpad("n", dist1), 
+" & ", rpad("cond(A)", dist2), 
+" & ", rpad("rank(A)", dist3), 
+" & ", rpad("Gauss Relative Error", dist2), 
+" & ", rpad("Invert Relative Error", dist2), 
 " & ", rpad("c", 3))
 for i in [5, 10, 20]
     for k in [0, 1, 3 , 7, 12, 16]
