@@ -1,4 +1,4 @@
-# Jakub Jaśków
+# Jakub Jaśków 268416
 # A)
 function forwards(x, y, type, n)
     S = type(0.0)
