@@ -1,4 +1,4 @@
-Wspolczynniki wielomianu z zadania 3
+# Wspolczynniki wielomianu z zadania 3
 p=[1, -210.0, 20615.0,-1256850.0,
       53327946.0,-1672280820.0, 40171771630.0, -756111184500.0,          
       11310276995381.0, -135585182899530.0,
