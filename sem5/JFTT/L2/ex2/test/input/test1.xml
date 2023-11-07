@@ -1,0 +1,13 @@
+<?xml version="1.1"?>
+<!DOCTYPE none>
+<root>
+  <!--foo>commented out <a>elements</a></foo-->
+  <foo var="test>  <!-- this is not a comment --> <a" href="x" />
+  <![CDATA[
+    In CDATA <!-- everything is data!!! -->]]>
+  <!-- valid comment -->
+  <DUPA>
+    bla bla bla "<!-- comment hello -->".
+  </DUPA>
+  <!-- invalid -- comment -->
+</root>
