@@ -2,6 +2,7 @@ __pycache__/
 venv/
 cmake-build-debug/
 .idea/
+.vscode/
 *.zip
 *.tar.gz
 
