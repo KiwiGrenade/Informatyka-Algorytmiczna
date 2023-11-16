@@ -1,6 +1,5 @@
 # Jakub Jaśków 268416
-
-module utils
+module Utils
 export mbisekcji, mstycznych, msiecznych
 
 
@@ -35,18 +34,18 @@ function mbisekcji(f, a::Float64, b::Float64, delta::Float64, epsilon::Float64)
     while true
         n_it += 1
         er /= 2
-        c = a + er
-        v = f(c)
+        r = a + er
+        v = f(r)
 
         if abs(er) < delta || abs(v) < epsilon
-            return c, v, n_it, 0
+            return r, v, n_it, 0
         end
 
         if sign(v) != sign(A)
-            b = c
+            b = r
             B = v
         else
-            a = c
+            a = r
             A = v
         end
     end
