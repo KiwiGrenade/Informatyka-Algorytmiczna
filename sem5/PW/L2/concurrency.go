@@ -196,12 +196,15 @@ func timer(T int, wakeChan *chan bool) {
 func freezer(travList []*traveler, cameraFreezerChannel chan bool, freezerCameraChannel chan bool) {
 	for {
 		select {
+		// receive signal from camera
 		case stopStart := <-cameraFreezerChannel:
+			// notify all live travelers
 			for _, trav := range travList {
 				if trav.isAlive {
 					trav.freezeChan <- stopStart
 				}
 			}
+			// notify camera that all travellers stopped
 			freezerCameraChannel <- stopStart
 		default:
 		}
@@ -214,7 +217,9 @@ func camera(vMatrix [][]*vertex, travelers []*traveler, cameraFreezerChannel cha
 	for {
 		select {
 		case <-timerChan:
+			// notify freezer to stop travelers
 			cameraFreezerChannel <- true
+			// wait for freezers response
 			<-freezerCameraChannel
 
 			boardWidth := 2*len(vMatrix) - 1
@@ -248,10 +253,13 @@ func camera(vMatrix [][]*vertex, travelers []*traveler, cameraFreezerChannel cha
 				board = append(board, boardRow)
 			}
 
+			// track back the move history and show the edges
 			for _, trav := range travelers {
-				if trav.currVertex != nil {
+				if trav.currVertex != nil && trav.isVisible {
 					X := trav.currVertex.cord.x
 					Y := trav.currVertex.cord.y
+
+					// set traveler id on board and make it visible
 					board[X*2][Y*2].val = trav.id
 					board[X*2][Y*2].isVisible = true
 
@@ -276,41 +284,14 @@ func camera(vMatrix [][]*vertex, travelers []*traveler, cameraFreezerChannel cha
 							board[startX-1][startY].isVisible = true
 						}
 					}
-					// create new coordinates
+					// remove coords
 					trav.moveHistory = make([]coordinates, 0)
+					// because we removed all coordinates, we also removed current position. Add it back
 					trav.moveHistory = append(trav.moveHistory, trav.currVertex.cord)
 				}
 			}
 
-			//for i := 0; i < n; i++ {
-			//	for j := 0; j < m; j++ {
-			//		if vMatrix[i][j].currTraveler != nil {
-			//			print(vMatrix[i][j].currTraveler.id)
-			//		} else {
-			//			print("..")
-			//		}
-			//
-			//		// end the row
-			//		if j < m-1 {
-			//			print("---")
-			//		} else {
-			//			println()
-			//		}
-			//	}
-			//
-			//	// end the column
-			//	if i < n-1 {
-			//		for c := 0; c < m; c++ {
-			//			print("|")
-			//			if c < m-1 {
-			//				print("    ")
-			//			} else {
-			//				println()
-			//			}
-			//		}
-			//	}
-			//}
-
+			// print the whole board
 			for _, boardRow := range board {
 				for _, vertex := range boardRow {
 					if vertex.isVisible {
@@ -325,8 +306,11 @@ func camera(vMatrix [][]*vertex, travelers []*traveler, cameraFreezerChannel cha
 			println()
 			println()
 
+			// tell freezer to unfreeze all travelers
 			cameraFreezerChannel <- false
+			// wait for response
 			<-freezerCameraChannel
+			// set timer
 			go timer(1000, &timerChan)
 		default:
 		}
@@ -334,8 +318,10 @@ func camera(vMatrix [][]*vertex, travelers []*traveler, cameraFreezerChannel cha
 }
 
 func travSender(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
+	// create initial timer
 	go timer(rand.Intn(5000), &traveler.timerChan)
 	for {
+		// cascading select - makes creating channel priority hierarchy possible
 		select {
 		// stop for the camera
 		case stop := <-traveler.freezeChan:
@@ -355,8 +341,9 @@ func travSender(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 				return
 			default:
 				select {
-				// timer says you good
+				// timer says to make a move
 				case <-traveler.timerChan:
+					// not first move (traveler already spawned)
 					if traveler.currVertex != nil {
 						X := traveler.currVertex.cord.x
 						Y := traveler.currVertex.cord.y
@@ -382,6 +369,7 @@ func travSender(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 								travHandshake(traveler, vMatrix[X][Y-1])
 							}
 						}
+						// first move
 					} else {
 						randX := rand.Intn(m - 1)
 						randY := rand.Intn(n - 1)
@@ -390,7 +378,7 @@ func travSender(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 							traveler.isVisible = true
 						}
 					}
-					//go timer(rand.Intn(750), &traveler.timerChan)
+					//go timer(rand.Intn(1000), &traveler.timerChan)
 					go timer(1000, &traveler.timerChan)
 				default:
 				}
@@ -401,29 +389,30 @@ func travSender(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 
 func vertexListener(vert *vertex) {
 	for {
-		traveler := <-vert.receive
-		var response bool
-		// vertex is empty
-		if vert.currTraveler == nil {
-			vert.currTraveler = traveler
-			response = true
-			// traveler wants to move in a vertex occupied by a drifter
-		} else if vert.currTraveler.id == " *" && traveler.id != " *" {
-			//println(traveler.id, " wants to move in!")
-			vert.currTraveler.receiveChan <- false
-			response = <-vert.vertDriftChan
-			// traveler wants to move in a vertex occupied by a danger
-		} else if vert.currTraveler.id == " #" && traveler.id != " *" && traveler.id != " #" {
-			//println(traveler.id, " moves into danger!")
-			vert.currTraveler.deathChan <- true
-			traveler.deathChan <- true
-		} else {
-			response = false
+		select {
+		case traveler := <-vert.receive:
+			var response bool
+			// vertex is empty
+			if vert.currTraveler == nil {
+				vert.currTraveler = traveler
+				response = true
+				// traveler wants to move in a vertex occupied by a drifter
+			} else if vert.currTraveler.id == " *" && traveler.id != " *" {
+				//println(traveler.id, " wants to move in!")
+				vert.currTraveler.receiveChan <- false
+				response = <-vert.vertDriftChan
+				// traveler wants to move in a vertex occupied by a danger
+			} else if vert.currTraveler.id == " #" && traveler.id != " *" && traveler.id != " #" {
+				//println(traveler.id, " moves into danger!")
+				vert.currTraveler.deathChan <- true
+				traveler.deathChan <- true
+			} else {
+				response = false
+			}
+			// respond
+			traveler.receiveChan <- response
+		default:
 		}
-		// respond
-		traveler.receiveChan <- response
-
-		// receive move in request
 	}
 }
 
