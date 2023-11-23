@@ -209,112 +209,121 @@ func freezer(travList []*traveler, cameraFreezerChannel *chan bool, freezerCamer
 }
 
 func camera(vMatrix [][]*vertex, cameraFreezerChannel *chan bool, freezerCameraChannel *chan bool, m int, n int) {
+	timerChan := make(chan bool)
+	go timer(1000, &timerChan)
 	for {
-		*cameraFreezerChannel <- true
-		<-*freezerCameraChannel
+		select {
+		case <-timerChan:
+			*cameraFreezerChannel <- true
+			<-*freezerCameraChannel
 
-		var board [][]*boardField
-		for i := 0; i < 2*n-1; i++ {
-			var boardRow []*boardField
-			for j := 0; j < 2*m-1; j++ {
-				var val string
-				isVisible := false
-				if i%2 != 0 {
-					// vertical pass
-					if j%2 == 0 {
-						val = "|"
-					} else {
-						val = "    "
-					}
-				} else {
-					if j%2 == 0 {
-						val = ".."
-						isVisible = true
-					} else {
-						val = "---"
-					}
-				}
-				field := &boardField{val: val, isVisible: isVisible}
-				boardRow = append(boardRow, field)
-			}
-			board = append(board, boardRow)
-		}
-
-		for i := 0; i < n; i++ {
-			for j := 0; j < m; j++ {
-				currVert := vMatrix[i][j]
-				if currVert.currTraveler != nil {
-					// emplace traveler
-					board[i*2][j*2].val = currVert.currTraveler.id
-					board[i*2][j*2].isVisible = true
-					for k := 1; k < len(currVert.currTraveler.moveHistory); k++ {
-						startX := currVert.currTraveler.moveHistory[k-1].x * 2
-						startY := currVert.currTraveler.moveHistory[k-1].y * 2
-						endX := currVert.currTraveler.moveHistory[k].x * 2
-						endY := currVert.currTraveler.moveHistory[k].y * 2
-						if endY > startY {
-							board[startX][startY+1].isVisible = true
-						} else if endY < startY {
-							board[startX][startY-1].isVisible = true
+			// make board and set all the fields
+			var board [][]*boardField
+			for i := 0; i < 2*n-1; i++ {
+				var boardRow []*boardField
+				for j := 0; j < 2*m-1; j++ {
+					var val string
+					isVisible := false
+					if i%2 != 0 {
+						// vertical pass
+						if j%2 == 0 {
+							val = "|"
+						} else {
+							val = "    "
 						}
-						if endX > startX {
-							board[startX+1][startY].isVisible = true
-						} else if endX < startX {
-							board[startX-1][startY].isVisible = true
+					} else {
+						if j%2 == 0 {
+							val = ".."
+							isVisible = true
+						} else {
+							val = "---"
 						}
 					}
-					currVert.currTraveler.moveHistory = make([]coordinates, 0)
-					currVert.currTraveler.moveHistory = append(currVert.currTraveler.moveHistory, vMatrix[i][j].cord)
+					field := &boardField{val: val, isVisible: isVisible}
+					boardRow = append(boardRow, field)
+				}
+				board = append(board, boardRow)
+			}
+
+			// trackback
+			for i := 0; i < n; i++ {
+				for j := 0; j < m; j++ {
+					currVert := vMatrix[i][j]
+					if currVert.currTraveler != nil {
+						// emplace traveler
+						board[i*2][j*2].val = currVert.currTraveler.id
+						board[i*2][j*2].isVisible = true
+						for k := 1; k < len(currVert.currTraveler.moveHistory); k++ {
+							startX := currVert.currTraveler.moveHistory[k-1].x * 2
+							startY := currVert.currTraveler.moveHistory[k-1].y * 2
+							endX := currVert.currTraveler.moveHistory[k].x * 2
+							endY := currVert.currTraveler.moveHistory[k].y * 2
+							if endY > startY {
+								board[startX][startY+1].isVisible = true
+							} else if endY < startY {
+								board[startX][startY-1].isVisible = true
+							}
+							if endX > startX {
+								board[startX+1][startY].isVisible = true
+							} else if endX < startX {
+								board[startX-1][startY].isVisible = true
+							}
+						}
+						// create new coordinates
+						currVert.currTraveler.moveHistory = make([]coordinates, 0)
+						currVert.currTraveler.moveHistory = append(currVert.currTraveler.moveHistory, vMatrix[i][j].cord)
+					}
 				}
 			}
-		}
 
-		//for i := 0; i < n; i++ {
-		//	for j := 0; j < m; j++ {
-		//		if vMatrix[i][j].currTraveler != nil {
-		//			print(vMatrix[i][j].currTraveler.id)
-		//		} else {
-		//			print("..")
-		//		}
-		//
-		//		// end the row
-		//		if j < m-1 {
-		//			print("---")
-		//		} else {
-		//			println()
-		//		}
-		//	}
-		//
-		//	// end the column
-		//	if i < n-1 {
-		//		for c := 0; c < m; c++ {
-		//			print("|")
-		//			if c < m-1 {
-		//				print("    ")
-		//			} else {
-		//				println()
-		//			}
-		//		}
-		//	}
-		//}
+			//for i := 0; i < n; i++ {
+			//	for j := 0; j < m; j++ {
+			//		if vMatrix[i][j].currTraveler != nil {
+			//			print(vMatrix[i][j].currTraveler.id)
+			//		} else {
+			//			print("..")
+			//		}
+			//
+			//		// end the row
+			//		if j < m-1 {
+			//			print("---")
+			//		} else {
+			//			println()
+			//		}
+			//	}
+			//
+			//	// end the column
+			//	if i < n-1 {
+			//		for c := 0; c < m; c++ {
+			//			print("|")
+			//			if c < m-1 {
+			//				print("    ")
+			//			} else {
+			//				println()
+			//			}
+			//		}
+			//	}
+			//}
 
-		for i := 0; i < 2*n-1; i++ {
-			for j := 0; j < 2*m-1; j++ {
-				if board[i][j].isVisible {
-					print(board[i][j].val)
-				} else {
-					spaces := strings.Repeat(" ", utf8.RuneCountInString(board[i][j].val))
-					print(spaces)
+			for i := 0; i < 2*n-1; i++ {
+				for j := 0; j < 2*m-1; j++ {
+					if board[i][j].isVisible {
+						print(board[i][j].val)
+					} else {
+						spaces := strings.Repeat(" ", utf8.RuneCountInString(board[i][j].val))
+						print(spaces)
+					}
 				}
+				println()
 			}
 			println()
-		}
-		println()
-		println()
+			println()
 
-		*cameraFreezerChannel <- false
-		<-*freezerCameraChannel
-		time.Sleep(time.Duration(1000) * time.Millisecond)
+			*cameraFreezerChannel <- false
+			<-*freezerCameraChannel
+			go timer(1000, &timerChan)
+		default:
+		}
 	}
 }
 
@@ -376,7 +385,7 @@ func travSender(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 						}
 					}
 					//go timer(rand.Intn(750), &traveler.timerChan)
-					go timer(2000, &traveler.timerChan)
+					go timer(500, &traveler.timerChan)
 				default:
 				}
 			}
