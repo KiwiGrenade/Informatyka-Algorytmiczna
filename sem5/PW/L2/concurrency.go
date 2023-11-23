@@ -33,7 +33,7 @@ func main() {
 		return
 	}
 
-	// create 2d table with vertices and fire vertexListener go.subroutines
+	// create 2d table with vertices and fire vertexServerListener go.subroutines
 	var vMatrix [][]*vertex
 	for i := 0; i < n; i++ {
 		var vertexRow []*vertex
@@ -41,12 +41,12 @@ func main() {
 			ver := newVertex(coordinates{i, j})
 
 			vertexRow = append(vertexRow, ver)
-			go vertexListener(ver)
+			go vertexServerListener(ver)
 		}
 		vMatrix = append(vMatrix, vertexRow)
 	}
 
-	// create a list of travelers and fire travSender go.subroutines
+	// create a list of travelers and fire travelerLife go.subroutines
 	travelers := make([]*traveler, 0, n*m)
 	for i := 0; i < k; i++ {
 		id := ""
@@ -56,7 +56,7 @@ func main() {
 		id += strconv.Itoa(i)
 		trav := newTraveler(id)
 		travelers = append(travelers, trav)
-		go travSender(trav, vMatrix, m, n)
+		go travelerLife(trav, vMatrix, m, n)
 	}
 
 	//nDrifters := rand.Intn((n*m - k) / 2)
@@ -75,8 +75,8 @@ func main() {
 
 	cameraFreezerChannel := make(chan bool)
 	freezerCameraChannel := make(chan bool)
-	go freezer(travelers, cameraFreezerChannel, freezerCameraChannel)
-	go camera(vMatrix, travelers, cameraFreezerChannel, freezerCameraChannel)
+	go freezerLife(travelers, cameraFreezerChannel, freezerCameraChannel)
+	go cameraLife(vMatrix, travelers, cameraFreezerChannel, freezerCameraChannel)
 
 	select {}
 }
@@ -84,7 +84,7 @@ func main() {
 func dangerLife(danger *danger, vMatrix [][]*vertex, m int, n int) {
 	for {
 		select {
-		// stop for the camera
+		// stop for the cameraLife
 		case stop := <-danger.drifter.traveler.freezeChan:
 			for stop {
 				stop = <-danger.drifter.traveler.freezeChan
@@ -118,7 +118,7 @@ func dangerLife(danger *danger, vMatrix [][]*vertex, m int, n int) {
 							}
 
 							danger.drifter.traveler.isVisible = true
-							go timer(danger.drifter.lifeTime, &danger.drifter.traveler.timerChan)
+							go timerLift(danger.drifter.lifeTime, &danger.drifter.traveler.timerChan)
 							// stay dead
 						} else {
 							time.Sleep(time.Duration(rand.Intn(500)) * time.Millisecond)
@@ -133,22 +133,21 @@ func dangerLife(danger *danger, vMatrix [][]*vertex, m int, n int) {
 func drifterLife(drifter *drifter, vMatrix [][]*vertex, m int, n int) {
 	for {
 		select {
-		// stop for the camera
+		// stop for the cameraLife
 		case stop := <-drifter.traveler.freezeChan:
 			for stop {
 				stop = <-drifter.traveler.freezeChan
 			}
-			// time run out, you're dead
-			//TODO: drifter lives after death -> * is still on the board
 		default:
 			select {
+			// time run out - get drifter off the board
 			case <-drifter.traveler.timerChan:
 				drifter.traveler.isVisible = false
 				// move out
 				drifter.traveler.currVertex.currTraveler = nil
 				drifter.traveler.currVertex = nil
-				//println("drifter is dead!")
-				// find other place and move
+
+			// find other place and move
 			case <-drifter.traveler.receiveChan:
 				X := drifter.traveler.currVertex.cord.x
 				Y := drifter.traveler.currVertex.cord.y
@@ -176,7 +175,7 @@ func drifterLife(drifter *drifter, vMatrix [][]*vertex, m int, n int) {
 							randY = rand.Intn(n - 1)
 						}
 
-						go timer(drifter.lifeTime, &drifter.traveler.timerChan)
+						go timerLift(drifter.lifeTime, &drifter.traveler.timerChan)
 						// stay dead
 					} else {
 						//time.Sleep(time.Duration(rand.Intn(500)) * time.Millisecond)
@@ -188,15 +187,15 @@ func drifterLife(drifter *drifter, vMatrix [][]*vertex, m int, n int) {
 	}
 }
 
-func timer(T int, wakeChan *chan bool) {
+func timerLift(T int, wakeChan *chan bool) {
 	time.Sleep(time.Duration(T) * time.Millisecond)
 	*wakeChan <- true
 }
 
-func freezer(travList []*traveler, cameraFreezerChannel chan bool, freezerCameraChannel chan bool) {
+func freezerLife(travList []*traveler, cameraFreezerChannel chan bool, freezerCameraChannel chan bool) {
 	for {
 		select {
-		// receive signal from camera
+		// receive signal from cameraLife
 		case stopStart := <-cameraFreezerChannel:
 			// notify all live travelers
 			for _, trav := range travList {
@@ -204,20 +203,20 @@ func freezer(travList []*traveler, cameraFreezerChannel chan bool, freezerCamera
 					trav.freezeChan <- stopStart
 				}
 			}
-			// notify camera that all travellers stopped
+			// notify cameraLife that all travellers stopped
 			freezerCameraChannel <- stopStart
 		default:
 		}
 	}
 }
 
-func camera(vMatrix [][]*vertex, travelers []*traveler, cameraFreezerChannel chan bool, freezerCameraChannel chan bool) {
+func cameraLife(vMatrix [][]*vertex, travelers []*traveler, cameraFreezerChannel chan bool, freezerCameraChannel chan bool) {
 	timerChan := make(chan bool)
-	go timer(1000, &timerChan)
+	go timerLift(1000, &timerChan)
 	for {
 		select {
 		case <-timerChan:
-			// notify freezer to stop travelers
+			// notify freezerLife to stop travelers
 			cameraFreezerChannel <- true
 			// wait for freezers response
 			<-freezerCameraChannel
@@ -306,24 +305,24 @@ func camera(vMatrix [][]*vertex, travelers []*traveler, cameraFreezerChannel cha
 			println()
 			println()
 
-			// tell freezer to unfreeze all travelers
+			// tell freezerLife to unfreeze all travelers
 			cameraFreezerChannel <- false
 			// wait for response
 			<-freezerCameraChannel
-			// set timer
-			go timer(1000, &timerChan)
+			// set timerLift
+			go timerLift(1000, &timerChan)
 		default:
 		}
 	}
 }
 
-func travSender(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
-	// create initial timer
-	go timer(rand.Intn(5000), &traveler.timerChan)
+func travelerLife(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
+	// create initial timerLift
+	go timerLift(rand.Intn(5000), &traveler.timerChan)
 	for {
 		// cascading select - makes creating channel priority hierarchy possible
 		select {
-		// stop for the camera
+		// stop for the cameraLife
 		case stop := <-traveler.freezeChan:
 			for stop {
 				stop = <-traveler.freezeChan
@@ -341,7 +340,7 @@ func travSender(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 				return
 			default:
 				select {
-				// timer says to make a move
+				// timerLift says to make a move
 				case <-traveler.timerChan:
 					// not first move (traveler already spawned)
 					if traveler.currVertex != nil {
@@ -378,8 +377,8 @@ func travSender(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 							traveler.isVisible = true
 						}
 					}
-					//go timer(rand.Intn(1000), &traveler.timerChan)
-					go timer(1000, &traveler.timerChan)
+					//go timerLift(rand.Intn(1000), &traveler.timerChan)
+					go timerLift(1000, &traveler.timerChan)
 				default:
 				}
 			}
@@ -387,7 +386,7 @@ func travSender(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 	}
 }
 
-func vertexListener(vert *vertex) {
+func vertexServerListener(vert *vertex) {
 	for {
 		select {
 		case traveler := <-vert.receive:
@@ -396,14 +395,14 @@ func vertexListener(vert *vertex) {
 			if vert.currTraveler == nil {
 				vert.currTraveler = traveler
 				response = true
+
 				// traveler wants to move in a vertex occupied by a drifter
 			} else if vert.currTraveler.id == " *" && traveler.id != " *" {
-				//println(traveler.id, " wants to move in!")
 				vert.currTraveler.receiveChan <- false
 				response = <-vert.vertDriftChan
+
 				// traveler wants to move in a vertex occupied by a danger
 			} else if vert.currTraveler.id == " #" && traveler.id != " *" && traveler.id != " #" {
-				//println(traveler.id, " moves into danger!")
 				vert.currTraveler.deathChan <- true
 				traveler.deathChan <- true
 			} else {
@@ -457,6 +456,7 @@ type traveler struct {
 	isAlive   bool
 
 	receiveChan chan bool
+	moveChan    chan bool
 	deathChan   chan bool
 	freezeChan  chan bool
 	timerChan   chan bool
@@ -489,8 +489,9 @@ func newTraveler(id string) *traveler {
 		id:          id,
 		isAlive:     true,
 		moveHistory: make([]coordinates, 0),
-		receiveChan: make(chan bool, 2),
-		freezeChan:  make(chan bool), // HOTFIX -> to be removed
+		receiveChan: make(chan bool),
+		freezeChan:  make(chan bool),
+		moveChan:    make(chan bool),
 		deathChan:   make(chan bool, 1),
 		timerChan:   make(chan bool)}
 	return &traveler
