@@ -75,8 +75,8 @@ func main() {
 
 	cameraFreezerChannel := make(chan bool)
 	freezerCameraChannel := make(chan bool)
-	go freezer(travelers, &cameraFreezerChannel, &freezerCameraChannel)
-	go camera(vMatrix, &cameraFreezerChannel, &freezerCameraChannel, m, n)
+	go freezer(travelers, cameraFreezerChannel, freezerCameraChannel)
+	go camera(vMatrix, travelers, cameraFreezerChannel, freezerCameraChannel)
 
 	select {}
 }
@@ -152,7 +152,7 @@ func drifterLife(drifter *drifter, vMatrix [][]*vertex, m int, n int) {
 			case <-drifter.traveler.receiveChan:
 				X := drifter.traveler.currVertex.cord.x
 				Y := drifter.traveler.currVertex.cord.y
-				oldChannel := drifter.traveler.currVertex.drifterChan
+				oldChannel := drifter.traveler.currVertex.vertDriftChan
 				if ((X+1 < n) && travHandshake(drifter.traveler, vMatrix[X+1][Y])) ||
 					((X-1 >= 0) && travHandshake(drifter.traveler, vMatrix[X-1][Y])) ||
 					((Y+1 < m) && travHandshake(drifter.traveler, vMatrix[X][Y+1])) ||
@@ -193,35 +193,38 @@ func timer(T int, wakeChan *chan bool) {
 	*wakeChan <- true
 }
 
-func freezer(travList []*traveler, cameraFreezerChannel *chan bool, freezerCameraChannel *chan bool) {
+func freezer(travList []*traveler, cameraFreezerChannel chan bool, freezerCameraChannel chan bool) {
 	for {
 		select {
-		case stopStart := <-*cameraFreezerChannel:
+		case stopStart := <-cameraFreezerChannel:
 			for _, trav := range travList {
 				if trav.isAlive {
 					trav.freezeChan <- stopStart
 				}
 			}
-			*freezerCameraChannel <- stopStart
+			freezerCameraChannel <- stopStart
 		default:
 		}
 	}
 }
 
-func camera(vMatrix [][]*vertex, cameraFreezerChannel *chan bool, freezerCameraChannel *chan bool, m int, n int) {
+func camera(vMatrix [][]*vertex, travelers []*traveler, cameraFreezerChannel chan bool, freezerCameraChannel chan bool) {
 	timerChan := make(chan bool)
 	go timer(1000, &timerChan)
 	for {
 		select {
 		case <-timerChan:
-			*cameraFreezerChannel <- true
-			<-*freezerCameraChannel
+			cameraFreezerChannel <- true
+			<-freezerCameraChannel
+
+			boardWidth := 2*len(vMatrix) - 1
+			boardHeight := 2*len(vMatrix[0]) - 1
 
 			// make board and set all the fields
 			var board [][]*boardField
-			for i := 0; i < 2*n-1; i++ {
+			for i := 0; i < boardWidth; i++ {
 				var boardRow []*boardField
-				for j := 0; j < 2*m-1; j++ {
+				for j := 0; j < boardHeight; j++ {
 					var val string
 					isVisible := false
 					if i%2 != 0 {
@@ -245,34 +248,37 @@ func camera(vMatrix [][]*vertex, cameraFreezerChannel *chan bool, freezerCameraC
 				board = append(board, boardRow)
 			}
 
-			// trackback
-			for i := 0; i < n; i++ {
-				for j := 0; j < m; j++ {
-					currVert := vMatrix[i][j]
-					if currVert.currTraveler != nil {
-						// emplace traveler
-						board[i*2][j*2].val = currVert.currTraveler.id
-						board[i*2][j*2].isVisible = true
-						for k := 1; k < len(currVert.currTraveler.moveHistory); k++ {
-							startX := currVert.currTraveler.moveHistory[k-1].x * 2
-							startY := currVert.currTraveler.moveHistory[k-1].y * 2
-							endX := currVert.currTraveler.moveHistory[k].x * 2
-							endY := currVert.currTraveler.moveHistory[k].y * 2
-							if endY > startY {
-								board[startX][startY+1].isVisible = true
-							} else if endY < startY {
-								board[startX][startY-1].isVisible = true
-							}
-							if endX > startX {
-								board[startX+1][startY].isVisible = true
-							} else if endX < startX {
-								board[startX-1][startY].isVisible = true
-							}
+			for _, trav := range travelers {
+				if trav.currVertex != nil {
+					X := trav.currVertex.cord.x
+					Y := trav.currVertex.cord.y
+					board[X*2][Y*2].val = trav.id
+					board[X*2][Y*2].isVisible = true
+
+					for k := 1; k < len(trav.moveHistory); k++ {
+						startX := trav.moveHistory[k-1].x * 2
+						startY := trav.moveHistory[k-1].y * 2
+						endX := trav.moveHistory[k].x * 2
+						endY := trav.moveHistory[k].y * 2
+
+						// down
+						if endY > startY {
+							board[startX][startY+1].isVisible = true
+							// up
+						} else if endY < startY {
+							board[startX][startY-1].isVisible = true
 						}
-						// create new coordinates
-						currVert.currTraveler.moveHistory = make([]coordinates, 0)
-						currVert.currTraveler.moveHistory = append(currVert.currTraveler.moveHistory, vMatrix[i][j].cord)
+						// right
+						if endX > startX {
+							board[startX+1][startY].isVisible = true
+							// left
+						} else if endX < startX {
+							board[startX-1][startY].isVisible = true
+						}
 					}
+					// create new coordinates
+					trav.moveHistory = make([]coordinates, 0)
+					trav.moveHistory = append(trav.moveHistory, trav.currVertex.cord)
 				}
 			}
 
@@ -305,12 +311,12 @@ func camera(vMatrix [][]*vertex, cameraFreezerChannel *chan bool, freezerCameraC
 			//	}
 			//}
 
-			for i := 0; i < 2*n-1; i++ {
-				for j := 0; j < 2*m-1; j++ {
-					if board[i][j].isVisible {
-						print(board[i][j].val)
+			for _, boardRow := range board {
+				for _, vertex := range boardRow {
+					if vertex.isVisible {
+						print(vertex.val)
 					} else {
-						spaces := strings.Repeat(" ", utf8.RuneCountInString(board[i][j].val))
+						spaces := strings.Repeat(" ", utf8.RuneCountInString(vertex.val))
 						print(spaces)
 					}
 				}
@@ -319,8 +325,8 @@ func camera(vMatrix [][]*vertex, cameraFreezerChannel *chan bool, freezerCameraC
 			println()
 			println()
 
-			*cameraFreezerChannel <- false
-			<-*freezerCameraChannel
+			cameraFreezerChannel <- false
+			<-freezerCameraChannel
 			go timer(1000, &timerChan)
 		default:
 		}
@@ -385,7 +391,7 @@ func travSender(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 						}
 					}
 					//go timer(rand.Intn(750), &traveler.timerChan)
-					go timer(500, &traveler.timerChan)
+					go timer(1000, &traveler.timerChan)
 				default:
 				}
 			}
@@ -405,7 +411,7 @@ func vertexListener(vert *vertex) {
 		} else if vert.currTraveler.id == " *" && traveler.id != " *" {
 			//println(traveler.id, " wants to move in!")
 			vert.currTraveler.receiveChan <- false
-			response = <-vert.drifterChan
+			response = <-vert.vertDriftChan
 			// traveler wants to move in a vertex occupied by a danger
 		} else if vert.currTraveler.id == " #" && traveler.id != " *" && traveler.id != " #" {
 			//println(traveler.id, " moves into danger!")
@@ -471,8 +477,8 @@ type traveler struct {
 }
 
 type vertex struct {
-	drifterChan chan bool
-	receive     chan *traveler
+	vertDriftChan chan bool
+	receive       chan *traveler
 
 	cord         coordinates
 	currTraveler *traveler
@@ -503,9 +509,9 @@ func newTraveler(id string) *traveler {
 
 func newVertex(coordinates coordinates) *vertex {
 	ver := vertex{
-		receive:     make(chan *traveler),
-		drifterChan: make(chan bool),
-		cord:        coordinates}
+		receive:       make(chan *traveler),
+		vertDriftChan: make(chan bool),
+		cord:          coordinates}
 	return &ver
 }
 
