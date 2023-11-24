@@ -1,3 +1,4 @@
+// Jakub Jaśków 268416
 package main
 
 import (
@@ -59,17 +60,15 @@ func main() {
 		go travelerLife(trav, vMatrix, m, n)
 	}
 
-	// TODO: programme blocks when spawning drifters/dangers with travelers
 	drifters := make([]*drifter, 0, n*m)
-	//nDrifters := rand.Intn(n*m - k)
-	nDrifters := n*m - k
+	nDrifters := (n*m - k) / 2
 	for i := 0; i < nDrifters; i++ {
 		var id string
-		//if rand.Intn(4) == 0 {
-		id = " #"
-		//} else {
-		//id = " *"
-		//}
+		if rand.Intn(4) == 0 {
+			id = " #"
+		} else {
+			id = " *"
+		}
 		drifter := newDrifter(id)
 		drifters = append(drifters, drifter)
 		travelers = append(travelers, drifter.traveler)
@@ -209,17 +208,19 @@ func cameraLife(vMatrix [][]*vertex, travelers []*traveler, cameraFreezerChannel
 		cameraFreezerChannel <- false
 		// wait for response
 		<-freezerCameraChannel
-		//println("End of picture")
 		time.Sleep(time.Duration(2000) * time.Millisecond)
 	}
 }
 
 func suicide(traveler *traveler) {
+	// kill traveler
 	traveler.isAlive = false
+	// take it off board
 	if traveler.currVertex != nil {
 		traveler.currVertex.currTraveler = nil
 	}
 	traveler.currVertex = nil
+	// reset it's history
 	traveler.moveHistory = make([]coordinates, 0)
 	return
 }
@@ -270,9 +271,11 @@ func dangerLife(danger *drifter, vMatrix [][]*vertex, m int, n int) {
 			select {
 			case <-danger.traveler.deathChan:
 				suicide(danger.traveler)
+				return
 			// DANGER DIES FOR REAL
 			case <-danger.traveler.timerChan:
 				suicide(danger.traveler)
+				return
 			default:
 			}
 		}
@@ -284,7 +287,7 @@ func drifterLife(drifter *drifter, vMatrix [][]*vertex, m int, n int) {
 	go timerLife(drifter.lifeTime, &drifter.traveler.timerChan)
 	for {
 		select {
-		// stop for the cameraLife
+		// stop for picture
 		case stop := <-drifter.traveler.freezeChan:
 			for stop {
 				stop = <-drifter.traveler.freezeChan
@@ -293,13 +296,14 @@ func drifterLife(drifter *drifter, vMatrix [][]*vertex, m int, n int) {
 			select {
 			case <-drifter.traveler.timerChan:
 				suicide(drifter.traveler)
+				return
 			default:
 				select {
 				// find other place and move
 				case <-drifter.traveler.moveChan:
 					X := drifter.traveler.currVertex.cord.x
 					Y := drifter.traveler.currVertex.cord.y
-					oldChannel := drifter.traveler.currVertex.vertDriftChan
+					oldChannel := drifter.traveler.currVertex.driftVertChan
 					// try to move
 					canMove := false
 					if ((X+1 < m) && travHandshake(drifter.traveler, vMatrix[X+1][Y])) ||
@@ -308,7 +312,6 @@ func drifterLife(drifter *drifter, vMatrix [][]*vertex, m int, n int) {
 						((Y-1 >= 0) && travHandshake(drifter.traveler, vMatrix[X][Y-1])) {
 						canMove = true
 					} else {
-						println("drifter did not find a spot!")
 						canMove = false
 					}
 					// respond
@@ -322,7 +325,6 @@ func drifterLife(drifter *drifter, vMatrix [][]*vertex, m int, n int) {
 
 func travelerLife(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 	// create initial timerLife
-	pickFreeVertex(traveler, vMatrix, m, n)
 	go timerLife(rand.Intn(5000), &traveler.timerChan)
 	traveler.isAlive = true
 	for {
@@ -339,6 +341,7 @@ func travelerLife(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 			case <-traveler.deathChan:
 				// move out
 				suicide(traveler)
+				return
 			default:
 				select {
 				// timerLife says to make a move
@@ -369,6 +372,8 @@ func travelerLife(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 								travHandshake(traveler, vMatrix[X][Y-1])
 							}
 						}
+					} else {
+						pickFreeVertex(traveler, vMatrix, m, n)
 					}
 					//go timerLife(rand.Intn(1000), &traveler.timerChan)
 					go timerLife(1000, &traveler.timerChan)
@@ -383,27 +388,28 @@ func vertexServerListener(vert *vertex) {
 	for {
 		select {
 		case traveler := <-vert.receive:
-			var response bool
 			// vertex is empty
 			if vert.currTraveler == nil {
 				vert.currTraveler = traveler
-				response = true
+				traveler.receiveChan <- true
 
 				// traveler wants to move in a vertex occupied by a drifter
 			} else if vert.currTraveler.id == " *" && traveler.id != " *" {
-				vert.currTraveler.receiveChan <- false
-				response = <-vert.vertDriftChan
+				// notify drifter
+				vert.currTraveler.moveChan <- false
+				// get response
+				traveler.receiveChan <- <-vert.driftVertChan
 
 				// traveler wants to move in a vertex occupied by a danger
 			} else if vert.currTraveler.id == " #" && traveler.id != " *" && traveler.id != " #" {
+				// notify danger
 				vert.currTraveler.deathChan <- true
+				// notify traveler
+				traveler.receiveChan <- true
 				traveler.deathChan <- true
-				println(traveler.id, " must die!")
 			} else {
-				response = false
+				traveler.receiveChan <- false
 			}
-			// respond
-			traveler.receiveChan <- response
 		default:
 		}
 	}
@@ -428,7 +434,6 @@ func travHandshake(traveler *traveler, toBeVertex *vertex) bool {
 		traveler.currVertex = toBeVertex
 		toBeVertex.currTraveler = traveler
 	}
-	//println("received response")
 	return response
 }
 
@@ -440,12 +445,10 @@ func pickFreeVertex(traveler *traveler, vMatrix [][]*vertex, m int, n int) {
 		randX = rand.Intn(m)
 		randY = rand.Intn(n)
 	}
-	println(traveler.id, " chose [", randX, ",", randY, "]")
 }
 
 type drifter struct {
 	traveler *traveler
-	//isVisible bool
 	lifeTime int
 }
 
@@ -469,7 +472,7 @@ type traveler struct {
 }
 
 type vertex struct {
-	vertDriftChan chan bool
+	driftVertChan chan bool
 	receive       chan *traveler
 
 	cord         coordinates
@@ -497,7 +500,7 @@ func newTraveler(id string) *traveler {
 func newVertex(coordinates coordinates) *vertex {
 	ver := vertex{
 		receive:       make(chan *traveler),
-		vertDriftChan: make(chan bool),
+		driftVertChan: make(chan bool),
 		cord:          coordinates}
 	return &ver
 }
