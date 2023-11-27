@@ -1,7 +1,5 @@
 # Jakub Jaśków 268416
-include("Utils.jl")
-using .Utils
-epsilon = delta = 10^-3
+psilon = delta = 10^-3
 
 @testset "TEST: convergence" begin
   f = x -> x^3 + 1

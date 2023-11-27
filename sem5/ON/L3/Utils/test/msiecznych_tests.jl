@@ -1,7 +1,5 @@
 # Jakub Jaśków 268416
-include("Utils.jl")
-using .Utils
-epsilon = delta = 10^-3
+psilon = delta = 10^-3
 
 @testset "TEST: 1" begin
   f = x -> atan(x)
