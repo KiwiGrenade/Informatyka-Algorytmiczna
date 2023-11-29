@@ -1,5 +1,5 @@
 # Jakub Jaśków 268416
-psilon = delta = 10^-3
+epsilon = delta = 10^-3
 
 @testset "TEST: convergence" begin
   f = x -> x^3 + 1
