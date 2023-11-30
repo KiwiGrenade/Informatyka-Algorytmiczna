@@ -1,12 +1,14 @@
+# Jakub Jaśków 268416
+
 include("Utils1/src/Utils1.jl")
 import .Utils1
-f(x) = abs(x)
-g(x) = 1.0 / (1.0 + x^2)
+using Plots
 
-rysujNnfx(f, -1.0, 1.0, 5) 
-rysujNnfx(f, -1.0, 1.0, 10)
-rysujNnfx(f, -1.0, 1.0, 15)
-
-rysujNnfx(g, -5.0, 5.0, 5)
-rysujNnfx(g, -5.0, 5.0, 10)
-rysujNnfx(g, -5.0, 5.0, 15)
+f = x -> abs(x)
+g = x -> 1/(1+x^2)
+for n in [5, 10, 15]
+    plot_f = rysujNnfx(f, -1., 1., n)
+    plot_g = rysujNnfx(g, -5., 5., n)
+    savefig(plot_f, "plots/zadanie6F_$n.png")
+    savefig(plot_g, "plots/zadanie6G_$n.png")
+end
