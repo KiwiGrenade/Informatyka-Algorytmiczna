@@ -1,3 +1,5 @@
+# Jakub Jaśków 268416
+
 @testset "test1" begin
     w = x -> 5*x^2 + 2*x - 12
     x = [1., 2., 3., 4., 5.]
