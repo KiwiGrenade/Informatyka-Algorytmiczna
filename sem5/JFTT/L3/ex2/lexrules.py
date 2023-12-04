@@ -2,6 +2,7 @@
 
 P = 1234577
 
+# Defining tokens
 tokens = (
     'NUM',
     'ADD',
@@ -17,9 +18,10 @@ tokens = (
     'ERR',
 )
 
+#### Defining rules
 def t_NUM(t):
     r'\d+'
-    t.value = int(t.value) % P
+    t.value = int(t.value)
     return t
 
 t_ADD = r'\+'
