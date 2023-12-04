@@ -1,4 +1,3 @@
-/*Jakub Jaśków 268416*/
 %option noyywrap
 
 %{
@@ -12,17 +11,13 @@ extern int yylex();
 
 
 %%
-    /*delete whitespace*/
 [ \t]  ;
-    /*delete # commets with or without \[enter] escapes*/
 ^#(.|\\\n)*\n ;
 \\\n   ;
-    /*convert digits to numbers in GF(P) (GF - Galois Field / Finite Field) */
 [[:digit:]]+ { 
-    yylval = atoi(yytext) % P; 
+    yylval = atoi(yytext); 
     return NUM; 
 }
-
 "(" {return '(';}
 ")" {return ')';}
 "+" {return '+';}
