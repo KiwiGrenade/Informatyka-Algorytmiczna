@@ -46,10 +46,10 @@ def p_expr_paren(p):
     p[0] = p[2]
 
 def p_expr_neg(p):
-    'expr : SUB LPAREN expr RPAREN %prec NEG'
+    'expr : SUB expr %prec NEG'
     global rpn
     rpn += "~ "
-    p[0] = numConv(-p[3], P)
+    p[0] = numConv(-p[2], P)
 
 def p_expr_add(p):
     'expr : expr ADD expr'
@@ -100,7 +100,7 @@ def p_exponent_paren(p):
     p[0] = p[2]
 
 def p_exponent_neg(p):
-    'exponent : SUB LPAREN exponent RPAREN %prec NEG'
+    'exponent : SUB exponent %prec NEG'
     global rpn
     rpn += "~ "
     p[0] = numConv(-p[3], P-1)
