@@ -1,2 +1,2 @@
 # JFTT-L3
-Status: WIP
+Status: Accepted
