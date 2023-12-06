@@ -1,3 +1,4 @@
+/*# Jakub Jaśków 268415*/
 %{
 #define YYSTYPE int
 #include <iostream>
@@ -54,7 +55,7 @@ line:
 expr: 
     number                          { ONP += to_string($1) + " "; $$ = $1; }
     | '(' expr ')'                  { $$ = $2; }
-    | '-' '(' expr ')' %prec NEG    { ONP += "~ "; $$ = toGP(-$3, P); }
+    | '-' expr %prec NEG            { ONP += "~ "; $$ = toGP(-$2, P); }
     | expr '+' expr                 { ONP += "+ "; $$ = toGP($1 + $3, P); }
     | expr '-' expr                 { ONP += "- "; $$ = toGP($1 - $3, P); }
     | expr '*' expr                 { ONP += "* "; $$ = toGP($1 * $3, P); }
@@ -77,7 +78,7 @@ expr:
 exponent:
     exp_number                              { ONP += to_string($1) + " "; $$ = $1; }
     | '(' exponent ')'                      { $$ = $2; }
-    | '-' '(' exponent ')' %prec NEG        { ONP += "~ "; $$ = toGP(-$3, P-1); }
+    | '-' exponent %prec NEG                { ONP += "~ "; $$ = toGP(-$2, P-1); }
     | exponent '+' exponent                 { ONP += "+ "; $$ = toGP($1 + $3, P-1); }
     | exponent '-' exponent                 { ONP += "- "; $$ = toGP($1 - $3, P-1); }
     | exponent '*' exponent                 { ONP += "* "; $$ = toGP($1 * $3, P-1); }

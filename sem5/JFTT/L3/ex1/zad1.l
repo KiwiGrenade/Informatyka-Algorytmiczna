@@ -1,3 +1,4 @@
+/*# Jakub Jaśków 268415*/
 %option noyywrap
 
 %{
