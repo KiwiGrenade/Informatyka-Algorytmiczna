@@ -1,0 +1,322 @@
+\documentclass{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry}
+\geometry{a4paper}
+\usepackage[T1]{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{titling}
+\usepackage{caption}
+\usepackage[parfill]{parskip}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{decorations.markings}
+\usepackage{subcaption}
+\usepackage{pgffor}
+\usepackage{float}
+
+\begin{document}
+
+    \title{Algorytmy metaheurystyczne - Lista 2}
+    \author{Jakub Jaśków}
+
+    \maketitle
+
+\section*{Opis algorytmów}
+\subsection*{Symulowane wyżarzanie}
+W każdym kroku algorytmu wybierane jest rozwiązanie z otoczenia aktualnego rozwiązania. Jeżeli rozwiązanie to jest lepsze od aktualnego, to staje się ono aktualnym rozwiązaniem. W przeciwnym wypadku, rozwiązanie to staje się aktualnym rozwiązaniem z pewnym prawdopodobieństwem. Prawdopodobieństwo to maleje wraz z upływem czasu poprzez ustalnie aktualnej temperatury, która zmniejsza się w czasie. Zatem w początkowej fazie algorytmu prawdopodobieństwo wybrania gorszego rozwiązania jest większe, a w końcowej małe.\\\\
+Początkowa temperatura ustalana jest jako $T := \alpha N$, gdzie $N$ to liczba wierzchołków.
+Szukanie rozwiązania podzielone jest na epoki o ustalonej liczbie iteracji równej $S := \gamma T$. Po każdej epoce aktualna temperatura jest zmniejszana o ustalony czynnik: $T' := \beta T$.
+Rozwiązanie szukane jest do momentu gdy od ustalonej liczby iteracji $M := \delta N$ nie udało się znaleźć lepszego rozwiązania.\\\\
+Działanie algorytmu można opisać następująco:\\
+1. Wylosuj rozwiązanie początkowe $X$.\\
+2. Wybierz losowe rozwiązanie $X\prime$ znajdujące się w sąsiedztwie $X$.\\
+3. Jeśli $X\prime$ jest lepsze to je przyjmij $(X := X\prime)$. W przeciwnym razie, wyznacz prawdopodobieństwo przyjęcia nowego rozwiązania używając wzoru $e(f (X)-f (X\prime))/T$ i z tym prawdopodobieństwem $X := X\prime$.\\
+4. Jeśli nie wykonano jeszcze odpowiedniej liczby prób w obrębie danej epoki, wróć do punktu 2.\\
+5. Zmniejsz temperaturę.\\
+6. Jeśli nie osiągnięto jeszcze warunku stopu, wróć do punktu 2.\\
+
+\subsection*{Tabu Search}
+W każdym kroku algorytmu wybierane jest takie rozwiązanie z otoczenia aktualnego rozwiązania
+aby było ono najlepsze spośród wszystkich rozwiązań w otoczeniu oraz nie znajdowało się na liście tabu. Jeżeli rozwiązanie to jest lepsze od aktualnego, to staje się ono aktualnym rozwiązaniem.
+Każde rozwiązanie dodawane jest do listy tabu na określoną liczbę iteracji. W ten sposób algorytm może wyjść z lokalnego minimum.\\\\
+Maksymalna długość listy tabu ustalana jest jako $L := \alpha N$, gdzie $N$ to liczba wierzchołków. Gdy lista tabu jest pełna, to usuwane jest z niej najstarsze rozwiązanie.
+Rozwiązanie szukane jest do momentu gdy od ustalonej liczby iteracji $M := \beta N$ nie udało się znaleźć lepszego rozwiązania.\\\\
+Działanie algorytmu można opisać następująco:\\
+1. Wybierz rozwiązanie początkowe (np. wylosuj).\\
+2. Przeszukaj otoczenie bieżącego rozwiązania (deterministycznie lub losowo) i wybierz najlepsze którego nie ma na liście.\\
+3. Umieść je na liście i przyjmij jako bieżące rozwiązanie.\\
+4. Sprawdź warunek stopu i jeśli nie zachodzi to wróć do punktu 2 (warunkiem stopu może być np. koniec pojemności listy, lub liczba iteracji bez znalezienia nowego najlepszego rozwiązania).\\
+\section*{Poszukiwanie dogodnych parametrów}
+W celu wyznaczenia najbardziej optymalnych wartości dla naszych heurystyk przeprowadzimy testy dla różnych wartości zmiennych $\alpha, \beta, \delta, \gamma$.\\\\
+Wykresy poniżej zostały wyznaczone na podstawie 10 uruchomień heurystyki dla każdej kombinacji parametrów.
+\subsection*{Symulowane wyżarzanie}
+\subsubsection*{Temperatura początkowa - średnia długość cyklu}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9.5cm]{../../plots/sa-tuning-alpha-avg-xqf131.png}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9.5cm]{../../plots/sa-tuning-alpha-avg-xqg237.png}
+    \end{figure}
+
+\newpage
+
+\subsubsection*{Temperatura początkowa - minimalna długość cyklu}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9.5cm]{../../plots/sa-tuning-alpha-min-xqf131.png}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9.5cm]{../../plots/sa-tuning-alpha-min-xqg237.png}
+    \end{figure}
+
+\newpage
+
+\subsubsection*{Temperatura początkowa - średni czas działania}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9.5cm]{../../plots/sa-tuning-alpha-time-xqf131.png}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9.5cm]{../../plots/sa-tuning-alpha-time-xqg237.png}
+    \end{figure}
+
+
+\newpage 
+
+\subsubsection*{Chłodzenie - średnia długość cyklu}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9.5cm]{../../plots/sa-tuning-beta-avg-xqf131.png}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9.5cm]{../../plots/sa-tuning-beta-avg-xqg237.png}
+    \end{figure}
+
+\newpage
+
+\subsubsection*{Chłodzenie - minimalna długość cyklu}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9.5cm]{../../plots/sa-tuning-beta-min-xqf131.png}
+    \end{figure}
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9.5cm]{../../plots/sa-tuning-beta-min-xqg237.png}
+    \end{figure}
+
+\newpage
+
+\subsubsection*{Chłodzenie - średni czas działania}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9.5cm]{../../plots/sa-tuning-beta-time-xqf131.png}
+    \end{figure}
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9.5cm]{../../plots/sa-tuning-beta-time-xqg237.png}
+    \end{figure}
+
+\newpage
+
+\subsubsection*{Zmiana długość epoki i liczby iteracji: brak popraw średniej długości cyklu}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=10.0cm]{../../plots/sa-tuning-gamma-delta-avg-xqf131.png}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=10.0cm]{../../plots/sa-tuning-gamma-delta-avg-xqg237.png}
+    \end{figure}
+
+\newpage
+
+\subsubsection*{Zmiana długość epoki i liczby iteracji: brak popraw minimalnej długości cyklu}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=10.0cm]{../../plots/sa-tuning-gamma-delta-min-xqf131.png}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=10.0cm]{../../plots/sa-tuning-gamma-delta-min-xqg237.png}
+    \end{figure}
+\newpage
+
+\subsubsection*{Zmiana długość epoki i liczby iteracji: brak popraw średniego czasu}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=10.0cm]{../../plots/sa-tuning-gamma-delta-time-xqf131.png}
+    \end{figure}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=10.0cm]{../../plots/sa-tuning-gamma-delta-time-xqg237.png}
+    \end{figure}
+
+\newpage
+
+\subsection*{Tabu Search}
+
+\subsubsection*{Zmiana długości listy i liczby iteracji: brak wpływu na średnią długość cyklu}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9cm]{../../plots/ts-tuning-alpha-beta-avg-xqf131.png}
+    \end{figure}
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9cm]{../../plots/ts-tuning-alpha-beta-avg-xqg237.png}
+    \end{figure}
+
+\newpage
+
+\subsection*{Zmiana długości listy i liczby iteracji: brak wpływu na minimalna długość cyklu}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9cm]{../../plots/ts-tuning-alpha-beta-min-xqf131.png}
+    \end{figure}
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9cm]{../../plots/ts-tuning-alpha-beta-min-xqg237.png}
+    \end{figure}
+
+\newpage
+
+\subsection*{Zmiana długości listy i liczby iteracji: brak wpływu na średni czas działania}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9cm]{../../plots/ts-tuning-alpha-beta-time-xqf131.png}
+    \end{figure}
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=9cm]{../../plots/ts-tuning-alpha-beta-time-xqg237.png}
+    \end{figure}
+
+\newpage
+
+\subsubsection*{Średnia długosć cyklu}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline 
+        \multirow{2}{*}{Przykład} & \multicolumn{2}{|c|}{Losowe rozwiązania początkowe} & \multicolumn{2}{|c|}{Rozwiązanie początkowe bazujące na MST} \\
+        \cline{2-5}
+        \cline{2-5} & Otoczenie pełne & Otoczenie losowe & Otoczenie pełne & Otoczenie losowe \\
+        \hline
+        xqf131 & 610 & 640 & 602 & 620 \\
+        \hline
+        xqg237 & 1116 & 1166 & 1089 & 1132 \\
+        \hline
+        pma343 & 1487 & 1535 & 1454 & 1503 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsubsection*{Minimalna długość cyklu}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline 
+        \multirow{2}{*}{Przykład} & \multicolumn{2}{|c|}{Losowe rozwiązania początkowe} & \multicolumn{2}{|c|}{Rozwiązanie początkowe bazujące na MST} \\
+        \cline{2-5}
+        \cline{2-5} & Otoczenie pełne & Otoczenie losowe & Otoczenie pełne & Otoczenie losowe \\
+        \hline
+        xqf131 & 582 & 593 & 594 & 594 \\
+        \hline
+        xqg237 & 1070 & 1118 & 1060 & 1085 \\
+        \hline
+        pma343 & 1433 & 1474 & 1428 & 1455 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsubsection*{Średni czas działania}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline 
+        \multirow{2}{*}{Przykład} & \multicolumn{2}{|c|}{Losowe rozwiązania początkowe} & \multicolumn{2}{|c|}{Rozwiązanie początkowe bazujące na MST} \\
+        \cline{2-5}
+        \cline{2-5} & Otoczenie pełne & Otoczenie losowe & Otoczenie pełne & Otoczenie losowe \\
+        \hline
+        xqf131 & 0.18 & 0.007 & 0.06 & 0.004 \\
+        \hline
+        xqg237 & 1.9 & 0.03 & 0.5 & 0.02 \\
+        \hline
+        pma343 & 7.4 & 0.13 & 2.1 & 0.07 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section*{Wyniki}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c||c|c||c|c||c|c|c|}
+        \hline
+        \multirow{2}{*}{Przykład} & \multirow{2}{*}{Optimum} & \multicolumn{2}{|c|}{Local Search} & \multicolumn{2}{|c|}{Sumulowane Wyżarzanie}  & \multicolumn{2}{|c|}{Tabu Search}  \\
+        \cline{3-8}
+        & & śr. waga & min. waga & śr. waga & min. waga & śr. waga & min. waga \\
+        \hline\hline
+        xqf131 & 564 & 620.79 & 578 & 590.25 & 567 & 604.69 & 594 \\
+        \hline
+        xqg237 & 1019 & 1111.17 & 1062 & 1071.57 & 1036 & 1098.06 & 1060 \\
+        \hline
+        pma343 & 1368 & 1452.93 & 1424 & 1369.19 & 1378 & 1455.45 & 1428 \\
+        \hline
+        pka379 & 1332 & 1443.34 & 1399 & 1391.45 & 1360 & 1402.36 & 1376 \\
+        \hline
+        bcl380 & 1621 & 1834.46 & 1728 & 1725.17 & 1685 & 1735.09 & 1707 \\
+        \hline
+        pbl395 & 1281 & 1432.16 & 1359 & 1335.08 & 1317 & 1337.37 & 1352 \\
+        \hline
+        pbk411 & 1343 & 1482.24 & 1426 & 1485.94 & 1397 & 1425.27 & 1405 \\
+        \hline
+        pbn423 & 1365 & 1535.68 & 1454 & 1476.04 & 1412 & 1472.93 & 1440 \\
+        \hline
+        pbm436 & 1443 & 1623.38 & 1535 & 1497.92 & 1481 & 1576.97 & 1535 \\
+        \hline
+        xql662 & 2513 & 2829.16 & 2707 & 2700.47 & 2617 & 2693.88 & 2673 \\
+        \hline
+        xit1083 & 3558 & 4062.82 & 3919 & 3810.48 & 3746 & 3953.64 & 3768 \\
+        \hline
+        icw1483 & 4416 & 5031.55 & 4839 & 4745.15 & 4628 & 4759.97 & 4733 \\
+        \hline
+        djc1785 & 6115 & 6792.91 & 6697 & 6527.46 & 6460 & 6471.76 & 6450 \\
+        \hline
+        dcb2086 & 6600 & 7516.67 & 7313 & 7137.46 & 7074 & 7172.16 & 7153 \\
+        \hline
+        pds2566 & 7643 & 8659.21 & 8506 & 8245.51 & 8151 & 8305.68 & 8255 \\
+        \hline
+    \end{tabular}
+\end{table}
+\section*{Parametry}
+\subsection*{Symulowane wyżarzanie}
+    $\alpha = 	0.5$ 	(temperatura początkowa) \\
+    $\beta = 	0.95$ 	(chłodzenie)\\
+    $\delta = 	0.1$ 	(max. iteracji)\\
+    $\gamma = 	0.2$ 	(długość epoki)\\
+    Otoczenie: pełne\\
+    Rozwiązanie początkowe: losowe\\
+
+\subsection*{Tabu Search}
+    $\alpha = 0.1$ 	(długość listy tabu)\\
+    $\beta = 	0.2$ 	(max. iteracji)\\
+    Otoczenie: pełne\\
+    Rozwiązanie początkowe: MST\\
+\end{document}
