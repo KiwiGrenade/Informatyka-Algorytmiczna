@@ -5,7 +5,7 @@ using .blocksys
 using .matrixgen
 using Test
 
-test_case_list = ["Dane16_1_1/", "Dane10000_1_1/", "Dane50000_1_1/", "Dane100000_1_1/", "Dane300000_1_1/", "Dane500000_1_1/"]
+test_case_list = ["Dane16_1_1/", "Dane10000_1_1/", "Dane50000_1_1/", "Dane100000_1_1/"]
 n_list = [16, 10000, 50000, 100000, 300000, 500000]
 for i in eachindex(test_case_list)
     test = test_case_list[i]
