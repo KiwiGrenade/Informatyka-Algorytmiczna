@@ -3,7 +3,7 @@ include("blocksys/src/blocksys.jl")
 include("blocksys/src/matrixgen.jl")
 using .blocksys
 using .matrixgen
-using PyPlot
+using Plots
 
 # Sizes of matrices to generate
 mat_sizes = [1000, 2000, 5000, 10000, 20000, 25000, 30000, 50000]
@@ -54,28 +54,13 @@ end
 #### Solving
 ### Plots
 # Time
-clf()
-plot(mat_sizes, times_gauss, label="Gauss", linewidth=1.0)
-plot(mat_sizes, times_gauss_choose, label="Gauss with choose", linewidth=1.0)
-grid(true)
-legend(loc=2,borderaxespad=0)
-title("Calculation time")
-savefig("../plots/times_solving.png")
-
+plot(mat_sizes, [times_gauss times_gauss_choose], label=["Gauss" "Gauss with choose"], linewidth=[3 3])
+png("plots/times_solving")
 # Memory
-clf()
-plot(mat_sizes, memory_gauss, label="Gauss", linewidth=1.0)
-plot(mat_sizes, memory_gauss_choose, label="Gauss with choose", linewidth=1.0)
-grid(true)
-legend(loc=2,borderaxespad=0)
-title("Used memory")
-savefig("../plots/memory_solving.png")
-
+plot(mat_sizes, [memory_gauss memory_gauss_choose], label=["Gauss" "Gauss with choose"], linewidth=[3 3])
+png("plots/memory_solving")
 # Operations
-clf()
-plot(mat_sizes, operations_gauss, label="Gauss", linewidth=1.0)
-plot(mat_sizes, operations_gauss_choose, label="Gauss with choose", linewidth=1.0)
-grid(true)
-legend(loc=2,borderaxespad=0)
-title("Number of operations")
-savefig("../plots/operations_solving.png")
+plot(mat_sizes, [operations_gauss operations_gauss_choose], label=["Gauss" "Gauss with choose"], linewidth=[3 3])
+png("plots/operations_solving")
+
+rm("test_matrix.txt")
