@@ -22,15 +22,13 @@ export solve_gauss_with_choose
 
 function load_matrix(filepath::String)
     local data = C_NULL
-
     open(filepath, "r") do file
         sizes = split(readline(file), " ")
         n = parse(Int64, sizes[1])
         l = parse(Int64, sizes[2])
 
-        # Matrix A is sparse array type.
+        # Matrix A
         A = spzeros(Float64, n, n)
-
         for line in eachline(file)
             data = split(line, " ")
             i = parse(Int64, data[1])
@@ -39,10 +37,8 @@ function load_matrix(filepath::String)
 
             A[j, i] = value
         end
-
         data = (A, n, l)
     end
-
     return data
 end
 
@@ -58,22 +54,17 @@ Return:
 """
 function load_vector(filepath::String)
     local data = C_NULL
-
     open(filepath, "r") do file
         n = parse(Int64, readline(file))
-
         # Vector b
         b = zeros(n)
         i = 1
-
         for line in eachline(file)
             b[i] = parse(Float64, line)
             i += 1
         end
-
         data = (b, n)
     end
-
     return data
 end
 
@@ -92,8 +83,6 @@ Nothing is retruned.
 """
 function write_results(filepath::String, x::Vector{Float64}, n::Int64, is_b_gen::Bool)
     local err::Float64
-    local x_
-
     open(filepath, "w") do file
         if is_b_gen 
             x_initial = ones(n)
@@ -122,19 +111,16 @@ b - generated vector b; is Vector{Float64}
 """
 function generate_right_side_vector(A::SparseMatrixCSC{Float64, Int64}, n::Int64, l::Int64)
     b = zeros(n)
-
     for i = 1:n
         b[i] = Float64(0.0)
-
         for j = max(1, Int64(l * floor((i - 1) / l)) - 1):min(n, Int64(l + l * floor((i - 1) / l)))
             b[i] += A[j, i]
         end 
-        
+
         if i + l <= n
             b[i] += A[i, i + l]
         end
     end
-
     return b
 end
 
@@ -205,24 +191,19 @@ x - vector with solutions; if Vector{Float64}
 """
 function solve_gauss(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64}, n::Int64, l::Int64)
     res = gauss(A, b, n, l, false)
-
     _A = res[1]
     _b = res[2]
-
     # Vector with solutions of equations set
     x = zeros(n)
-
     # Iteration trough rows
     for i = n:-1:1
         sum_from_row = Float64(0.0)
-
         #Iteration trough columns
         for j = i + 1:min(n, i + l)
             sum_from_row += _A[j, i] * x[j]
         end
         x[i] = (_b[i] - sum_from_row) / _A[i, i]
     end
-
     return x
 end
 
@@ -244,7 +225,6 @@ Return:
                 b - given vector of right sides after elimination, is Vector{Float64}
 """
 function gauss_with_choose(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64}, n::Int64, l::Int64, is_lu::Bool)
-
     # Permutation vector
     perm = zeros(Int64, n)
 
@@ -255,13 +235,10 @@ function gauss_with_choose(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64
 
     # Iteration trough columns
     for k = 1:n - 1
-
         # Elements to eliminate in current column
         to_eliminate = k + (l - k % l)
-
         # Row with maximal element
         max_row = k
-
         # Maximal element in column
         max_element = abs(A[k, k])
 
@@ -313,11 +290,9 @@ x - vector with solutions; if Vector{Float64}
 """
 function solve_gauss_with_choose(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64}, n::Int64, l::Int64)
     res = gauss_with_choose(A, b, n, l, false)
-
     _A = res[1]
     _perm = res[2]
     _b = res[3]
-
     #Vector with solutions of equations set
     x = zeros(n)
 
@@ -332,7 +307,7 @@ function solve_gauss_with_choose(A::SparseMatrixCSC{Float64, Int64}, b::Vector{F
 
         x[i] = (_b[_perm[i]] - sum_from_row) / _A[i, _perm[i]]
     end
-
     return x
 end
+
 end # module end
