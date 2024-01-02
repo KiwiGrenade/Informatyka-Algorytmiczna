@@ -2,15 +2,6 @@
 
 module blocksys
 using SparseArrays
-"""
-Reads matrix data from file.
-
-Parameters:
-filepath - path to input file
-
-Return: 
-(A, n, l) - tuple: A - matrix; n - size of matrix A; l - size of submatrices
-"""
 
 export load_matrix
 export load_vector
@@ -20,6 +11,18 @@ export solve_gauss
 export gauss_with_choose
 export solve_gauss_with_choose
 
+"""
+Reads matrix data from file.
+
+Parameters:
+filepath - path to input file
+
+Return: 
+(A, n, l) - tuple: 
+    A - matrix; 
+    n - size of matrix A;
+    l - size of submatrices
+"""
 function load_matrix(filepath::String)
     local data = C_NULL
     open(filepath, "r") do file
@@ -44,13 +47,15 @@ end
 
 
 """
-Reads vector of right sides
+Reads vector of right sides.
 
 Parameters:
-filepath - is path to file with data; is String
+filepath - String - file path to input data.
 
 Return:
-(b, n) - tuple: b - vector of right sides; n size of vector b
+(b, n) - tuple:
+    b - vector of right sides;
+    n - size of vector b
 """
 function load_vector(filepath::String)
     local data = C_NULL
@@ -73,13 +78,13 @@ end
 Writes results of computations to file.
 
 Parameters:
-filpath - path to file where results should be saved; is String
-x - vector with arguments; is Vector{Float64}
-n - length of given vector x; is Int64
-is_b_gen - determinates type of b vector: if true b was generated, false - b was read from file
+filpath - String - path to file where results should be saved.
+x - Vector{Float64} -vector with arguments 
+n - Int64 - length of given vector x 
+is_b_gen - determinates type of b vector:
+    true - b was generated, false - b was read from file
 
-Return:
-Nothing is retruned.
+Return nothing.
 """
 function write_results(filepath::String, x::Vector{Float64}, n::Int64, is_b_gen::Bool)
     local err::Float64
@@ -102,12 +107,12 @@ end
 Genrates right sides vector for given matrix.
 
 Parameters:
-A - matrix; is Sparse Matrix; is SparseMatrixCSC{Float64, Int64}
-n - size of matrix A; is Int64
-l - size of submatrices of A; is Int64
+A - SparseMatrixCSC{Float64, Int64}
+n - Int64 - size of matrix A
+l - Int64 - size of submatrices of A
 
 Returns:
-b - generated vector b; is Vector{Float64}
+b - Vector{Float64} - generated vector of solutions 
 """
 function generate_right_side_vector(A::SparseMatrixCSC{Float64, Int64}, n::Int64, l::Int64)
     b = zeros(n)
@@ -126,50 +131,38 @@ end
 
 
 """
-Makes gaussian eleimination on given matrix. 
-If is_lu is set function makes LU decompsition using gaussian elimiantion.
 
 Parameters:
-A - matrix; is Sparse Matrix; is SparseMatrixCSC{Float64, Int64}
-b - vector with values; is Vector{Float64}
-n - size of matrix A; is Int64
-l - size of submatrices of A; is Int64
-is_lu - detrminates if function should be used: to LU decomposition if true; to only gauss elimination oth.
+A - SparseMatrixCSC{Float64, Int64}
+b - Vector{Float64} - vector with values
+n - Int64 - size of matrix A
+l - Int64 - size of submatrices of A
 
 Return:
-(A, b) - tuple: A - given matrix after elimination, is SparseMatrixCSC{Float64, Int64};
-                b - given vector of right sides after elimination, is Vector{Float64}
+(A, b) - tuple: 
+    A - SparseMatrixCSC{Float64, Int64} - given matrix after elimination
+    b - Vector{Float64} - given vector of right sides after elimination
 """
-function gauss(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64}, n::Int64, l::Int64, is_lu::Bool)
+function gauss(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64}, n::Int64, l::Int64)
     # Iteration trough columns
     for k = 1:n - 1
 
         # Elements to eliminate in current column
         to_eliminate = k + (l - k % l)
-        #to_eliminate = convert(Int64, min(l + l * floor((k+1) / l), n))
 
         # Iteration trough elements to eliminate
         for i = k + 1:to_eliminate
-
             # Multiplier = element to eliminate / current element on diagonal
             multiplier = A[k, i] / A[k, k]
 
-            if is_lu
-                # If it's LU decomposition set here used multiplier
-                A[k, i] = multiplier
-            else
-                A[k, i] = Float64(0.0)
-            end
+            A[k, i] = Float64(0.0)
 
             # Iteration trough columns
             for j = k + 1:min(k + l, n)
                 A[j, i] -= multiplier * A[j, k]
             end
 
-            # If it's LU it's unnecessarry
-            if !is_lu
-                b[i] -= multiplier * b[k]
-            end
+            b[i] -= multiplier * b[k]
         end
     end
 
@@ -181,16 +174,16 @@ end
 Solves set of linear equations using gaussian elimination method.
 
 Parameters:
-A - matrix; is Sparse Matrix; is SparseMatrixCSC{Float64, Int64}
-b - vector with values; is Vector{Float64}
-n - size of matrix A; is Int64
-l - size of submatrices of A; is Int64
+A - SparseMatrixCSC{Float64, Int64}
+b - Vector{Float64} - vector with values
+n - Int64 - size of matrix A 
+l - Int64 - size of submatrices of A
 
 Return:
-x - vector with solutions; if Vector{Float64}
+x - Vector{Float64} - vector of solutions
 """
 function solve_gauss(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64}, n::Int64, l::Int64)
-    res = gauss(A, b, n, l, false)
+    res = gauss(A, b, n, l)
     _A = res[1]
     _b = res[2]
     # Vector with solutions of equations set
@@ -210,21 +203,20 @@ end
 
 """
 Makes gaussian eleimination with choose of main element on given matrix. 
-If is_lu is set function makes LU decompsition using gaussian elimiantion with choose of main element.
 
 Parameters:
-A - matrix; is Sparse Matrix; is SparseMatrixCSC{Float64, Int64}
-b - vector with values; is Vector{Float64}
-n - size of matrix A; is Int64
-l - size of submatrices of A; is Int64
-is_lu - detrminates if function should be used: to LU decomposition if true; to only gauss elimination oth.
+A - SparseMatrixCSC{Float64, Int64} 
+b - Vector{Float64} - vector with values
+n - Int64 - size of matrix A
+l - Int64 - size of submatrices of A
 
 Return:
-(A, perm, b) - tuple: A - given matrix after elimination, is SparseMatrixCSC{Float64, Int64};
-                perm - permutation vector, is Vector{Float64};
-                b - given vector of right sides after elimination, is Vector{Float64}
+(A, perm, b) - tuple: 
+    A - SparseMatrixCSC{Float64, Int64} - given matrix after elimination
+    perm - Vector{Float64} - permutation vector
+    b - Vector{Float64} - given vector of right sides after elimination
 """
-function gauss_with_choose(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64}, n::Int64, l::Int64, is_lu::Bool)
+function gauss_with_choose(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64}, n::Int64, l::Int64)
     # Permutation vector
     perm = zeros(Int64, n)
 
@@ -250,25 +242,17 @@ function gauss_with_choose(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64
         end
         
         perm[k], perm[max_row] = perm[max_row], perm[k]
-
         # Iteration trough elements to eliminate
         for i = k + 1:to_eliminate
             multiplier = A[k, perm[i]] / A[k, perm[k]]
 
-            if is_lu
-                A[k, perm[i]] = multiplier
-            else
-                A[k, perm[i]] = Float64(0.0)
-            end
-
+            A[k, perm[i]] = Float64(0.0)
             # Iteration trough columns
             for j = k + 1:min(k + 2 * l, n)
                 A[j, perm[i]] -= multiplier * A[j, perm[k]]
             end
 
-            if !is_lu
-                b[perm[i]] -= multiplier * b[perm[k]]
-            end
+            b[perm[i]] -= multiplier * b[perm[k]]
         end 
     end
 
@@ -280,16 +264,16 @@ end
 Solves set of linear equations using gaussian elimination method with choose of main element
 
 Parameters:
-A - matrix; is Sparse Matrix; is SparseMatrixCSC{Float64, Int64}
-b - vector with values; is Vector{Float64}
-n - size of matrix A; is Int64
-l - size of submatrices of A; is Int64
+A - SparseMatrixCSC{Float64, Int64}
+b - Vector{Float64} - vector with values
+n - Int64 - size of matrix A
+l - Int64 - size of submatrices of A
 
 Return:
-x - vector with solutions; if Vector{Float64}
+x - Vector{Float64} - vector with solutions 
 """
 function solve_gauss_with_choose(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64}, n::Int64, l::Int64)
-    res = gauss_with_choose(A, b, n, l, false)
+    res = gauss_with_choose(A, b, n, l)
     _A = res[1]
     _perm = res[2]
     _b = res[3]
