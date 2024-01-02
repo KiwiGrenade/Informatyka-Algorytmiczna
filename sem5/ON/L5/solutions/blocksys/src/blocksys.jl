@@ -63,7 +63,7 @@ function load_vector(filepath::String)
         n = parse(Int64, readline(file))
 
         # Vector b
-        b = Vector{Float64}(n)
+        b = zeros(n)
         i = 1
 
         for line in eachline(file)
