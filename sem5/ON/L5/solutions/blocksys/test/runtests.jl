@@ -7,41 +7,19 @@ using Test
 
 ########### UNIT Tests
 
-# test_data = ["Dane16_1_1/", "Dane10000_1_1/", "Dane50000_1_1/", "Dane100000_1_1/", "Dane300000_1_1/", "Dane500000_1_1/"]
-# print(test_data[1])
+test_case_list = ["Dane16_1_1/", "Dane10000_1_1/", "Dane50000_1_1/", "Dane100000_1_1/", "Dane300000_1_1/", "Dane500000_1_1/"]
+n_list = [16, 10000, 50000, 100000, 300000, 500000]
+for i in eachindex(test_case_list)
+    test = test_case_list[i]
+    @testset "$test" begin
+        matrix = load_matrix("test_data/$test/A.txt")
+        vec = load_vector("test_data/$test/b.txt")
+        results = ones(n_list[i])
 
-@testset "16x16" begin
-    matrix = load_matrix("test_data/Dane16_1_1/A.txt")
-    vec = load_vector("test_data/Dane16_1_1/b.txt")
-    results = ones(16)
+        @test isapprox(solve_gauss(matrix[1], vec[1], matrix[2], matrix[3]), results)
 
-    @test isapprox(solve_gauss(matrix[1], vec[1], matrix[2], matrix[3]), results)
-
-    matrix = load_matrix("test_data/Dane16_1_1/A.txt")
-    vec = load_vector("test_data/Dane16_1_1/b.txt")
-    @test isapprox(solve_gauss_with_choose(matrix[1], vec[1], matrix[2], matrix[3]),  results)
+        matrix = load_matrix("test_data/$test/A.txt")
+        vec = load_vector("test_data/$test/b.txt")
+        @test isapprox(solve_gauss_with_choose(matrix[1], vec[1], matrix[2], matrix[3]),  results)
+    end
 end
-
-# @testset "10kx10k" begin
-#     matrix = load_matrix("test_data/Dane10000_1_1/A.txt")
-#     vec = load_vector("test_data/Dane10000_1_1/b.txt")
-#     results = ones(10000)
-
-#     @test isapprox(solve_gauss(matrix[1], vec[1], matrix[2], matrix[3]), results)
-
-#     matrix = load_matrix("test_data/Dane10000_1_1/A.txt")
-#     vec = load_vector("test_data/Dane10000_1_1/b.txt")
-#     @test isapprox(solve_gauss_with_choose(matrix[1], vec[1], matrix[2], matrix[3]),  results)
-# end
-
-# @testset "50kx50k" begin
-# matrix = load_matrix("test_data/Dane50000_1_1/A.txt")
-# vec = load_vector("test_data/Dane50000_1_1/b.txt")
-# results = ones(50000)
-
-# @test isapprox(solve_gauss(matrix[1], vec[1], matrix[2], matrix[3]), results)
-
-# matrix = load_matrix("test_data/Dane50000_1_1/A.txt")
-# vec = load_vector("test_data/Dane50000_1_1/b.txt")
-# @test isapprox(solve_gauss_with_choose(matrix[1], vec[1], matrix[2], matrix[3]),  results)
-# end
