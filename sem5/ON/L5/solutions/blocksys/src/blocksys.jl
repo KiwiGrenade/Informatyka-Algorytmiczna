@@ -30,7 +30,6 @@ function load_matrix(filepath::String)
         n = parse(Int64, sizes[1])
         l = parse(Int64, sizes[2])
 
-        # Matrix A
         A = spzeros(Float64, n, n)
         for line in eachline(file)
             data = split(line, " ")
@@ -61,7 +60,6 @@ function load_vector(filepath::String)
     local data = C_NULL
     open(filepath, "r") do file
         n = parse(Int64, readline(file))
-        # Vector b
         b = zeros(n)
         i = 1
         for line in eachline(file)
@@ -91,7 +89,6 @@ function write_results(filepath::String, x::Vector{Float64}, n::Int64, is_b_gen:
     open(filepath, "w") do file
         if is_b_gen 
             x_initial = ones(n)
-
             err = norm(x_initial - x) / norm(x)
             println(file, err)
         end
@@ -144,20 +141,14 @@ Return:
     b - Vector{Float64} - given vector of right sides after elimination
 """
 function gauss(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64}, n::Int64, l::Int64)
-    # Iteration trough columns
     for k = 1:n - 1
 
-        # Elements to eliminate in current column
         to_eliminate = k + (l - k % l)
 
-        # Iteration trough elements to eliminate
         for i = k + 1:to_eliminate
-            # Multiplier = element to eliminate / current element on diagonal
-            multiplier = A[k, i] / A[k, k]
-
+            multiplier = A[k, i] / A[k, k] # multiplier = to_eliminate / curr_diagonal
             A[k, i] = Float64(0.0)
 
-            # Iteration trough columns
             for j = k + 1:min(k + l, n)
                 A[j, i] -= multiplier * A[j, k]
             end
@@ -186,12 +177,11 @@ function solve_gauss(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64}, n::
     res = gauss(A, b, n, l)
     _A = res[1]
     _b = res[2]
-    # Vector with solutions of equations set
     x = zeros(n)
-    # Iteration trough rows
+    # rows
     for i = n:-1:1
         sum_from_row = Float64(0.0)
-        #Iteration trough columns
+        # columns
         for j = i + 1:min(n, i + l)
             sum_from_row += _A[j, i] * x[j]
         end
@@ -217,21 +207,18 @@ Return:
     b - Vector{Float64} - given vector of right sides after elimination
 """
 function gauss_with_choose(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64}, n::Int64, l::Int64)
-    # Permutation vector
     perm = zeros(Int64, n)
 
-    # Put not permutated sequence into perm
+    # not permutated -> perm
     for i = 1:n
         perm[i] = i
     end
 
-    # Iteration trough columns
     for k = 1:n - 1
-        # Elements to eliminate in current column
         to_eliminate = k + (l - k % l)
-        # Row with maximal element
+        # Row with max element
         max_row = k
-        # Maximal element in column
+        # Max element in column
         max_element = abs(A[k, k])
 
         for i = k:to_eliminate
@@ -242,12 +229,10 @@ function gauss_with_choose(A::SparseMatrixCSC{Float64, Int64}, b::Vector{Float64
         end
         
         perm[k], perm[max_row] = perm[max_row], perm[k]
-        # Iteration trough elements to eliminate
         for i = k + 1:to_eliminate
             multiplier = A[k, perm[i]] / A[k, perm[k]]
 
             A[k, perm[i]] = Float64(0.0)
-            # Iteration trough columns
             for j = k + 1:min(k + 2 * l, n)
                 A[j, perm[i]] -= multiplier * A[j, perm[k]]
             end
@@ -277,14 +262,11 @@ function solve_gauss_with_choose(A::SparseMatrixCSC{Float64, Int64}, b::Vector{F
     _A = res[1]
     _perm = res[2]
     _b = res[3]
-    #Vector with solutions of equations set
     x = zeros(n)
 
-    # Iteration trough rows
     for i = n:-1:1
         sum_from_row = Float64(0.0)
 
-        #Iteration trough columns
         for j = i + 1:min(i + 2 * l + 1, n)
             sum_from_row += _A[j, _perm[i]] * x[j]
         end
