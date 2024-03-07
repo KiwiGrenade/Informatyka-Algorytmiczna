@@ -1,0 +1,89 @@
+\documentclass{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry}
+\geometry{a4paper}
+\usepackage[T1]{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{titling}
+\usepackage{caption}
+\usepackage[parfill]{parskip}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{decorations.markings}
+\usepackage{subcaption}
+\usepackage{pgffor}
+
+\begin{document}
+
+\title{JFTT - Lista 4 Zadanie 6}
+\author{Jakub Jaśków 268416}
+\maketitle
+
+\section*{Polecenie}
+Pokaż, że język $$ L= \{a^nb^nc^i : i \neq n\} $$ nie jest bezkontekstowy.
+
+\section*{Lematy}
+\subsection*{Lemat o Pompowaniu (L.o.P.}
+\textbf{Lemat o pompowaniu dla języków bezkontekstowych} - niech $L$ - język bezkontekstowy. Istnieje wtedy $n$ - (stała pompowania) zależna tylko od danego języka $L$ taka, że jeżeli $z \in L$ $\wedge$ $|z| \geq n$ to $z = uvwxy$ oraz:
+\begin{itemize}
+\item[•] $|vx| \geq 1$
+\item[•] $|vwx| \leq n$
+\item[•] $(\forall i \geq 0)$ $uv^iwx^iy \in L$
+\end{itemize}
+\subsection*{Lemat Ogdena}
+\textbf{Lemat Ogdena} - niech $L$ - język bezkontekstowy. Instnieje wtedy $n$ - (stała pompowania) zależna od danego języka $L$ taka, że jeśli w słowie $ z \in L$ oznaczymy $\geq$ n liter to $z$ możemy zapisać jako $z = uvwxy$ oraz:
+\begin{itemize}
+\item[•] $v$ i $x$ mają łącznie oznaczoną co najmniej jedną literę
+\item[•] $vwx$ ma co najwyżej $n$ oznaczonych liter
+\item[•] $(\forall i \geq 0)$ $uv^iwx^iy \in L$
+\end{itemize}
+\section*{Rozwiązanie}
+\subsection{L.o.P dla języków bezkontekstowych}
+Najpierw sprawdźmy czy zadanie da się rozwiązać za pomocą \textbf{L.o.P dla języków bezkontekstowych}.\\\\
+Załóżmy nie wprost, że $L$ - bezkontekstowy. Weźmy $z$ takie, że $z \in L$ $\wedge$ $z = a^lb^lc^k$, gdzie $l = n + 1$ $\wedge$ $l \neq k$ i $|z| \geq n$ ($n$ - stała z L.o.P).
+\subsubsection*{\#1 : $k = l - 1, v = aa, x = bb$}
+\begin{enumerate}
+\item $i=0$, $z = a^{l-2}b^{l-2}c^k = a^{l-2}b^{l-2}c^{l-1}$
+\item $i=1$, $z = a^{l}b^{l}c^k = a^{l}b^{l}c^{l-1}$
+\item $i\geq2$, $z = a^{l-2(i-1)}b^{l-2(i-1)}c^k = a^{l-2(i-1)}b^{l-2(i-1)}c^{l-1}$
+\end{enumerate}
+\subsubsection*{\#2 : $k = l + 1, v = cc, x = \epsilon$}
+\begin{enumerate}
+\item $i=0$, $z = a^{l}b^{l}c^{k-2} = a^{l}b^{l}c^{l-1}$
+\item $i\geq1$, $z = a^{l}b^{l}c^k = a^{l}b^{l}c^{l-1+2i}$
+\end{enumerate}
+\subsubsection*{\#3 : $k \leq l - 2, v = a, x = b$}
+\begin{enumerate}
+\item $i=0$, $z = a^{l-1}b^{l-1}c^k$, gdzie $k \leq l - 2 < l - 1$
+\item $i=1$, $z = a^{l}b^{l}c^k$
+\item $i\geq2$, $z = a^{l+i-1}b^{l+1-1}c^k,$ gdzie $k \leq l - 2 < l - 1 < m + i - 1$
+\end{enumerate}
+\subsubsection*{\#4 : $k \geq l + 2, v = c, x = \epsilon$}
+\begin{enumerate}
+\item $i=0$, $z = a^{l}b^{l}c^{k-1}$, gdzie $k - 1 \geq l + 1$
+\item $i=1$, $z = a^{l}b^{l}c^k$
+\item $i\geq2$, $z = a^{l}b^{l}c^{k+i-1},$ gdzie $k + i - 1 > l + 2$
+\end{enumerate}
+
+Niestety L.o.P. nie zadziałał - każdy rozważany wyżej przypadek należy dalej do języka.\\
+\subsection*{Lemat Ogdena}
+Zadanie to da się jednak rozwiązać używając \textbf{Lematu Ogdena}.\\
+Załóżmy nie wprost, że $L$ - bezkontekstowy. Niech $n$ - stała z \textbf{Lematu Ogdena}. $ l = n + 1$ a $z = a^lb^lc^{l!+l}$. Musimy ozanczyć co najmniej $n$ liter, więc oznaczamy całe $b^l$. Nasze $vwx$ ma ozanczonych co najwyżej n liter. Oznacza to, że rozpatrywane przez nas części $z$ muszą zawierać:\\
+\begin{enumerate}
+\item przynajmniej jedno $a$ i jedno $b$,
+\item tylko oznaczone $b$,
+\item przynajmniej jedno $c$ i jedno oznaczone $b$,
+\end{enumerate}
+\textbf{Nie możemy jednocześnie pompować $a$ i $c$}.
+\subsubsection*{\#1 : $vx = b^k, n\geq k \geq 1$}
+$i = 0$, $a^lb^{l-k}c^{l!+l} \notin L$
+\subsubsection*{\#2 : $vx = b^kc^j$, $n\leq k + j$, $k,j\geq 1$}
+$i = 0$, $a^lb^{l-k}c^{l!+l-k} \notin L$
+\subsubsection*{\#3 : $vx = a^kb^j$, $n\leq k + j$, $k,j\geq 1$, niech $i = l!/j + 1$}
+$i = 0$, $a^{l+(l!/j)*k}b^{l+(l!/j)*j}c^{l!+l} = a^{l+(l!/j)*k}b^{l!+l}c^{l!+l}\notin L$
+
+Z powyższych zapisów wynika, że dla wybranego słowa $z$ z języka $L$ oraz dowolnego podziału spełniającego założenia \textbf{Lematu Ogdena} znajdziemy $i$ takie, że słowo $z'=uv^iwx^iy \notin L$. Sprzeczność z założeniami -> $L$ nie jest bezkontekstowy. 
+
+\end{document}

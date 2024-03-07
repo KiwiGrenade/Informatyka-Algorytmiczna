@@ -1,11 +1,11 @@
 [submodule "PiastCity"]
-	path = sem4/AM/PiastCity
+	path = electives/APM/PiastCity
 	url = https://github.com/suchygracz/PiastCity
 [submodule "AlteredTicTacToeBot"]
-	path = sem4/WSI/WSI_2
+	path = electives/WSI/WSI_2
 	url = https://github.com/KiwiGrenade/ATTTB
 [submodule "15Puzzle"]
-	path = sem4/WSI/15Puzzle
+	path = electives/WSI/15Puzzle
 	url = https://github.com/KiwiGrenade/15Puzzle
 [submodule "Color-changing-tiles"]
 	path = sem2/PO/L6
