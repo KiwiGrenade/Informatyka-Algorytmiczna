@@ -2,6 +2,8 @@
 [![pl](https://img.shields.io/badge/lang-pl-red.svg)](README.md)
 [![en](https://img.shields.io/badge/lang-en-green.svg)](README.en.md)
 
+Zbiór materiałów z kursów realizowanych na kierunku Informatyka Algorytmiczna na Politechnice Wrocławskiej. 
+
 ## Kursy wybieralne
 - JP2 - Języki i Paradygmaty Programowania
 - PWL - Programowanie w Logice
