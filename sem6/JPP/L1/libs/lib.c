@@ -1,13 +1,16 @@
 //
 // Created by mango on 05.03.24.
 //
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "lib.h"
-uint64_t IFactor(uint8_t n)
+uint64_t IFactor(uint16_t n)
 {
     uint64_t r = 1;
 
-    for(uint8_t i = 2; i <= n; i++)
+    for(uint16_t i = 2; i <= n; i++)
     {
         r *= i;
     }
@@ -15,9 +18,9 @@ uint64_t IFactor(uint8_t n)
     return r;
 }
 
-uint64_t RFactor(uint8_t n)
+uint64_t RFactor(uint16_t n)
 {
-    if(n > 2)
+    if(n < 2)
     {
         return 1;
     }
