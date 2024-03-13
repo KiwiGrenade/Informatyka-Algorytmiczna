@@ -12,14 +12,18 @@ FetchContent_MakeAvailable(Catch2)
 
 project(L1)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_C_STANDARD 99)
 
-include_directories(src)
 include(CTest)
 
+add_subdirectory(libs)
+
 add_executable(C
-        src/lib.c
-        src/lib.h
-        src/test_factorial.cpp)
+        test_1.cpp)
+
 target_link_libraries(C Catch2::Catch2WithMain)
+target_link_libraries(C MathFunctions)
+
+target_include_directories(C PUBLIC libs)
+
 add_test(TEST1 ./C)
