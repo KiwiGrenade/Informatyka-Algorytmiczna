@@ -1,11 +1,11 @@
 //
 // Created by mango on 05.03.24.
 //
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include "lib.h"
+#include <stdlib.h>
+#include <stdio.h>
+
 uint64_t IFactor(uint16_t n)
 {
     uint64_t r = 1;
@@ -56,52 +56,129 @@ uint64_t RGCD(uint64_t a, uint64_t b)
     }
 }
 
-struct result IEEA(int64_t a, int64_t b)
+//  Extended Recursive Greatest Common Divisor
+int64_t ERGCD (uint64_t a, uint64_t b, int64_t* x, int64_t* y)
 {
-    struct result myResult;
-
-    int64_t x2 = 1;
-    int64_t x1 = 0;
-    int64_t y2 = 0;
-    int64_t y1 = 1;
-
-    while(b > 0) {
-        int64_t q = a / b;
-        int64_t r = a % b;
-
-        myResult.x = x1 - q*x2;
-        myResult.y = y1 - q*y2;
-
-        x2 = x1;
-        x1 = myResult.x;
-        y2 = y1;
-        y1 = myResult.y;
-        a = b;
-        b = r;
+    // Base Case
+    if (b == 0) {
+        *x = 1;
+        *y = 0;
+        return a;
     }
-    myResult.d = a;
+    // Recursively find the gcd
+    else {
+        int64_t g = ERGCD(b, a % b, x, y);
+        int64_t x1 = *x;
+        int64_t y1 = *y;
 
-    return myResult;
+        *x = y1;
+        *y = x1 - (a / b) * y1;
+
+        return g;
+    }
 }
 
-struct result REEA(int64_t a, int64_t b)
+// Iterative Extended Greatest Common Divisor
+int64_t IEGCD (uint64_t a, uint64_t b, int64_t* x, int64_t* y)
 {
-    struct result myResult;
-    if(b == 0)
-    {
-        myResult.d = a;
-        myResult.x = 1;
-        myResult.y = 0;
-        return myResult;
+    int64_t x0 = 1;
+    int64_t y0 = 0;
+    int64_t x1 = 0;
+    int64_t y1 = 1;
+
+    while (b != 0) {
+        uint64_t quotient = a / b;
+        uint64_t remainder = a % b;
+        a = b;
+        b = remainder;
+
+        int64_t temp = x1;
+        x1 = x0 - quotient * x1;
+        x0 = temp;
+
+        temp = y1;
+        y1 = y0 - quotient * y1;
+        y0 = temp;
     }
-    int64_t q = a/b;
-    int64_t r = a % b;
 
-    myResult = REEA(b, r);
+    *x = x0;
+    *y = y0;
 
-    int64_t temp = myResult.x;
-    myResult.x = myResult.y;
-    myResult.y = 1 - q * temp;
+    return a;
+}
 
-    return myResult;
+// Recursive Linear Diophantine Equation
+struct int64_pair RLDE(uint64_t a, uint64_t b, uint64_t c)
+{
+    int64_t *x, *y;
+    x = malloc(sizeof (int64_t));
+    y = malloc(sizeof (int64_t));
+
+    if (a == 0 && b == 0)
+    {
+        // Infinite solutions
+        if (c == 0)
+        {
+            printf("Infinite Solutions Exist\n");
+        }
+        // No solution
+        else
+        {
+            printf("No Solution Exists\n");
+        }
+    }
+    int64_t gcd = ERGCD(a, b, x, y);
+
+    // Condition for no solutions exist
+    if (c % gcd != 0)
+    {
+        printf("No Solution Exists\n");
+    }
+
+    struct int64_pair result;
+    result.x = *x;
+    result.y = *y;
+
+    free(x);
+    free(y);
+
+    return result;
+}
+
+// Iterative Linear Diophantine Equation
+struct int64_pair ILDE(uint64_t a, uint64_t b, uint64_t c)
+{
+    int64_t *x, *y;
+    x = malloc(sizeof (int64_t));
+    y = malloc(sizeof (int64_t));
+
+    if (a == 0 && b == 0)
+    {
+        // Infinite solutions
+        if (c == 0)
+        {
+            printf("Infinite Solutions Exist\n");
+        }
+        // No solution
+        else
+        {
+            printf("No Solution Exists\n");
+        }
+    }
+    int64_t gcd = IEGCD(a, b, x, y);
+
+    // Condition for no solutions exist
+    if (c % gcd != 0)
+    {
+        printf("No Solution Exists\n");
+    }
+
+    struct int64_pair result;
+    result.x = *x;
+    result.y = *y;
+
+    free(x);
+    free(y);
+
+    return result;
 }
