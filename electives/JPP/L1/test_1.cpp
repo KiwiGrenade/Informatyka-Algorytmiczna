@@ -15,25 +15,16 @@ unsigned long long llrand() {
     return r & 0xFFFFFFFFFFFFFFFFULL;
 }
 
-bool cmpResults(struct result myResult1, struct result myResult2) {
-    if (myResult1.d == myResult2.d) {
-        if(myResult1.x == myResult2.x) {
-            if(myResult1.y == myResult2.y) {
-                return true;
-            }
-            else {
-                std::cerr   << "myResult1.y = " << myResult1.y << std::endl
-                            << "myResult2.y = " << myResult2.y << std::endl;
-            }
-        }
-        else {
-            std::cerr   << "myResult1.x = " << myResult1.x << std::endl
-                        << "myResult2.x = " << myResult2.x << std::endl;
-        }
+bool cmpPairs(struct int64_pair myResult1, struct int64_pair myResult2) {
+    if ((abs(myResult1.x) == abs(myResult2.x))
+        && (abs(myResult1.y) == abs(myResult2.y))) {
+        return true;
     }
     else {
-        std::cerr   << "myResult1.d = " << myResult1.d << std::endl
-                    << "myResult2.d = " << myResult2.d << std::endl;
+        std::cerr   << "myResult1.x = " << myResult1.x << std::endl
+                    << "myResult2.x = " << myResult2.x << std::endl
+                    << "myResult1.y = " << myResult1.y << std::endl
+                    << "myResult2.y = " << myResult2.y << std::endl;
     }
     return false;
 }
@@ -75,18 +66,49 @@ TEST_CASE( "IGCD ?= RGCD", "[IGCD/RGCD]" ) {
     }
 }
 
-//TEST_CASE("IEEA ?= REEA", "[IEEA/REEA]") {
-//    uint64_t a, b;
-//    struct result myResult{
-//    };
-//    REQUIRE(cmpResults(IEEA(a, b), REEA(a, b)));
-//}
+TEST_CASE("Normal RLDE tests", "[RLDE]") {
+    uint64_t a, b, c;
+    struct int64_pair exp_out;
 
-TEST_CASE("IEEA ?= REEA", "[IEEA/REEA]") {
-    uint64_t a, b;
-    for(uint16_t i = 0; i < 20; i++) {
-        a = llrand();
-        b = llrand();
-        REQUIRE(cmpResults(IEEA(a, b), REEA(a, b)));
-    }
+    a = 56;
+    b = 15;
+    c = 3;
+    exp_out = {
+        4,
+        -15
+    };
+    REQUIRE(cmpPairs(RLDE(a, b, c), exp_out));
+
+    a = 91;
+    b = 35;
+    c = 7;
+    exp_out = {
+        2,
+        -5
+    };
+    REQUIRE(cmpPairs(RLDE(a, b, c), exp_out));
+}
+
+
+TEST_CASE("Normal ILDE tests", "[ILDE]") {
+    uint64_t a, b, c;
+    struct int64_pair exp_out;
+
+    a = 56;
+    b = 15;
+    c = 3;
+    exp_out = {
+        4,
+        -15
+    };
+    REQUIRE(cmpPairs(ILDE(a, b, c), exp_out));
+
+    a = 91;
+    b = 35;
+    c = 7;
+    exp_out = {
+        2,
+        -5
+    };
+    REQUIRE(cmpPairs(ILDE(a, b, c), exp_out));
 }
