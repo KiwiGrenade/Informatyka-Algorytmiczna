@@ -26,4 +26,5 @@ target_link_libraries(C MathFunctions)
 
 target_include_directories(C PUBLIC libs)
 
-add_test(TEST1 ./C)
+add_test(TEST_LIB_C ./C)
+add_test(TEST_LIB_ADA ./bin/main)

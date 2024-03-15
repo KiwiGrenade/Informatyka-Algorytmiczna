@@ -16,8 +16,8 @@ unsigned long long llrand() {
 }
 
 bool cmpPairs(struct int64_pair myResult1, struct int64_pair myResult2) {
-    if ((abs(myResult1.x) == abs(myResult2.x))
-        && (abs(myResult1.y) == abs(myResult2.y))) {
+    if ((myResult1.x == myResult2.x)
+        && (myResult1.y == myResult2.y)) {
         return true;
     }
     else {
@@ -70,12 +70,12 @@ TEST_CASE("Normal RLDE tests", "[RLDE]") {
     uint64_t a, b, c;
     struct int64_pair exp_out;
 
-    a = 56;
-    b = 15;
-    c = 3;
+    a = 24;
+    b = 36;
+    c = 12;
     exp_out = {
-        4,
-        -15
+        -1,
+        1
     };
     REQUIRE(cmpPairs(RLDE(a, b, c), exp_out));
 
@@ -94,12 +94,12 @@ TEST_CASE("Normal ILDE tests", "[ILDE]") {
     uint64_t a, b, c;
     struct int64_pair exp_out;
 
-    a = 56;
-    b = 15;
-    c = 3;
+    a = 24;
+    b = 36;
+    c = 12;
     exp_out = {
-        4,
-        -15
+        -1,
+        1
     };
     REQUIRE(cmpPairs(ILDE(a, b, c), exp_out));
 
