@@ -28,3 +28,4 @@ target_include_directories(C PUBLIC libs)
 
 add_test(TEST_LIB_C ./C)
 add_test(TEST_LIB_ADA ./bin/main)
+add_test(TEST_LIB_GO go test ../...)
