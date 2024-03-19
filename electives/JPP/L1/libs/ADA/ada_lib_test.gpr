@@ -1,7 +1,7 @@
 project Ada_Lib_Test is
    for Source_Dirs use (".");  -- Assuming the Ada source files are in the current directory
-   for Object_Dir use "../build/obj";   -- Directory where object files will be stored
-   for Exec_Dir use "../build/bin";     -- Directory where executable files will be stored
+   for Object_Dir use "../../build/obj";   -- Directory where object files will be stored
+   for Exec_Dir use "../../build/bin";     -- Directory where executable files will be stored
 
    for Main use ("main.adb");  -- Main source file containing the test procedures
 
