@@ -1,1 +1,2 @@
-add_library(MathFunctions SHARED lib.c)
+add_subdirectory(C)
+add_subdirectory(ADA)

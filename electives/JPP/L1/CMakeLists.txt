@@ -24,7 +24,9 @@ add_executable(C
 target_link_libraries(C Catch2::Catch2WithMain)
 target_link_libraries(C MathFunctions)
 
-target_include_directories(C PUBLIC libs)
+target_include_directories(C 
+	PUBLIC libs
+	PUBLIC libs/C)
 
 add_test(TEST_LIB_C ./C)
 add_test(TEST_LIB_ADA ./bin/main)
