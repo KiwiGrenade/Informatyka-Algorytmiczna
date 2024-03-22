@@ -1,1 +1,1 @@
-add_library(MathFunctions SHARED lib.c)
+add_library(C_Lib SHARED lib.c)

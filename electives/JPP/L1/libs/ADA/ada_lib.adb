@@ -1,6 +1,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
-package body Lib is
+package body Ada_Lib is
    function IFactor(N : UInt16) return UInt64 is
       R : UInt64 := 1;
    begin
@@ -158,4 +158,4 @@ package body Lib is
          return (X, Y);
       end;
    end ILDE;
-end Lib;
+end Ada_Lib;
