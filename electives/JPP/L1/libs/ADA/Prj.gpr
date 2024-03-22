@@ -1,0 +1,11 @@
+library project Prj is
+	for Languages use ("Ada");
+	for Library_Name use "Ada_Lib";
+	for Library_Kind use "dynamic";
+	for Library_Interface use ("ada_lib");
+	for Library_Auto_Init use "true";
+	for Library_Src_Dir use "include";
+	for Library_Dir use "lib";
+	for Source_Dirs use (".");
+	for Object_Dir use ".build";
+end Prj;

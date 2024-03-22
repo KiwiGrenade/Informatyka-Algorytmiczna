@@ -1,6 +1,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Assertions; use Ada.Assertions;
-with Lib; use Lib;
+with Ada_Lib; use Ada_Lib;
 
 package body Test_Lib is
    procedure RunAllTests is
