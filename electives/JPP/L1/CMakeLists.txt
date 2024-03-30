@@ -17,17 +17,4 @@ set(CMAKE_C_STANDARD 99)
 include(CTest)
 
 add_subdirectory(libs)
-
-add_executable(C
-        test_1.cpp)
-
-target_link_libraries(C Catch2::Catch2WithMain)
-target_link_libraries(C MathFunctions)
-
-target_include_directories(C 
-	PUBLIC libs
-	PUBLIC libs/C)
-
-add_test(TEST_LIB_C ./C)
-add_test(TEST_LIB_ADA ./bin/main)
-add_test(TEST_LIB_GO go test ../...)
+add_subdirectory(wrappers)

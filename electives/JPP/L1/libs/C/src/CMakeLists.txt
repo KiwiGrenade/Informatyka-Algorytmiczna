@@ -1,0 +1,1 @@
+add_library(C_Lib SHARED lib.c)

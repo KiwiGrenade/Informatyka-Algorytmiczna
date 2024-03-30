@@ -1,3 +1,6 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
 #ifndef WRAPPER_H
 #define WRAPPER_H
 
@@ -24,4 +27,7 @@ struct int64_pair
     int64_t y;
 };
 
+#ifdef __cplusplus
+}
+#endif
 #endif

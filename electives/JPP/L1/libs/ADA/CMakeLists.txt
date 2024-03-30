@@ -1,12 +1,17 @@
-add_custom_command(
-	OUTPUT 	${CMAKE_BINARY_DIR}/main
-	COMMAND mkdir ${CMAKE_BINARY_DIR}/bin
-	COMMAND	mkdir ${CMAKE_BINARY_DIR}/obj
-	COMMAND	gprbuild ${CMAKE_CURRENT_SOURCE_DIR}/ada_lib_test.gpr
-	SOURCE ada_lib_test.gpr lib.adb lib.ads main.adb test_lib.adb test_lib.ads
+add_custom_target(ADA_TEST_LIB ALL
+    COMMAND gprbuild -p -P Test_Ada_Lib_Prj
+    SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/Test_Ada_Lib_Prj.gpr
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/ada_lib.adb
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/ada_lib.ads
+    BYPRODUCTS
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/build
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    WORKING_DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    VERBATIM
+    
 )
-add_custom_target(Ada ALL 
-	DEPENDS ${CMAKE_BINARY_DIR}/main
-	DEPENDS ${CMAKE_BINARY_DIR}/bin
-	DEPENDS ${CMAKE_BINARY_DIR}/obj
-	)
+
+add_test(TEST_ADA_LIB ${CMAKE_CURRENT_SOURCE_DIR}/test/build/test)
