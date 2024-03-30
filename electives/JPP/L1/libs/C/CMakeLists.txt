@@ -1,1 +1,2 @@
-add_library(C_Lib SHARED lib.c)
+add_subdirectory(src)
+add_subdirectory(test)
