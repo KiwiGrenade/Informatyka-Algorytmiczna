@@ -1,5 +1,5 @@
 set(ADA_LIB_DIR ${CMAKE_SOURCE_DIR}/libs/ADA/src)
-add_custom_target(C_WRAPPER_FOR_ADA ALL
+add_custom_target(C_WRP_FOR_ADA ALL
     COMMAND gprbuild -p -P Test_Ada_Wrapper_Prj
     SOURCES
         wrapper.c
@@ -18,4 +18,4 @@ add_custom_target(C_WRAPPER_FOR_ADA ALL
         ${CMAKE_CURRENT_SOURCE_DIR}
     VERBATIM
 )
-add_test(TEST_C_WRAPPER_FOR_ADA ${CMAKE_CURRENT_SOURCE_DIR}/test)
+add_test(TEST_C_WRP_FOR_ADA ${CMAKE_CURRENT_SOURCE_DIR}/test)
