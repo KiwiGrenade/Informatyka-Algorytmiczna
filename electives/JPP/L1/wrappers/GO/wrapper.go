@@ -3,7 +3,6 @@ package go_wrapper
 // #cgo CFLAGS: -g -Wall
 // #include "../../libs/C/src/lib.c"
 import "C"
-import "unsafe"
 
 type int64Pair struct {
 	x int64
@@ -40,12 +39,20 @@ func RLDE(a, b, c uint64) int64Pair {
 	tempResult = C.RLDE(C.uint64_t(a), C.uint64_t(b), C.uint64_t(c))
 	var result int64Pair
 
-	//TODO: How to convert C_int64_pair to int64Pair?
-	result
+	result.x = int64(tempResult.x);
+	result.y = int64(tempResult.y);
 
-	return 
+	return result;
 }
 
 // ILDE finds the solution for an iterative linear Diophantine equation
 func ILDE(a, b, c uint64) int64Pair {
+	var tempResult C.struct_int64_pair
+	tempResult = C.ILDE(C.uint64_t(a), C.uint64_t(b), C.uint64_t(c))
+	var result int64Pair
+
+	result.x = int64(tempResult.x);
+	result.y = int64(tempResult.y);
+
+	return result;
 }
