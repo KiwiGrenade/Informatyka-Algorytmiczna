@@ -38,36 +38,36 @@ int main()
     uint64_t a, b, c;
     struct int64_pair exp_out;
 
-    printf("Normal RLDE tests\n");
+    printf("Normal RLDES tests\n");
 
         a = 24;
         b = 36;
         c = 12;
         exp_out.x = -1;
         exp_out.y =  1;
-        cmpPairs(RLDE(a, b, c), exp_out);
+        cmpPairs(RLDES(a, b, c), exp_out);
 
         a = 91;
         b = 35;
         c = 7;
         exp_out.x =  2;
         exp_out.y = -5;
-        cmpPairs(RLDE(a, b, c), exp_out);
+        cmpPairs(RLDES(a, b, c), exp_out);
 
 
-    printf("Normal ILDE tests\n");
+    printf("Normal ILDES tests\n");
 
         a = 24;
         b = 36;
         c = 12;
         exp_out.x = -1;
         exp_out.y =  1;
-        cmpPairs(ILDE(a, b, c), exp_out);
+        cmpPairs(ILDES(a, b, c), exp_out);
 
         a = 91;
         b = 35;
         c = 7;
         exp_out.x =  2;
         exp_out.y = -5;
-        cmpPairs(ILDE(a, b, c), exp_out);
+        cmpPairs(ILDES(a, b, c), exp_out);
 }

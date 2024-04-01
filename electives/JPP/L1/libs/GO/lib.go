@@ -62,8 +62,8 @@ func ERGCD(a, b uint64, x, y *int64) int64 {
 	return g
 }
 
-// RLDE finds the solution for a recursive linear Diophantine equation
-func RLDE(a, b, c uint64) int64Pair {
+// RLDES finds the solution for a recursive linear Diophantine equation
+func RLDES(a, b, c uint64) int64Pair {
 	var result int64Pair
 	var x, y int64
 	if a == 0 && b == 0 {
@@ -109,8 +109,8 @@ func IEGCD(a, b uint64, x, y *int64) int64 {
 	return TA
 }
 
-// ILDE finds the solution for an iterative linear Diophantine equation
-func ILDE(a, b, c uint64) int64Pair {
+// ILDES finds the solution for an iterative linear Diophantine equation
+func ILDES(a, b, c uint64) int64Pair {
 	var result int64Pair
 	var x, y int64
 	if a == 0 && b == 0 {

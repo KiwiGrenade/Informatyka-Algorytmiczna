@@ -33,10 +33,10 @@ func RGCD(a uint64, b uint64) uint64 {
 	return uint64(result)
 }
 
-// RLDE finds the solution for a recursive linear Diophantine equation
-func RLDE(a, b, c uint64) int64Pair {
+// RLDES finds the solution for a recursive linear Diophantine equation
+func RLDES(a, b, c uint64) int64Pair {
 	var tempResult C.struct_int64_pair
-	tempResult = C.RLDE(C.uint64_t(a), C.uint64_t(b), C.uint64_t(c))
+	tempResult = C.RLDES(C.uint64_t(a), C.uint64_t(b), C.uint64_t(c))
 	var result int64Pair
 
 	result.x = int64(tempResult.x);
@@ -45,10 +45,10 @@ func RLDE(a, b, c uint64) int64Pair {
 	return result;
 }
 
-// ILDE finds the solution for an iterative linear Diophantine equation
-func ILDE(a, b, c uint64) int64Pair {
+// ILDES finds the solution for an iterative linear Diophantine equation
+func ILDES(a, b, c uint64) int64Pair {
 	var tempResult C.struct_int64_pair
-	tempResult = C.ILDE(C.uint64_t(a), C.uint64_t(b), C.uint64_t(c))
+	tempResult = C.ILDES(C.uint64_t(a), C.uint64_t(b), C.uint64_t(c))
 	var result int64Pair
 
 	result.x = int64(tempResult.x);

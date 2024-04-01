@@ -66,7 +66,7 @@ TEST_CASE( "IGCD ?= RGCD", "[IGCD/RGCD]" ) {
     }
 }
 
-TEST_CASE("Normal RLDE tests", "[RLDE]") {
+TEST_CASE("Normal RLDES tests", "[RLDES]") {
     uint64_t a, b, c;
     struct int64_pair exp_out;
 
@@ -77,7 +77,7 @@ TEST_CASE("Normal RLDE tests", "[RLDE]") {
         -1,
         1
     };
-    REQUIRE(cmpPairs(RLDE(a, b, c), exp_out));
+    REQUIRE(cmpPairs(RLDES(a, b, c), exp_out));
 
     a = 91;
     b = 35;
@@ -86,11 +86,11 @@ TEST_CASE("Normal RLDE tests", "[RLDE]") {
         2,
         -5
     };
-    REQUIRE(cmpPairs(RLDE(a, b, c), exp_out));
+    REQUIRE(cmpPairs(RLDES(a, b, c), exp_out));
 }
 
 
-TEST_CASE("Normal ILDE tests", "[ILDE]") {
+TEST_CASE("Normal ILDES tests", "[ILDES]") {
     uint64_t a, b, c;
     struct int64_pair exp_out;
 
@@ -101,7 +101,7 @@ TEST_CASE("Normal ILDE tests", "[ILDE]") {
         -1,
         1
     };
-    REQUIRE(cmpPairs(ILDE(a, b, c), exp_out));
+    REQUIRE(cmpPairs(ILDES(a, b, c), exp_out));
 
     a = 91;
     b = 35;
@@ -110,5 +110,5 @@ TEST_CASE("Normal ILDE tests", "[ILDE]") {
         2,
         -5
     };
-    REQUIRE(cmpPairs(ILDE(a, b, c), exp_out));
+    REQUIRE(cmpPairs(ILDES(a, b, c), exp_out));
 }
