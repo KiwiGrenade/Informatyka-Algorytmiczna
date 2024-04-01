@@ -5,14 +5,20 @@ extern "C" {
 #define L1_LIB_H
 #include <stdint.h>
 
+/*  
+    I - iterative, R - recursive
+    GCD - Greatest Common Divisor
+    LDES - Linear Diophantine Equation Solver 
+*/
+
 uint64_t IFactor(uint16_t n);
 uint64_t RFactor(uint16_t n);
 
 uint64_t IGCD(uint64_t a, uint64_t b);
 uint64_t RGCD(uint64_t a, uint64_t b);
 
-struct int64_pair ILDE(uint64_t a, uint64_t b, uint64_t c);
-struct int64_pair RLDE(uint64_t a, uint64_t b, uint64_t c);
+struct int64_pair ILDES(uint64_t a, uint64_t b, uint64_t c);
+struct int64_pair RLDES(uint64_t a, uint64_t b, uint64_t c);
 
 struct int64_pair
 {

@@ -30,14 +30,14 @@ package Ada_Lib is
          External_Name => "RGCD";
    function ERGCD(A, B : Int64; X, Y : access Int64) return Int64;
    function IEGCD(A, B : Int64; X, Y : access Int64) return Int64;
-   function RLDE(A, B, C : Int64) return Int64_Pair
+   function RLDES(A, B, C : Int64) return Int64_Pair
       with
          Export => True,
          Convention => C,
-         External_Name => "RLDE";
-   function ILDE(A, B, C : Int64) return Int64_Pair
+         External_Name => "RLDES";
+   function ILDES(A, B, C : Int64) return Int64_Pair
       with
          Export => True,
          Convention => C,
-         External_Name => "ILDE";
+         External_Name => "ILDES";
 end Ada_Lib;

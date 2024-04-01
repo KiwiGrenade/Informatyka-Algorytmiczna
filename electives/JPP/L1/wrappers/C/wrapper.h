@@ -10,8 +10,8 @@ extern uint64_t IFactor(uint16_t n);
 extern uint64_t RFactor(uint16_t n);
 extern uint64_t IGCD(uint64_t a, uint64_t b);
 extern uint64_t RGCD(uint64_t a, uint64_t b);
-extern struct int64_pair ILDE(uint64_t a, uint64_t b, uint64_t c);
-extern struct int64_pair RLDE(uint64_t a, uint64_t b, uint64_t c);
+extern struct int64_pair ILDES(uint64_t a, uint64_t b, uint64_t c);
+extern struct int64_pair RLDES(uint64_t a, uint64_t b, uint64_t c);
 
 uint64_t C_IFactor(uint16_t n);
 uint64_t C_RFactor(uint16_t n);

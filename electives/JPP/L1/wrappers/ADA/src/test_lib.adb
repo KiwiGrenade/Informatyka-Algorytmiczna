@@ -65,28 +65,28 @@ package body Test_Lib is
       A, B, C : uu_uint64_t;
       Result : Int64_Pair;
    begin
-      Put_Line("Testing RLDE and ILDE...");
+      Put_Line("Testing RLDES and ILDES...");
       A := 24;
       B := 36;
       C := 12;
-      Result := RLDE(A, B, C);
-      Put_Line("1. RLDE(" & uu_uint64_t'Image(A) & ", " & uu_uint64_t'Image(B) & ", " & uu_uint64_t'Image(C) & ") = (" & uu_int64_t'Image(Result.X) & ", " & uu_int64_t'Image(Result.Y) & ")");
-      pragma Assert (Result.X = -1 and Result.Y = 1); -- ERGCD(24, 36) = 12, RLDE(24, 36, 12) = (1, -1)
+      Result := RLDES(A, B, C);
+      Put_Line("1. RLDES(" & uu_uint64_t'Image(A) & ", " & uu_uint64_t'Image(B) & ", " & uu_uint64_t'Image(C) & ") = (" & uu_int64_t'Image(Result.X) & ", " & uu_int64_t'Image(Result.Y) & ")");
+      pragma Assert (Result.X = -1 and Result.Y = 1); -- ERGCD(24, 36) = 12, RLDES(24, 36, 12) = (1, -1)
 
-      Result := ILDE(A, B, C);
-      Put_Line("1. ILDE(" & uu_uint64_t'Image(A) & ", " & uu_uint64_t'Image(B) & ", " & uu_uint64_t'Image(C) & ") = (" & uu_int64_t'Image(Result.X) & ", " & uu_int64_t'Image(Result.Y) & ")");
-      pragma Assert (Result.X = -1 and Result.Y = 1); -- IEGCD(24, 36) = 12, ILDE(24, 36, 12) = (1, -1)
+      Result := ILDES(A, B, C);
+      Put_Line("1. ILDES(" & uu_uint64_t'Image(A) & ", " & uu_uint64_t'Image(B) & ", " & uu_uint64_t'Image(C) & ") = (" & uu_int64_t'Image(Result.X) & ", " & uu_int64_t'Image(Result.Y) & ")");
+      pragma Assert (Result.X = -1 and Result.Y = 1); -- IEGCD(24, 36) = 12, ILDES(24, 36, 12) = (1, -1)
 
       A := 91;
       B := 35;
       C := 7;
-      Result := RLDE(A, B, C);
-      Put_Line("2. RLDE(" & uu_uint64_t'Image(A) & ", " & uu_uint64_t'Image(B) & ", " & uu_uint64_t'Image(C) & ") = (" & uu_int64_t'Image(Result.X) & ", " & uu_int64_t'Image(Result.Y) & ")");
-      pragma Assert (Result.X = 2 and Result.Y = -5); -- ERGCD(24, 36) = 12, RLDE(24, 36, 12) = (1, -1)
+      Result := RLDES(A, B, C);
+      Put_Line("2. RLDES(" & uu_uint64_t'Image(A) & ", " & uu_uint64_t'Image(B) & ", " & uu_uint64_t'Image(C) & ") = (" & uu_int64_t'Image(Result.X) & ", " & uu_int64_t'Image(Result.Y) & ")");
+      pragma Assert (Result.X = 2 and Result.Y = -5); -- ERGCD(24, 36) = 12, RLDES(24, 36, 12) = (1, -1)
 
-      Result := ILDE(A, B, C);
-      Put_Line("2. ILDE(" & uu_uint64_t'Image(A) & ", " & uu_uint64_t'Image(B) & ", " & uu_uint64_t'Image(C) & ") = (" & uu_int64_t'Image(Result.X) & ", " & uu_int64_t'Image(Result.Y) & ")");
-      pragma Assert (Result.X = 2 and Result.Y = -5); -- IEGCD(24, 36) = 12, ILDE(24, 36, 12) = (1, -1)
+      Result := ILDES(A, B, C);
+      Put_Line("2. ILDES(" & uu_uint64_t'Image(A) & ", " & uu_uint64_t'Image(B) & ", " & uu_uint64_t'Image(C) & ") = (" & uu_int64_t'Image(Result.X) & ", " & uu_int64_t'Image(Result.Y) & ")");
+      pragma Assert (Result.X = 2 and Result.Y = -5); -- IEGCD(24, 36) = 12, ILDES(24, 36, 12) = (1, -1)
    exception
       when Assertion_Error =>
          Put_Line("Assertion failed in TestLDE.");

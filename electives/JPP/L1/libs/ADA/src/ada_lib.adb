@@ -93,7 +93,7 @@ package body Ada_Lib is
       return TA;
    end IEGCD;
 
-   function RLDE(A, B, C : Int64) return Int64_Pair is
+   function RLDES(A, B, C : Int64) return Int64_Pair is
       X, Y : Int64;
    begin
       if A = 0 and B = 0 then
@@ -124,9 +124,9 @@ package body Ada_Lib is
          end if;
          return (X, Y);
       end;
-   end RLDE;
+   end RLDES;
 
-   function ILDE(A, B, C : Int64) return Int64_Pair is
+   function ILDES(A, B, C : Int64) return Int64_Pair is
       X, Y : Int64;
    begin
       if A = 0 and B = 0 then
@@ -157,5 +157,5 @@ package body Ada_Lib is
          end if;
          return (X, Y);
       end;
-   end ILDE;
+   end ILDES;
 end Ada_Lib;

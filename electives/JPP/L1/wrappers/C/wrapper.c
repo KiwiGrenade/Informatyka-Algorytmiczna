@@ -18,9 +18,9 @@ uint64_t C_RGCD(uint64_t a, uint64_t b)
 }
 struct int64_pair C_ILDE(uint64_t a, uint64_t b, uint64_t c)
 {
-    return ILDE(a, b, c);
+    return ILDES(a, b, c);
 }
 struct int64_pair C_RLDE(uint64_t a, uint64_t b, uint64_t c)
 {
-    return RLDE(a, b, c);
+    return RLDES(a, b, c);
 }

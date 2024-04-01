@@ -56,7 +56,7 @@ func Test_RLDE_1(t *testing.T) {
 	var expected int64Pair
 	expected.x = -1
 	expected.y = 1
-	var got int64Pair = RLDE(24, 36, 12)
+	var got int64Pair = RLDES(24, 36, 12)
 	if got != expected {
 		t.Errorf("expected: %d, got: %d", expected, got)
 	}
@@ -66,7 +66,7 @@ func Test_RLDE_2(t *testing.T) {
 	var expected int64Pair
 	expected.x = 2
 	expected.y = -5
-	var got int64Pair = RLDE(91, 35, 7)
+	var got int64Pair = RLDES(91, 35, 7)
 	if got != expected {
 		t.Errorf("expected: %d, got: %d", expected, got)
 	}
@@ -76,7 +76,7 @@ func Test_ILDE_1(t *testing.T) {
 	var expected int64Pair
 	expected.x = -1
 	expected.y = 1
-	var got int64Pair = ILDE(24, 36, 12)
+	var got int64Pair = ILDES(24, 36, 12)
 	if got != expected {
 		t.Errorf("expected: %d, got: %d", expected, got)
 	}
@@ -86,7 +86,7 @@ func Test_ILDE_2(t *testing.T) {
 	var expected int64Pair
 	expected.x = 2
 	expected.y = -5
-	var got int64Pair = ILDE(91, 35, 7)
+	var got int64Pair = ILDES(91, 35, 7)
 	if got != expected {
 		t.Errorf("expected: %d, got: %d", expected, got)
 	}

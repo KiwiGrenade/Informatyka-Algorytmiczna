@@ -108,7 +108,7 @@ int64_t IEGCD (uint64_t a, uint64_t b, int64_t* x, int64_t* y)
 }
 
 // Recursive Linear Diophantine Equation
-struct int64_pair RLDE(uint64_t a, uint64_t b, uint64_t c)
+struct int64_pair RLDES(uint64_t a, uint64_t b, uint64_t c)
 {
     int64_t *x, *y;
     x = malloc(sizeof (int64_t));
@@ -146,7 +146,7 @@ struct int64_pair RLDE(uint64_t a, uint64_t b, uint64_t c)
 }
 
 // Iterative Linear Diophantine Equation
-struct int64_pair ILDE(uint64_t a, uint64_t b, uint64_t c)
+struct int64_pair ILDES(uint64_t a, uint64_t b, uint64_t c)
 {
     int64_t *x, *y;
     x = malloc(sizeof (int64_t));
