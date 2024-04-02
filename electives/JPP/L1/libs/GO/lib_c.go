@@ -1,12 +1,16 @@
-package main
-
+package main_c
+/* 
+#include <stdint.h>
+struct int64Pair 
+{
+	int64_t x;
+	int64_t y;
+};
+*/
+import "C"
 import "fmt"
 
-type int64Pair struct {
-	x int64
-	y int64
-}
-
+//export IFactor
 func IFactor(n uint16) uint64 {
 	var r uint64 = 1
 	var i uint16 = 2
@@ -20,6 +24,7 @@ func IFactor(n uint16) uint64 {
 	return r
 }
 
+//export RFactor
 func RFactor(n uint16) uint64 {
 	if n < 2 {
 		return 1
@@ -28,6 +33,7 @@ func RFactor(n uint16) uint64 {
 	}
 }
 
+//export IGCD
 func IGCD(a uint64, b uint64) uint64 {
 	var t uint64
 	for b != 0 {
@@ -38,6 +44,7 @@ func IGCD(a uint64, b uint64) uint64 {
 	return a
 }
 
+//export RGCD
 func RGCD(a uint64, b uint64) uint64 {
 	if b == 0 {
 		return a
@@ -88,8 +95,9 @@ func ERGCD(a, b int64, x, y *int64) int64 {
 }
 
 // ILDES finds the solution for an iterative linear Diophantine equation
-func ILDES(a, b, c int64) int64Pair {
-	var result int64Pair
+// export ILDES
+func ILDES(a, b, c int64) C.struct_int64Pair {
+	var result C.struct_int64Pair
 	var x, y int64
 	if a == 0 && b == 0 {
 		if c == 0 {
@@ -109,8 +117,9 @@ func ILDES(a, b, c int64) int64Pair {
 }
 
 // RLDES finds the solution for a recursive linear Diophantine equation
-func RLDES(a, b, c int64) int64Pair {
-	var result int64Pair
+//export RLDES
+func RLDES(a, b, c int64) C.struct_int64Pair {
+	var result C.struct_int64Pair
 	var x, y int64
 	if a == 0 && b == 0 {
 		if c == 0 {

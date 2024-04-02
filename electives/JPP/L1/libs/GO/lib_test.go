@@ -1,8 +1,6 @@
 package main
 
-import (
-	"testing"
-)
+import "testing"
 
 func Test_IFactor(t *testing.T) {
 	const expected uint64 = 120
