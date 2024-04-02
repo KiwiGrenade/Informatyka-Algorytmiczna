@@ -79,7 +79,7 @@ int64_t ERGCD (uint64_t a, uint64_t b, int64_t* x, int64_t* y)
 }
 
 // Iterative Extended Greatest Common Divisor
-int64_t IEGCD (uint64_t a, uint64_t b, int64_t* x, int64_t* y)
+int64_t EIGCD (uint64_t a, uint64_t b, int64_t* x, int64_t* y)
 {
     int64_t x0 = 1;
     int64_t y0 = 0;
@@ -165,7 +165,7 @@ struct int64_pair ILDES(uint64_t a, uint64_t b, uint64_t c)
             printf("No Solution Exists\n");
         }
     }
-    int64_t gcd = IEGCD(a, b, x, y);
+    int64_t gcd = EIGCD(a, b, x, y);
 
     // Condition for no solutions exist
     if (c % gcd != 0)

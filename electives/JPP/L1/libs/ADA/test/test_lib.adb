@@ -72,7 +72,7 @@ package body Test_Lib is
 
       Result := ILDES(A, B, C);
       Put_Line("1. ILDES(" & Int64'Image(A) & ", " & Int64'Image(B) & ", " & Int64'Image(C) & ") = (" & Int64'Image(Result.X) & ", " & Int64'Image(Result.Y) & ")");
-      pragma Assert (Result.X = -1 and Result.Y = 1); -- IEGCD(24, 36) = 12, ILDES(24, 36, 12) = (1, -1)
+      pragma Assert (Result.X = -1 and Result.Y = 1); -- EIGCD(24, 36) = 12, ILDES(24, 36, 12) = (1, -1)
 
       A := 91;
       B := 35;
@@ -83,7 +83,7 @@ package body Test_Lib is
 
       Result := ILDES(A, B, C);
       Put_Line("2. ILDES(" & Int64'Image(A) & ", " & Int64'Image(B) & ", " & Int64'Image(C) & ") = (" & Int64'Image(Result.X) & ", " & Int64'Image(Result.Y) & ")");
-      pragma Assert (Result.X = 2 and Result.Y = -5); -- IEGCD(24, 36) = 12, ILDES(24, 36, 12) = (1, -1)
+      pragma Assert (Result.X = 2 and Result.Y = -5); -- EIGCD(24, 36) = 12, ILDES(24, 36, 12) = (1, -1)
    exception
       when Assertion_Error =>
          Put_Line("Assertion failed in TestLDE.");

@@ -16,5 +16,5 @@ private
    --  Tests the IGCD and RGCD functions
 
    procedure TestLDE;
-   --  Tests the ERGCD, IEGCD, RLDES, and ILDES functions
+   --  Tests the ERGCD, EIGCD, RLDES, and ILDES functions
 end Test_Lib;
