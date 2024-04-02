@@ -61,7 +61,7 @@ package body Ada_Lib is
       end if;
    end ERGCD;
 
-   function IEGCD(A, B : Int64; X, Y : access Int64) return Int64 is
+   function EIGCD(A, B : Int64; X, Y : access Int64) return Int64 is
       X0, Y0, X1, Y1, Temp, Quotient, Remainder, TA, TB : Int64 := 1;
    begin
       Y0 := 0;
@@ -91,7 +91,7 @@ package body Ada_Lib is
       end loop;
 
       return TA;
-   end IEGCD;
+   end EIGCD;
 
    function RLDES(A, B, C : Int64) return Int64_Pair is
       X, Y : Int64;
@@ -149,7 +149,7 @@ package body Ada_Lib is
 
          if A = 0 and B = 0 then
             Put_Line("Infinite Solutions Exist");
-         elsif C mod IEGCD(A, B, X_Ptr, Y_Ptr) /= 0 then
+         elsif C mod EIGCD(A, B, X_Ptr, Y_Ptr) /= 0 then
             Put_Line("No Solution Exists");
          else
             X := X_Ptr.all;

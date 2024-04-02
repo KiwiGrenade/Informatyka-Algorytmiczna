@@ -29,7 +29,7 @@ package Ada_Lib is
          Convention => C,
          External_Name => "RGCD";
    function ERGCD(A, B : Int64; X, Y : access Int64) return Int64;
-   function IEGCD(A, B : Int64; X, Y : access Int64) return Int64;
+   function EIGCD(A, B : Int64; X, Y : access Int64) return Int64;
    function RLDES(A, B, C : Int64) return Int64_Pair
       with
          Export => True,

@@ -1,4 +1,4 @@
-package go_lib
+package main
 
 import (
 	"testing"

@@ -4,5 +4,20 @@ add_test(
     COMMAND 
         go test
     WORKING_DIRECTORY 
-        ${CMAKE_CURRENT_SOURCE_DIR}/
+        ${CMAKE_CURRENT_SOURCE_DIR}
     )
+add_custom_command(
+    OUTPUT
+        lib.h
+        lib.so
+    COMMAND
+        go build -o lib.so -buildmode=c-shared lib.go
+    DEPENDS
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib_test.go
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib.go
+        ${CMAKE_CURRENT_SOURCE_DIR}/go.mod
+    WORKING_DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    VERBATIM
+)
+
