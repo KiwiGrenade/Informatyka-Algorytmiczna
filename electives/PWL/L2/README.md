@@ -1,2 +1,2 @@
 # Programowanie w Logice - Lista 2
-Punkty: ?/10
+Punkty: 10/10
