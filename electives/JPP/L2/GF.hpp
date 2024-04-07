@@ -18,6 +18,8 @@ public:
     ~GF() = default;
 
     [[nodiscard]] int64_t getP() const;
+    // TODO: !Check if p in GF class should be unsigned!
+    void setP(int64_t _p);
 
     // compare
     bool operator == (const GF &R) const;

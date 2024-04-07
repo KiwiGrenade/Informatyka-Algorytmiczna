@@ -14,8 +14,12 @@ void GF::checkP(const GF& L, const GF& R) {
     if(L.p != R.p)
         throw std::invalid_argument("[GF]ERROR: not matching p!");
 }
+
 int64_t GF::getP() const {
-    return this->p;
+    return p;
+}
+void GF::setP(int64_t _p) {
+    p = _p;
 }
 
 // compare
@@ -39,6 +43,7 @@ bool GF::operator<=(const GF &R) const {
 bool GF::operator>=(const GF &R) const {
     return !(*this < R);
 }
+
 
 
 

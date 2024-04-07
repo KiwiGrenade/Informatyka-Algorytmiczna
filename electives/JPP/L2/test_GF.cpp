@@ -11,6 +11,12 @@ TEST_CASE("getP()", "[GF][getters]") {
     int64_t p = GENERATE(take(5, random(MIN, MAX)));
     REQUIRE(GF(p, 1).getP() == p);
 }
+TEST_CASE("setP()", "[GF][setters]") {
+    int64_t p = GENERATE(take(5, random(MIN, MAX)));
+    GF* t = new GF(1, 1);
+    t->setP(p);
+    REQUIRE(GF(p, 1).getP() == p);
+}
 
 // compare
 TEST_CASE("operator ==", "[GF][compare]") {
