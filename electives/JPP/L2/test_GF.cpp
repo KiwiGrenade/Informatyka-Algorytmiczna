@@ -103,7 +103,7 @@ TEST_CASE("operator <=", "[GF][compare]") {
         int64_t val = GENERATE(take(5, random(MIN, MAX)));
         GF* L = new GF(p, val);
         GF* R = new GF(p-1, val-1);
-        REQUIRE_THROWS((*L) > (*R));
+        REQUIRE_THROWS((*L) <= (*R));
     }
 }
 TEST_CASE("operator >=", "[GF][compare]") {
@@ -127,5 +127,20 @@ TEST_CASE("operator >=", "[GF][compare]") {
         GF* L = new GF(p, val);
         GF* R = new GF(p-1, val-1);
         REQUIRE_THROWS((*L) >= (*R));
+    }
+}
+
+TEST_CASE("operator =", "[GF][assignment][copy]") {
+    SECTION("random values") {
+        int64_t p = GENERATE(take(5, random(MIN, MAX)));
+        int64_t val = GENERATE(take(5, random(MIN, MAX)));
+        SECTION("equal") {
+            GF* L = new GF(p, val);
+            GF* R = L;
+            GF* K;
+            K = R;
+            REQUIRE((*L) == (*R));
+            REQUIRE((*K) == (*R));
+        }
     }
 }

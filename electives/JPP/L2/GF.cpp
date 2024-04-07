@@ -5,14 +5,14 @@
 #include <stdexcept>
 #include "GF.hpp"
 
-GF::GF(const int64_t& _p, const int64_t& _value) noexcept{
-    p = _p;
-    value = _value;
-}
-
 void GF::checkP(const GF& L, const GF& R) {
     if(L.p != R.p)
         throw std::invalid_argument("[GF]ERROR: not matching p!");
+}
+
+GF::GF(const int64_t& _p, const int64_t& _value) noexcept{
+    p = _p;
+    value = _value;
 }
 
 int64_t GF::getP() const {
@@ -43,6 +43,7 @@ bool GF::operator<=(const GF &R) const {
 bool GF::operator>=(const GF &R) const {
     return !(*this < R);
 }
+
 
 
 

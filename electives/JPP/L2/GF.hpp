@@ -21,6 +21,9 @@ public:
     // TODO: !Check if p in GF class should be unsigned!
     void setP(int64_t _p);
 
+    // copy assignment
+    GF& operator=(const GF& other) = default;
+
     // compare
     bool operator == (const GF &R) const;
     bool operator != (const GF &R) const;
@@ -28,6 +31,10 @@ public:
     bool operator >  (const GF &R) const;
     bool operator <= (const GF &R) const;
     bool operator >= (const GF &R) const;
+
+    // arithmetic
+
+
 };
 
 #endif //JPP_L2_GF_HPP
