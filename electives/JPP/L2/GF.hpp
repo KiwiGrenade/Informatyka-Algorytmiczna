@@ -20,9 +20,12 @@ public:
     [[nodiscard]] int64_t getP() const;
 
     // compare
-    bool operator==(const GF &R) const;
-    bool operator!=(const GF &R) const;
-
+    bool operator == (const GF &R) const;
+    bool operator != (const GF &R) const;
+    bool operator <  (const GF &R) const;
+    bool operator >  (const GF &R) const;
+    bool operator <= (const GF &R) const;
+    bool operator >= (const GF &R) const;
 };
 
 #endif //JPP_L2_GF_HPP
