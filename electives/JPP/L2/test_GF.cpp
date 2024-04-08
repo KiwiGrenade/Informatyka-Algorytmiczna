@@ -3,144 +3,157 @@
 #include <catch2/generators/catch_generators_random.hpp>
 #include "GF.hpp"
 
-#define MIN std::numeric_limits<int64_t>::min()
-#define MAX std::numeric_limits<int64_t>::max()
+#define MIN std::numeric_limits<uint32_t>::min()
+#define MAX std::numeric_limits<uint32_t>::max()
 
-// getters
-TEST_CASE("getP()", "[GF][getters]") {
-    int64_t p = GENERATE(take(5, random(MIN, MAX)));
-    REQUIRE(GF(p, 1).getP() == p);
-}
-TEST_CASE("setP()", "[GF][setters]") {
-    int64_t p = GENERATE(take(5, random(MIN, MAX)));
-    GF* t = new GF(1, 1);
-    t->setP(p);
-    REQUIRE(GF(p, 1).getP() == p);
+TEST_CASE("getters", "[GF][getters]") {
+    uint32_t p = GENERATE(take(5, random(MIN, MAX)));
+    SECTION("p") {
+        GF A = GF(p, 1);
+        REQUIRE(A.getP() == p);
+    }
+    SECTION("value") {
+        GF A = GF(p, p-1);
+        REQUIRE(A.getVal() == p-1);
+    }
 }
 
-// compare
-TEST_CASE("operator ==", "[GF][compare]") {
-    SECTION("random values") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        GF* L = new GF(p, val);
-        GF* R = new GF(p, val);
-        REQUIRE((*L) == (*R));
+TEST_CASE("setters", "[GF][setters]") {
+    SECTION("p") {
+        GF t = GF(1, 1);
+        uint32_t p = 3;
+        t.setP(p);
+        REQUIRE(t.getP() == p);
     }
-    SECTION("exceptions") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        GF* L = new GF(p, val);
-        GF* R = new GF(p-1, val);
-        REQUIRE_THROWS((*L) == (*R));
+    SECTION("value") {
+        GF t = GF(1, 1);
+        uint32_t val = 3;
+        t.setVal(val);
+        REQUIRE(t.getVal() == val);
     }
 }
-TEST_CASE("operator !=", "[GF][compare]") {
-    SECTION("random values") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        GF* L = new GF(p, val);
-        GF* R = new GF(p, val-1);
-        REQUIRE((*L) != (*R));
-    }
-    SECTION("exceptions") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        GF* L = new GF(p, val);
-        GF* R = new GF(p-1, val-1);
-        REQUIRE_THROWS((*L) != (*R));
-    }
-}
-TEST_CASE("operator <", "[GF][compare]") {
-    SECTION("random values") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        GF* L = new GF(p, val);
-        GF* R = new GF(p, val+1);
-        REQUIRE((*L) < (*R));
-    }
-    SECTION("exceptions") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        GF* L = new GF(p, val);
-        GF* R = new GF(p-1, val+1);
-        REQUIRE_THROWS((*L) < (*R));
-    }
-}
-TEST_CASE("operator >", "[GF][compare]") {
-    SECTION("random values") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        GF* L = new GF(p, val);
-        GF* R = new GF(p, val-1);
-        REQUIRE((*L) > (*R));
-    }
-    SECTION("exceptions") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        GF* L = new GF(p, val);
-        GF* R = new GF(p-1, val-1);
-        REQUIRE_THROWS((*L) > (*R));
-    }
-}
-TEST_CASE("operator <=", "[GF][compare]") {
-    SECTION("random values") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        SECTION("smaller") {
-            GF* L = new GF(p, val);
-            GF* R = new GF(p, val+1);
-            REQUIRE((*L) <= (*R));
+
+TEST_CASE("compare", "[GF][compare]") {
+    uint32_t p = GENERATE(take(5, random(MIN, MAX)));
+    uint32_t val = GENERATE(take(5, random(MIN, MAX)));
+    SECTION("operator ==") {
+        SECTION("positive") {
+            GF L = GF(p, val);
+            GF R = GF(p, val);
+            REQUIRE(L == R);
         }
-        SECTION("equal") {
-            GF* L = new GF(p, val);
-            GF* R = new GF(p, val);
-            REQUIRE((*L) <= (*R));
+        SECTION("negative") {
+            GF L = GF(p, val);
+            GF R = GF(p, val-1);
+            REQUIRE_FALSE(L == R);
+        }
+        SECTION("exceptions") {
+            GF L = GF(p, val);
+            GF R = GF(p-1, val);
+            REQUIRE_THROWS(L == R);
         }
     }
-    SECTION("exceptions") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        GF* L = new GF(p, val);
-        GF* R = new GF(p-1, val-1);
-        REQUIRE_THROWS((*L) <= (*R));
-    }
-}
-TEST_CASE("operator >=", "[GF][compare]") {
-    SECTION("random values") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        SECTION("smaller") {
-            GF* L = new GF(p, val);
-            GF* R = new GF(p, val-1);
-            REQUIRE((*L) >= (*R));
+    SECTION("operator !=") {
+        SECTION("positive") {
+            GF L = GF(p, val);
+            GF R = GF(p, val - 1);
+            REQUIRE(L != R);
         }
-        SECTION("equal") {
-            GF* L = new GF(p, val);
-            GF* R = new GF(p, val);
-            REQUIRE((*L) >= (*R));
+        SECTION("negative") {
+            GF L = GF(p, val);
+            GF R = GF(p, val - 1);
+            REQUIRE(L != R);
+        }
+        SECTION("exceptions") {
+            GF L = GF(p, val);
+            GF R = GF(p-1, val-1);
+            REQUIRE_THROWS(L != R);
         }
     }
-    SECTION("exceptions") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        GF* L = new GF(p, val);
-        GF* R = new GF(p-1, val-1);
-        REQUIRE_THROWS((*L) >= (*R));
+    SECTION("operator <", "[GF][compare]") {
+        SECTION("random values") {
+            GF L = GF(p, val);
+            GF R = GF(p, val+1);
+            REQUIRE(L < R);
+        }
+        SECTION("exceptions") {
+            GF L = GF(p, val);
+            GF R = GF(p-1, val+1);
+            REQUIRE_THROWS(L < R);
+        }
+    }
+    SECTION("operator >", "[GF][compare]") {
+        SECTION("random values") {
+            GF L = GF(p, val);
+            GF R = GF(p, val-1);
+            REQUIRE(L > R);
+        }
+        SECTION("exceptions") {
+            GF L = GF(p, val);
+            GF R = GF(p-1, val-1);
+            REQUIRE_THROWS(L > R);
+        }
+    }
+    SECTION("operator <=", "[GF][compare]") {
+        SECTION("random values") {
+            SECTION("smaller") {
+                GF L = GF(p, val);
+                GF R = GF(p, val+1);
+                REQUIRE(L <= R);
+            }
+            SECTION("equal") {
+                GF L = GF(p, val);
+                GF R = GF(p, val);
+                REQUIRE(L <= R);
+            }
+        }
+        SECTION("exceptions") {
+            GF L = GF(p, val);
+            GF R = GF(p-1, val-1);
+            REQUIRE_THROWS(L <= R);
+        }
+    }
+    SECTION("operator >=", "[GF][compare]") {
+        SECTION("random values") {
+            SECTION("smaller") {
+                GF L = GF(p, val);
+                GF R = GF(p, val-1);
+                REQUIRE(L >= R);
+            }
+            SECTION("equal") {
+                GF L = GF(p, val);
+                GF R = GF(p, val);
+                REQUIRE(L >= R);
+            }
+        }
+        SECTION("exceptions") {
+            GF L = GF(p, val);
+            GF R = GF(p-1, val-1);
+            REQUIRE_THROWS(L >= R);
+        }
     }
 }
+
 
 TEST_CASE("operator =", "[GF][assignment][copy]") {
-    SECTION("random values") {
-        int64_t p = GENERATE(take(5, random(MIN, MAX)));
-        int64_t val = GENERATE(take(5, random(MIN, MAX)));
-        SECTION("equal") {
-            GF* L = new GF(p, val);
-            GF* R = L;
-            GF* K;
-            K = R;
-            REQUIRE((*L) == (*R));
-            REQUIRE((*K) == (*R));
-        }
-    }
+    uint32_t p = GENERATE(take(5, random(MIN, MAX)));
+    uint32_t val = GENERATE(take(5, random(MIN, MAX)));
+
+    GF L = GF(p, val);
+    GF R = L;
+    GF K = GF(1,1);
+    K = R;
+
+    REQUIRE(L == R);
+    REQUIRE(K == R);
+}
+
+TEST_CASE("operator +", "[GF][arithmetic][add]") {
+//        uint32_t p = GENERATE(take(5, random(MIN, MAX)));
+//        uint32_t val2 = GENERATE(take(5, random(MIN, MAX)));
+//        uint32_t val1 = GENERATE(take(5, random(MIN, MAX)));
+        GF L = GF(20, 3);
+        GF R = GF(20, 19);
+        GF C = L + R;
+        REQUIRE(C.getVal() == (R.getVal() + L.getVal()) % 20);
 }
