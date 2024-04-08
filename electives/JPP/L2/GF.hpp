@@ -9,17 +9,18 @@
 
 class GF {
 private:
-    int64_t p;
-    int64_t value;
+    uint32_t p;
+    uint32_t value;
     static void checkP(const GF& L, const GF& R);
 
 public:
-    explicit GF(const int64_t& _p, const int64_t& _value) noexcept;
+    explicit GF(const uint32_t& _p, const uint32_t& _value) noexcept;
     ~GF() = default;
 
-    [[nodiscard]] int64_t getP() const;
-    // TODO: !Check if p in GF class should be unsigned!
-    void setP(int64_t _p);
+    [[nodiscard]] uint32_t getP() const noexcept;
+    void setP(uint32_t _p);
+    [[nodiscard]] uint32_t getVal() const noexcept;
+    void setVal(uint32_t _val);
 
     // copy assignment
     GF& operator=(const GF& other) = default;
@@ -33,7 +34,7 @@ public:
     bool operator >= (const GF &R) const;
 
     // arithmetic
-
+    GF operator+(const GF &R) const;
 
 };
 
