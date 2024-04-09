@@ -26,8 +26,9 @@ TEST_CASE("setters", "[GF][setters]") {
         REQUIRE(t.getP() == p);
     }
     SECTION("value") {
-        GF t = GF(1, 1);
         uint32_t val = 3;
+        uint32_t p = 5;
+        GF t = GF(p, 1);
         t.setVal(val);
         REQUIRE(t.getVal() == val);
     }
@@ -134,7 +135,6 @@ TEST_CASE("compare", "[GF][compare]") {
     }
 }
 
-
 TEST_CASE("operator =", "[GF][assignment][copy]") {
     uint32_t p = GENERATE(take(5, random(MIN, MAX)));
     uint32_t val = GENERATE(take(5, random(MIN, MAX)));
@@ -148,12 +148,53 @@ TEST_CASE("operator =", "[GF][assignment][copy]") {
     REQUIRE(K == R);
 }
 
-TEST_CASE("operator +", "[GF][arithmetic][add]") {
-//        uint32_t p = GENERATE(take(5, random(MIN, MAX)));
-//        uint32_t val2 = GENERATE(take(5, random(MIN, MAX)));
-//        uint32_t val1 = GENERATE(take(5, random(MIN, MAX)));
-        GF L = GF(20, 3);
-        GF R = GF(20, 19);
-        GF C = L + R;
-        REQUIRE(C.getVal() == (R.getVal() + L.getVal()) % 20);
+TEST_CASE("arithmetic", "[GF][arithmetic]") {
+    uint32_t p = GENERATE(take(5, random(MIN, MAX)));
+    uint32_t val1 = GENERATE(take(5, random(MIN, MAX)));
+
+    SECTION("unary") {
+        SECTION("operator +", "[GF][arithmetic][positive]") {
+            GF L = GF(p, val1);
+            GF R = +L;
+            REQUIRE(R == L);
+        }
+        SECTION("operator -", "[GF][arithmetic][positive]") {
+            GF L = GF(p, val1);
+            GF R = -L;
+            REQUIRE(R.getVal() == (p - L.getVal()));
+        }
+    }
+    SECTION("binary") {
+        uint32_t val2 = GENERATE(take(5, random(MIN, MAX)));
+        SECTION("operator +", "[GF][arithmetic][add]") {
+            GF L = GF(p, val1);
+            GF R = GF(p, val2);
+            GF C = L + R;
+
+            uint32_t exp_res = (R.getVal() + L.getVal()) % p;
+
+            REQUIRE(C.getVal() == exp_res);
+        }
+        SECTION("operator -", "[GF][arithmetic][sub]") {
+            p = 23;
+            val1 = 18;
+            val2 = 22;
+            GF L = GF(p, val1);
+            GF R = GF(p, val2);
+            GF C = L - R;
+
+            uint32_t exp_res = 19;
+
+            REQUIRE(C.getVal() == exp_res);
+        }
+        SECTION("operator *", "[GF][arithmetic][mul]") {
+            GF L = GF(p, val1);
+            GF R = GF(p, val2);
+            GF C = L * R;
+
+            uint32_t exp_res = (R.getVal() * L.getVal()) % p;
+
+            REQUIRE(C.getVal() == exp_res);
+        }
+    }
 }

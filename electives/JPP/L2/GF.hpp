@@ -34,8 +34,12 @@ public:
     bool operator >= (const GF &R) const;
 
     // arithmetic
+    GF operator-() const;
+    GF operator+() const;
     GF operator+(const GF &R) const;
-
+    GF operator-(const GF &R) const;
+    GF operator*(const GF &R) const;
+    GF operator/(const GF &R) const;
 };
 
 #endif //JPP_L2_GF_HPP
