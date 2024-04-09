@@ -26,8 +26,9 @@ uint32_t GF::getVal() const noexcept{
     return value;
 }
 void GF::setVal(uint32_t _val) {
-    value = _val;
+    value = (_val) % p;
 }
+
 // compare
 bool GF::operator==(const GF &R) const {
     checkP(*this, R);
@@ -50,14 +51,28 @@ bool GF::operator>=(const GF &R) const {
     return !(*this < R);
 }
 
+GF GF::operator-(const GF &R) const {
+    checkP(*this, R);
+    return ((-R) + (*this));
+}
+GF GF::operator+() const {
+    return *this;
+}
 GF GF::operator+(const GF &R) const {
     checkP(*this, R);
     uint32_t _val = (value + R.value) % p;
     return GF(R.p, _val);
 }
-
-
-
-
-
-
+GF GF::operator*(const GF &R) const {
+    checkP(*this, R);
+    uint32_t _val = (value * R.value) % p;
+    return GF(p, _val);
+}
+GF GF::operator/(const GF &R) const {
+    checkP(*this, R);
+    uint32_t _val = (value / R.value) % p;
+    return GF(p, _val);
+}
+GF GF::operator-() const {
+    return GF(p, p-value);
+}
