@@ -14,16 +14,20 @@ private:
     static void checkP(const GF& L, const GF& R);
 
 public:
-    explicit GF(const uint32_t& _p, const uint32_t& _value) noexcept;
+    explicit GF(const uint32_t& _p, const uint32_t& _value);
     ~GF() = default;
 
     [[nodiscard]] uint32_t getP() const noexcept;
-    void setP(uint32_t _p);
+    void setP(uint32_t _p) noexcept;
     [[nodiscard]] uint32_t getVal() const noexcept;
-    void setVal(uint32_t _val);
+    void setVal(uint32_t _val) noexcept;
 
-    // copy assignment
-    GF& operator=(const GF& other) = default;
+    // assignments
+    GF& operator= (const GF &other) = default;
+    GF& operator+=(const GF &other);
+    GF& operator-=(const GF &other);
+    GF& operator*=(const GF &other);
+    GF& operator/=(const GF &other);
 
     // compare
     bool operator == (const GF &R) const;
@@ -34,8 +38,8 @@ public:
     bool operator >= (const GF &R) const;
 
     // arithmetic
-    GF operator-() const;
-    GF operator+() const;
+    GF operator-() const noexcept;
+    GF operator+() const noexcept;
     GF operator+(const GF &R) const;
     GF operator-(const GF &R) const;
     GF operator*(const GF &R) const;
