@@ -1,4 +1,15 @@
 # Wybrane Zagadnienia Algebry
-Zadania na laboratiora z kursu "Wybrane Zagadnienia Algebry" prowadzone w semestrze letnim 2023/2024.
-Prowadzący wykład: prof. dr hab. Jacek Cichoń
-Prowadzący laboratiora: dr inż. Dominik Bojko
+
+### Laboratoria - Lato 2023/2024
+
+
+- P. wykład: prof. dr hab. Jacek Cichoń
+- P. laboratoria oraz ćwiczenia: dr inż. Dominik Bojko
+---
+### Lista zadań
+
+- [x] ex01
+- [x] ex02 
+- [x] ex03 
+- [x] ex04 
+- [x] ex06

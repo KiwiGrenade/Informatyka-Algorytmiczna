@@ -1,8 +1,8 @@
-from typing import List
+from typing import List, Tuple
 
 import numpy
 
-class polynomial():
+class Polynomial:
     def __init__(self, coeffs: List[float]) -> None:
         self._coeffs = coeffs
 
@@ -19,28 +19,28 @@ class polynomial():
     def __str__(self) -> str:
         return str(self.coeffs)
     
-    def __add__(self, other) -> 'polynomial':
+    def __add__(self, other) -> 'Polynomial':
         coeffs_n = list(numpy.polynomial.polynomial.polyadd(self.coeffs, other.coeffs))
-        return polynomial(coeffs_n)
+        return Polynomial(coeffs_n)
 
-    def __sub__(self, other) -> 'polynomial':
+    def __sub__(self, other) -> 'Polynomial':
         coeffs_n = list(numpy.polynomial.polynomial.polysub(self.coeffs, other.coeffs))
-        return polynomial(coeffs_n)
+        return Polynomial(coeffs_n)
 
-    def __mul__(self, other) -> 'polynomial':
+    def __mul__(self, other) -> 'Polynomial':
         prod = [0] * (self.deg + other.deg - 1)
         for i in range(self.deg):
             for j in range(other.deg):
                 prod[i + j] += (self.coeffs[i] * other.coeffs[j])
 
-        return polynomial(prod)
+        return Polynomial(prod)
 
-    def __truediv__(self, other) -> tuple['polynomial', 'polynomial']:
+    def __truediv__(self, other) -> Tuple['Polynomial', 'Polynomial']:
         q, r =  numpy.polynomial.polynomial.polydiv(self.coeffs, other.coeffs)
-        return polynomial(list(q)), polynomial(list(r))
+        return Polynomial(list(q)), Polynomial(list(r))
 
 
-def gcd(x: polynomial, y: polynomial) -> polynomial:
+def gcd(x: Polynomial, y: Polynomial) -> Polynomial:
     if x.deg < y.deg:
         return gcd(y, x)
     if y.deg == 0:
@@ -48,17 +48,17 @@ def gcd(x: polynomial, y: polynomial) -> polynomial:
     _, r = x / y
     return gcd(y, r)
 
-def gcd_ext(x: polynomial, y: polynomial) -> tuple[polynomial, polynomial, polynomial]:
+def gcd_ext(x: Polynomial, y: Polynomial) -> Tuple[Polynomial, Polynomial, Polynomial]:
     if x.deg < y.deg:
         return gcd_ext(y, x)
     if y.deg == 0:
-        return x, polynomial([1]), polynomial([0])
+        return x, Polynomial([1]), Polynomial([0])
 
     q, r = x / y
     d, X, Y = gcd_ext(y, r)
     return d, Y, X - Y * q
 
-def lcm(x: polynomial, y: polynomial) -> polynomial:
+def lcm(x: Polynomial, y: Polynomial) -> Polynomial:
     gcd_ = gcd(x, y)
     mul = x * y
     return (mul / gcd_)[0]
