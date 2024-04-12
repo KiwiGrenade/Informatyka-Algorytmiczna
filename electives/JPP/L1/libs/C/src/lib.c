@@ -110,9 +110,7 @@ int64_t EIGCD (uint64_t a, uint64_t b, int64_t* x, int64_t* y)
 // Recursive Linear Diophantine Equation
 struct int64_pair RLDES(uint64_t a, uint64_t b, uint64_t c)
 {
-    int64_t *x, *y;
-    x = malloc(sizeof (int64_t));
-    y = malloc(sizeof (int64_t));
+    int64_t x, y;
 
     if (a == 0 && b == 0)
     {
@@ -121,13 +119,13 @@ struct int64_pair RLDES(uint64_t a, uint64_t b, uint64_t c)
         {
             printf("Infinite Solutions Exist\n");
         }
-        // No solution
+            // No solution
         else
         {
             printf("No Solution Exists\n");
         }
     }
-    int64_t gcd = ERGCD(a, b, x, y);
+    int64_t gcd = ERGCD(a, b, &x, &y);
 
     // Condition for no solutions exist
     if (c % gcd != 0)
@@ -136,11 +134,8 @@ struct int64_pair RLDES(uint64_t a, uint64_t b, uint64_t c)
     }
 
     struct int64_pair result;
-    result.x = *x;
-    result.y = *y;
-
-    free(x);
-    free(y);
+    result.x = x;
+    result.y = y;
 
     return result;
 }
@@ -148,9 +143,7 @@ struct int64_pair RLDES(uint64_t a, uint64_t b, uint64_t c)
 // Iterative Linear Diophantine Equation
 struct int64_pair ILDES(uint64_t a, uint64_t b, uint64_t c)
 {
-    int64_t *x, *y;
-    x = malloc(sizeof (int64_t));
-    y = malloc(sizeof (int64_t));
+    int64_t x, y;
 
     if (a == 0 && b == 0)
     {
@@ -159,13 +152,13 @@ struct int64_pair ILDES(uint64_t a, uint64_t b, uint64_t c)
         {
             printf("Infinite Solutions Exist\n");
         }
-        // No solution
+            // No solution
         else
         {
             printf("No Solution Exists\n");
         }
     }
-    int64_t gcd = EIGCD(a, b, x, y);
+    int64_t gcd = EIGCD(a, b, &x, &y);
 
     // Condition for no solutions exist
     if (c % gcd != 0)
@@ -174,11 +167,8 @@ struct int64_pair ILDES(uint64_t a, uint64_t b, uint64_t c)
     }
 
     struct int64_pair result;
-    result.x = *x;
-    result.y = *y;
-
-    free(x);
-    free(y);
+    result.x = x;
+    result.y = y;
 
     return result;
 }

@@ -4,111 +4,62 @@
 #include "catch2/catch_test_macros.hpp"
 #include "lib.h"
 #include "iostream"
+#include "catch2/generators/catch_generators_adapters.hpp"
+#include "catch2/generators/catch_generators_random.hpp"
 
-unsigned long long llrand() {
-    unsigned long long r = 0;
+#define MAX_VAL uint64_t(std::numeric_limits<uint64_t>::max())
+#define MIN_VAL uint64_t(1)
 
-    for (int i = 0; i < 5; ++i) {
-        r = (r << 15) | (rand() & 0x7FFF);
+TEST_CASE( "Factorials", "[Factorial]" ) {
+    SECTION("Factorials are computed by iteration.", "[IFactor]") {
+        REQUIRE( IFactor(0) == 1 );
+        REQUIRE( IFactor(1) == 1 );
+        REQUIRE( IFactor(2) == 2 );
+        REQUIRE( IFactor(3) == 6 );
+        REQUIRE( IFactor(10) == 3628800 );
     }
-
-    return r & 0xFFFFFFFFFFFFFFFFULL;
-}
-
-bool cmpPairs(struct int64_pair myResult1, struct int64_pair myResult2) {
-    if ((myResult1.x == myResult2.x)
-        && (myResult1.y == myResult2.y)) {
-        return true;
+    SECTION("Factorials are computed by recursion", "[RFactor]") {
+        REQUIRE( RFactor(0) == 1 );
+        REQUIRE( RFactor(1) == 1 );
+        REQUIRE( RFactor(2) == 2 );
+        REQUIRE( RFactor(3) == 6 );
+        REQUIRE( RFactor(10) == 3628800 );
     }
-    else {
-        std::cerr   << "myResult1.x = " << myResult1.x << std::endl
-                    << "myResult2.x = " << myResult2.x << std::endl
-                    << "myResult1.y = " << myResult1.y << std::endl
-                    << "myResult2.y = " << myResult2.y << std::endl;
+}
+
+
+TEST_CASE("Greatest common divisor", "[GCD]") {
+    SECTION( "Greatest common divisior is computed by iteration", "[IGCD]" ) {
+        REQUIRE( IGCD(1, 1) == 1 );
+        REQUIRE( IGCD(10, 100) == 10 );
     }
-    return false;
-}
-
-TEST_CASE( "Factorials are computed by iteration", "[IFactorial]" ) {
-    REQUIRE( IFactor(0) == 1 );
-    REQUIRE( IFactor(1) == 1 );
-    REQUIRE( IFactor(2) == 2 );
-    REQUIRE( IFactor(3) == 6 );
-    REQUIRE( IFactor(10) == 3628800 );
-}
-
-TEST_CASE( "Factorials are computed by recursion", "[RFactorial]" ) {
-    REQUIRE( RFactor(0) == 1 );
-    REQUIRE( RFactor(1) == 1 );
-    REQUIRE( RFactor(2) == 2 );
-    REQUIRE( RFactor(3) == 6 );
-    REQUIRE( RFactor(10) == 3628800 );
-}
-
-
-TEST_CASE( "Greatest common divisior is computed by iteration", "[IGCD]" ) {
-    REQUIRE( IGCD(1, 1) == 1 );
-    REQUIRE( IGCD(10, 100) == 10 );
-}
-
-
-TEST_CASE( "Greatest common divisior is computed by recursion", "[RGCD]" ) {
-    REQUIRE( RGCD(1, 1) == 1 );
-    REQUIRE( RGCD(10, 100) == 10 );
-}
-
-TEST_CASE( "IGCD ?= RGCD", "[IGCD/RGCD]" ) {
-    uint64_t a, b;
-    for(uint16_t i = 0; i < 20; i++) {
-        a = llrand();
-        b = llrand();
+    SECTION( "Greatest common divisor is computed by recursion", "[RGCD]" ) {
+        REQUIRE( RGCD(1, 1) == 1 );
+        REQUIRE( RGCD(10, 100) == 10 );
+    }
+    SECTION( "IGCD ?= RGCD", "[IGCD/RGCD]" ) {
+        uint64_t a = GENERATE(take(100, random(MIN_VAL, MAX_VAL)));
+        uint64_t b = GENERATE(take(100, random(MIN_VAL, MAX_VAL)));
         REQUIRE( IGCD(a, b) == RGCD(a, b));
     }
 }
 
-TEST_CASE("Normal RLDES tests", "[RLDES]") {
-    uint64_t a, b, c;
-    struct int64_pair exp_out;
 
-    a = 24;
-    b = 36;
-    c = 12;
-    exp_out = {
-        -1,
-        1
-    };
-    REQUIRE(cmpPairs(RLDES(a, b, c), exp_out));
+TEST_CASE("TEST LDES", "[LDES]") {
+    uint64_t a = GENERATE(take(100, random(MIN_VAL, MAX_VAL)));
+    uint64_t b = GENERATE(take(100, random(MIN_VAL, MAX_VAL)));
+    uint64_t c;
+    struct int64_pair result{};
 
-    a = 91;
-    b = 35;
-    c = 7;
-    exp_out = {
-        2,
-        -5
-    };
-    REQUIRE(cmpPairs(RLDES(a, b, c), exp_out));
-}
+    SECTION("Normal RLDES tests", "[RLDES]") {
+        c = RGCD(a, b);
+        result = RLDES(a, b, c);
+        REQUIRE(a*result.x + b*result.y == c);
+    }
 
-
-TEST_CASE("Normal ILDES tests", "[ILDES]") {
-    uint64_t a, b, c;
-    struct int64_pair exp_out;
-
-    a = 24;
-    b = 36;
-    c = 12;
-    exp_out = {
-        -1,
-        1
-    };
-    REQUIRE(cmpPairs(ILDES(a, b, c), exp_out));
-
-    a = 91;
-    b = 35;
-    c = 7;
-    exp_out = {
-        2,
-        -5
-    };
-    REQUIRE(cmpPairs(ILDES(a, b, c), exp_out));
+    SECTION("Normal ILDES tests", "[ILDES]") {
+        c = IGCD(a, b);
+        result = ILDES(a, b, c);
+        REQUIRE(a*result.x + b*result.y == c);
+    }
 }
