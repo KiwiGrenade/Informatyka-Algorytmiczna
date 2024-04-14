@@ -11,24 +11,30 @@ TEST_CASE("GF(1234577)") {
 
     uint32_t p = 1234577;
 
-    // getters and setters
+    SECTION("constructor", "[GF][constructor]") {
+        int64_t val = -3;
+        GF A = GF(p, val);
+        REQUIRE(A.getVal() == p + val);
+    }
+
     SECTION("getters", "[GF][getters]") {
         SECTION("p") {
             GF A = GF(p, 1);
             REQUIRE(A.getP() == p);
         }
-        SECTION("value") {
+        SECTION("val") {
             GF A = GF(p, p-1);
             REQUIRE(A.getVal() == p-1);
         }
     }
+
     SECTION("setters", "[GF][setters]") {
         SECTION("p") {
             GF t = GF(1, 1);
             t.setP(p);
             REQUIRE(t.getP() == p);
         }
-        SECTION("value") {
+        SECTION("val") {
             uint32_t val = 3;
             GF t = GF(p, 1);
             t.setVal(val);
@@ -38,7 +44,6 @@ TEST_CASE("GF(1234577)") {
 
     // comparison operators
     SECTION("compare", "[GF][compare]") {
-//    uint32_t p = GENERATE(take(5, random(MIN_P, MAX_P)));
         uint32_t val = GENERATE(take(TEST_RUNS, random(MIN_VAL, MAX_VAL)));
         SECTION("operator ==") {
             SECTION("positive") {
