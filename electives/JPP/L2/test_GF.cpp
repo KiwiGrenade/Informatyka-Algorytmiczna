@@ -4,16 +4,14 @@
 #include "GF.hpp"
 #include "lib.h"
 
-#define MIN_VAL std::numeric_limits<uint32_t>::min()
+#define MIN_VAL uint32_t(1)
 #define MAX_VAL std::numeric_limits<uint32_t>::max()
-//#define MIN_P uint32_t(1)
-//#define MAX_P uint32_t(5)
-//#define MAX_P std::numeric_limits<uint32_t>::max()
-//#define MAX std::numeric_limits<uint32_t>::max()
-//#define MIN std::numeric_limits<uint32_t>::min()
+#define TEST_RUNS 100
+TEST_CASE("GF(1234577)") {
 
-TEST_CASE("GF(1234577)"){
-    uint32_t p = GENERATE(1234577);
+    uint32_t p = 1234577;
+
+    // getters and setters
     SECTION("getters", "[GF][getters]") {
         SECTION("p") {
             GF A = GF(p, 1);
@@ -38,9 +36,10 @@ TEST_CASE("GF(1234577)"){
         }
     }
 
+    // comparison operators
     SECTION("compare", "[GF][compare]") {
 //    uint32_t p = GENERATE(take(5, random(MIN_P, MAX_P)));
-        uint32_t val = GENERATE(take(5, random(MIN_VAL, MAX_VAL)));
+        uint32_t val = GENERATE(take(TEST_RUNS, random(MIN_VAL, MAX_VAL)));
         SECTION("operator ==") {
             SECTION("positive") {
                 GF L = GF(p, val);
@@ -138,97 +137,83 @@ TEST_CASE("GF(1234577)"){
             }
         }
     }
-    SECTION("assignment", "[GF][assignment]") {
 
-//    uint32_t p = GENERATE(take(5, random(MIN_P, MAX_P)));
-        uint32_t val = GENERATE(take(5, random(MIN_VAL, MAX_VAL)));
+    // assignment operators
+    SECTION("assignment", "[GF][assignment]") {
+        uint32_t val = GENERATE(take(TEST_RUNS, random(MIN_VAL, MAX_VAL)));
+        GF T = GF(p, val);
 
         SECTION("operator =", "[GF][assignment][copy]") {
-
-            GF L = GF(p, val);
-            GF R = L;
-            GF K = GF(1, 1);
-            K = R;
-
-            REQUIRE(L == R);
-            REQUIRE(K == R);
+            GF tmp = T;
+            REQUIRE(tmp == T);
         }
+
+        GF tmp = T;
+
         SECTION("operator +=", "[GF][assignment][add]") {
-            GF T = GF(p, val);
             T+=T;
-            REQUIRE(T == T+T);
+            REQUIRE(T == tmp+tmp);
         }
         SECTION("operator -=", "[GF][assignment][sub]") {
-            GF T = GF(p, val);
             T-=T;
-            REQUIRE(T == T-T);
+            REQUIRE(T == tmp-tmp);
         }
         SECTION("operator *=", "[GF][assignment][mul]") {
-            GF T = GF(p, val);
             T*=T;
-            CHECK(T.getVal() == (T.getVal() * T.getVal()) % T.getP());
-            CHECK(T.getP() == (T.getVal() * T.getVal()));
-            REQUIRE(T.getVal() == (T*T).getVal());
+            REQUIRE(T == tmp*tmp);
         }
         SECTION("operator /=", "[GF][assignment][div]") {
-            GF T = GF(p, val);
             T/=T;
-            REQUIRE(T == T/T);
+            REQUIRE(T == tmp/tmp);
         }
     }
-    SECTION("arithmetic", "[GF][arithmetic]") {
-//    uint32_t p = GENERATE(take(5, random(MIN_P, MAX_P)));
-        uint32_t val1 = GENERATE(take(5, random(MIN_VAL, MAX_VAL)));
 
+    // arithmetic operators
+    SECTION("arithmetic", "[GF][arithmetic]") {
+        uint32_t val1 = GENERATE(take(TEST_RUNS, random(MIN_VAL, MAX_VAL)));
         SECTION("unary") {
+            GF L = GF(p, val1);
             SECTION("operator +", "[GF][arithmetic][positive]") {
-                GF L = GF(p, val1);
                 GF R = +L;
                 REQUIRE(R == L);
             }
             SECTION("operator -", "[GF][arithmetic][negative]") {
-                GF L = GF(p, val1);
                 GF R = -L;
                 REQUIRE(R.getVal() == (p - L.getVal()));
             }
         }
         SECTION("binary") {
-            uint32_t val2 = GENERATE(take(5, random(MIN_VAL, MAX_VAL)));
+            uint32_t val2 = GENERATE(take(TEST_RUNS, random(MIN_VAL, MAX_VAL)));
+            GF L = GF(p, val1);
+            GF R = GF(p, val2);
+            uint32_t exp_res;
+
             SECTION("operator +", "[GF][arithmetic][add]") {
-                GF L = GF(p, val1);
-                GF R = GF(p, val2);
                 GF C = L + R;
 
-                uint32_t exp_res = (R.getVal() + L.getVal()) % p;
+                exp_res = (R.getVal() + L.getVal()) % p;
 
                 REQUIRE(C.getVal() == exp_res);
             }
-//        SECTION("operator -", "[GF][arithmetic][sub]") {
-//            GF L = GF(p, val1);
-//            GF R = GF(p, val2);
-//            GF C = L - R;
-//
-//            uint32_t exp_res = 19;
-//
-//            REQUIRE(C.getVal() == exp_res);
-//        }
+            SECTION("operator -", "[GF][arithmetic][sub]") {
+                GF C = L - R;
+
+                exp_res = (p + L.getVal() - R.getVal()) % p;
+
+                REQUIRE(C.getVal() == exp_res);
+            }
             SECTION("operator *", "[GF][arithmetic][mul]") {
-                GF L = GF(p, val1);
-                GF R = GF(p, val2);
                 GF C = L * R;
 
-                uint32_t exp_res = (R.getVal() * L.getVal()) % p;
+                exp_res = (R.getVal() * L.getVal()) % p;
 
                 REQUIRE(C.getVal() == exp_res);
-                REQUIRE(C == L * R);
             }
             SECTION("operator /", "[GF][arithmetic][mul]") {
-                GF L = GF(p, val1);
-                GF R = GF(p, val2);
                 GF C = L / R;
 
-                uint32_t ReversedRVal = ILDES((uint64_t) R.getVal(), (uint64_t)R.getP(), 1).x;
-                uint32_t exp_res = L.getVal() * ReversedRVal;
+                uint32_t ReversedRVal = ILDES((uint64_t) R.getVal(), (uint64_t)R.getP(), IGCD(R.getVal(), R.getP())).x;
+                exp_res = (L.getVal() * ReversedRVal) % R.getP();
 
                 REQUIRE(C.getVal() == exp_res);
             }
