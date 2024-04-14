@@ -65,7 +65,7 @@ int64_t ERGCD (uint64_t a, uint64_t b, int64_t* x, int64_t* y)
         *y = 0;
         return a;
     }
-    // Recursively find the gcd
+        // Recursively find the gcd
     else {
         int64_t g = ERGCD(b, a % b, x, y);
         int64_t x1 = *x;
@@ -121,7 +121,7 @@ struct int64_pair RLDES(uint64_t a, uint64_t b, uint64_t c)
         {
             printf("Infinite Solutions Exist\n");
         }
-        // No solution
+            // No solution
         else
         {
             printf("No Solution Exists\n");
@@ -159,7 +159,7 @@ struct int64_pair ILDES(uint64_t a, uint64_t b, uint64_t c)
         {
             printf("Infinite Solutions Exist\n");
         }
-        // No solution
+            // No solution
         else
         {
             printf("No Solution Exists\n");
