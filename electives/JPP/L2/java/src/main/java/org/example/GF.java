@@ -72,7 +72,7 @@ public class GF {
     }
 
     public GF minus() {
-        return new GF(this.p, this.p - this.val);
+        return new GF(this.p, (this.p - this.val) % p);
     }
 
     public GF subtract(GF R) {
@@ -102,7 +102,7 @@ public class GF {
     // assignment
     // TODO: fix this
     public GF plusEquals(GF other) {
-//        this.setVal((this.add(other)).getVal());
+        this.setVal();
         return this;
     }
     // TODO: fix this
