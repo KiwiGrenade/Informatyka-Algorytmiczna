@@ -1,128 +1,125 @@
 package org.example;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 public class GF {
-    private int p;
+    private long p;
     private long val;
 
-    public GF(int _p, long _val) {
-        if(_p == 0) {
+    public GF(long _p, long _val) {
+        if(_p <= 0) {
             throw new IllegalArgumentException("[GF]ERROR: p must be > 0");
         }
-        this.p = _p;
-        this.setVal(_val);
+        p = _p;
+        setVal(_val);
     }
 
-    public int getP() {
-        return this.p;
+    public long getP() {
+        return p;
     }
 
-    public void setP(int _p) {
-        this.p = _p;
-        this.setVal(this.val);
+    public void setP(long _p) {
+        p = _p;
+        setVal(val);
     }
 
     public long getVal() {
-        return this.val;
+        return val;
     }
 
     public void setVal(long _val) {
         if(_val < 0 ) {
-            this.val = (this.p + _val) % this.p;
+            val = (p + _val) % p;
         }
         else {
-            this.val = _val;
+            val = _val;
         }
     }
 
-    private static void checkP(GF L, GF R) {
+    private static void checkP(@NotNull GF L, @NotNull GF R) {
         if(L.p != R.p)
             throw new IllegalArgumentException("[GF]ERROR: not matching p!");
     }
 
     // compare
-    public boolean equals(GF R) {
-        checkP(this, R);
-        return this.val == R.val;
+    static public boolean equals(GF L, GF R) {
+        checkP(L, R);
+        return L.val == R.val;
     }
-
-    public boolean notEquals(GF R) {
-        return !this.equals(R);
+    static public boolean notEquals(GF L, GF R) {
+        return !equals(L, R);
     }
-
-    public boolean lessThan(GF R) {
-        checkP(this, R);
-        return this.val < R.val;
+    static public boolean lessThan(GF L, GF R) {
+        checkP(L, R);
+        return L.val < R.val;
     }
-
-    public boolean greaterThan(GF R) {
-        return R.lessThan(this);
+    static public boolean greaterThan(GF L, GF R) {
+        return lessThan(R, L);
     }
-
-    public boolean lessThanOrEqual(GF R) {
-        return !this.greaterThan(R);
+    static public boolean lessThanOrEqual(GF L, GF R) {
+        return !greaterThan(L, R);
     }
-
-    public boolean greaterThanOrEqual(GF R) {
-        return !this.lessThan(R);
+    static public boolean greaterThanOrEqual(GF L, GF R) {
+        return !lessThan(L, R);
     }
 
     // arithmetic
     public GF plus() {
         return this;
     }
-
     public GF minus() {
-        return new GF(this.p, (this.p - this.val) % p);
+        return new GF(this.p, (this.p - this.val) % this.p);
     }
-
-    public GF subtract(GF R) {
-        checkP(this, R);
-        return this.minus().add(R);
+    @NotNull
+    static public GF subtract(GF L, GF R) {
+        checkP(L, R);
+        R = R.minus();
+        long _val = (L.val + R.val) % L.p;
+        return new GF(R.    p, _val);
     }
-
-    public GF add(GF R) {
-        checkP(this, R);
-        long _val = (this.val + R.val) % this.p;
+    @NotNull
+    @Contract("_, _ -> new")
+    static public GF add(GF L, GF R) {
+        checkP(L, R);
+        long _val = (L.val + R.val) % L.p;
         return new GF(R.p, _val);
     }
-
-    public GF multiply(GF R) {
-        checkP(this, R);
-        long _val = (this.val * R.val) % this.p;
-        return new GF(this.p, _val);
+    @NotNull
+    @Contract("_, _ -> new")
+    static public GF multiply(GF L, GF R) {
+        checkP(L, R);
+        long _val = (L.val * R.val) % L.p;
+        return new GF(L.p, _val);
     }
-
-    public GF divide(GF R) {
-        checkP(this, R);
+    @NotNull
+    @Contract("_, _ -> new")
+    static public GF divide(GF L, GF R) {
+        checkP(L, R);
         long RValReverse = Lib.iLDES(R.val, R.p, Lib.iGCD(R.val, R.p))[0];
-        long _val = (this.val * RValReverse) % this.p;
-        return new GF(this.p, _val);
+        long _val = (L.val * RValReverse) % L.p;
+        return new GF(L.p, _val);
     }
 
-    // assignment
-    // TODO: fix this
-    public GF plusEquals(GF other) {
-        this.setVal();
-        return this;
+    // assign
+    public void assign(@org.jetbrains.annotations.NotNull GF other) {
+        setP(other.p);
+        setVal(other.val);
     }
-    // TODO: fix this
-    public GF minusEquals(GF other) {
-//        this.setVal((this.subtract(other)).getVal());
-        return this;
+    public void plusAssign(GF other) {
+        val = add(this, other).val;
     }
-
-    public GF multiplyEquals(GF other) {
-        this.setVal((this.multiply(other)).getVal());
-        return this;
+    public void minusAssign(GF other) {
+        val = subtract(this, other).val;
     }
-
-    public GF divideEquals(GF other) {
-        this.setVal((this.divide(other)).getVal());
-        return this;
+    public void multiplyAssign(GF other) {
+        val = multiply(this, other).val;
     }
-
+    public void divideAssign(GF other) {
+        val = divide(this, other).val;
+    }
     @Override
     public String toString() {
-        return "p   = " + this.p + "\nval = " + this.val;
+        return "p   = " + p + "\nval = " + val;
     }
 }
