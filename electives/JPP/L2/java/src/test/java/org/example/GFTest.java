@@ -147,8 +147,8 @@ class GFTest {
                 L = new GF(p, val1);
                 R = new GF(p, val2);
                 C = GF.subtract(L, R);
-
-                assertEquals(C.getVal(), GF.add(L, R.minus()).getVal());
+                long exp_res = (L.getVal() + (R.getP() - R.getVal())) % p;
+                assertEquals(C.getVal(), exp_res);
             }
 
             @Test
@@ -188,6 +188,7 @@ class GFTest {
     class TestAssignment {
         GF L;
         GF R;
+        GF C;
         private long val1;
         private long val2;
 
@@ -195,52 +196,53 @@ class GFTest {
         void setupValues() {
             val1 = random.nextLong(MAX_VAL - MIN_VAL) + MIN_VAL;
             val2 = random.nextLong(MAX_VAL - MIN_VAL) + MIN_VAL;
+            C = new GF(1, 1);
         }
 
         @Test
         void assign() {
             L = new GF(p, val1);
             R = new GF(p, val2);
-            L.assign(R);
+            R.assign(L);
 
             assertEquals(L.getVal(), R.getVal());
             assertEquals(L.getP(), R.getP());
         }
-        //FIXME: Fails
         @Test
         void plusAssign() {
             L = new GF(p, val1);
             R = new GF(p, val2);
+            C.assign(L);
 
             L.plusAssign(R);
-            assertEquals(L.getVal(), GF.add(L, R).getVal());
+            assertEquals(L.getVal(), GF.add(C, R).getVal());
         }
-        //FIXME: Fails
         @Test
         void minusAssign() {
             L = new GF(p, val1);
             R = new GF(p, val2);
+            C.assign(L);
 
             L.minusAssign(R);
-            assertEquals(L.getVal(), GF.subtract(L, R).getVal());
+            assertEquals(L.getVal(), GF.subtract(C, R).getVal());
         }
-        //FIXME: Fails
         @Test
         void multiplyAssign() {
             L = new GF(p, val1);
             R = new GF(p, val2);
+            C.assign(L);
 
             L.multiplyAssign(R);
-            assertEquals(L.getVal(), GF.multiply(L, R).getVal());
+            assertEquals(L.getVal(), GF.multiply(C, R).getVal());
         }
-
         @Test
         void divideAssign() {
             L = new GF(p, val1);
             R = new GF(p, val2);
+            C.assign(L);
 
             L.divideAssign(R);
-            assertEquals(L.getVal(), GF.divide(L, R).getVal());
+            assertEquals(L.getVal(), GF.divide(C, R).getVal());
         }
     }
 }

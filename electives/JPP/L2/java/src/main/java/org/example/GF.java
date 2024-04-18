@@ -76,7 +76,7 @@ public class GF {
         checkP(L, R);
         R = R.minus();
         long _val = (L.val + R.val) % L.p;
-        return new GF(R.    p, _val);
+        return new GF(R.p, _val);
     }
     @NotNull
     @Contract("_, _ -> new")
