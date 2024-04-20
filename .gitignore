@@ -6,3 +6,4 @@ venv/
 *.tar.gz
 *build*/
 *.class
+*.lst
