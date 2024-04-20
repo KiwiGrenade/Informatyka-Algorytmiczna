@@ -4,4 +4,4 @@ target_link_libraries(test_GF PRIVATE
         Catch2::Catch2WithMain
         GF
 )
-add_test(TEST_GF ./test_GF)
+add_test(TEST_CPP ./test_GF)

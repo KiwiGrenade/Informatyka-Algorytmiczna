@@ -1,2 +1,3 @@
-add_subdirectory(src/main/java/org/example)
-#add_subdirectory(src/test/java/org/example)
+add_test(NAME TEST_JAVA 
+	COMMAND mvn test
+	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
