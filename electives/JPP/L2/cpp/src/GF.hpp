@@ -13,6 +13,7 @@ private:
     uint32_t p;
     uint32_t val;
     static void checkP(const GF& L, const GF& R);
+    static uint32_t inverse(const uint32_t _p, const int64_t _val);
 
 public:
     explicit GF(const uint32_t& _p, const int64_t& _val);

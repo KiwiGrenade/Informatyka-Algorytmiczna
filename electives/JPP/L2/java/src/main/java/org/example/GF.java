@@ -30,7 +30,7 @@ public class GF {
 
     public void setVal(long _val) {
         if(_val < 0 ) {
-            val = (p + _val) % p;
+            val = inverse(p, val);
         }
         else {
             val = _val;
@@ -40,6 +40,10 @@ public class GF {
     private static void checkP(@NotNull GF L, @NotNull GF R) {
         if(L.p != R.p)
             throw new IllegalArgumentException("[GF]ERROR: not matching p!");
+    }
+   
+    private static long inverse(long _p, long _val){ 
+        return _p + (_val % _p);
     }
 
     // compare

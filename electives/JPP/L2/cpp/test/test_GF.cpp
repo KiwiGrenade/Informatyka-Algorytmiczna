@@ -15,6 +15,9 @@ TEST_CASE("GF(1234577)") {
         int64_t val = -3;
         GF A = GF(p, val);
         REQUIRE(A.getVal() == p + val);
+
+        GF B = GF(p, val - 2*p);
+        REQUIRE(B.getVal() == A.getVal());
     }
 
     SECTION("getters", "[GF][getters]") {

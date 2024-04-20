@@ -20,6 +20,13 @@ class GFTest {
         long val = -3;
         GF A = new GF(p, val);
         GF B = new GF(p, p + val);
+        
+        assertEquals(A.getVal(), B.getVal());
+        assertEquals(A.getP(), B.getP());
+
+        A = new GF(p, val);
+        B = new GF(p, val - 2*p);
+        
         assertEquals(A.getVal(), B.getVal());
         assertEquals(A.getP(), B.getP());
     }
