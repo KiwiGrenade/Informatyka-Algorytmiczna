@@ -10,6 +10,10 @@ void GF::checkP(const GF& L, const GF& R) {
         throw std::invalid_argument("[GF]ERROR: not matching p!");
 }
 
+uint32_t GF::inverse(const uint32_t _p, const int64_t _val){
+    return _p + (_val % _p);
+}
+
 GF::GF(const uint32_t& _p, const int64_t& _val) {
     if(_p == 0) {
         throw std::invalid_argument("[GF]ERROR: p must be > 0");
@@ -29,9 +33,10 @@ void GF::setP(uint32_t _p) noexcept{
 uint32_t GF::getVal() const noexcept{
     return val;
 }
+
 void GF::setVal(int64_t _val) noexcept{
     if(_val < 0 ) {
-        val = (p + _val) % p;
+        val = inverse(p, _val);
     }
     else {
         val = _val;
