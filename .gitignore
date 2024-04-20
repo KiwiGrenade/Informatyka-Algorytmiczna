@@ -5,4 +5,4 @@ venv/
 *.zip
 *.tar.gz
 *build*/
-
+*.class
