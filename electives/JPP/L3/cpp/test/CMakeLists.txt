@@ -18,4 +18,4 @@ target_include_directories(User_TEST PUBLIC
 )
 
 add_test(TEST_DHSetup ./DHSetup_TEST)
-
+add_test(TEST_User ./User_TEST)

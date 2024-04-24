@@ -2,13 +2,13 @@
 #include <random>
 #include <vector>
 #include <cmath>
+
 template<typename T>
 class DHSetup {
 private:
     T g;
-    // std::random_device rd;
-    std::mt19937 rng;
-    std::uniform_int_distribution<T> dist;
+    static std::mt19937 rng;
+    static std::uniform_int_distribution<T> dist;
     std::vector<T> primeFactors;
     bool isGenerator(const T& a, const T& _p) {
         //TODO: throwing if primeFactors aren't initialized
@@ -69,3 +69,9 @@ public:
         return res;
     }
 };
+
+template<typename T>
+std::mt19937 DHSetup<T>::rng;
+template<typename T>
+std::uniform_int_distribution<T> DHSetup<T>::dist;
+ 
