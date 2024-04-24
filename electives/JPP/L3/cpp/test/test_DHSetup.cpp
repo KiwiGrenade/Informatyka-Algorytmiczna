@@ -5,7 +5,7 @@
 #include <catch2/generators/catch_generators_random.hpp>
 #include "DHSetup.hpp"
 
-TEST_CASE("1234567891"){  
+TEST_CASE("DHSetup: p = 1234567891"){  
     // constexpr uint32_t testRuns = 100;
     constexpr uint32_t p = 1234567891;
     DHSetup<uint32_t> DH = DHSetup<uint32_t>(p);

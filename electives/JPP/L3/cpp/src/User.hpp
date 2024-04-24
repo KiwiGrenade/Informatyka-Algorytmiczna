@@ -5,27 +5,24 @@
 template<typename T>
 class User {
 private:
-    std::mt19937 rng;
-    std::uniform_int_distribution<uint32_t> dist;
-    DHSetup DH;
+    static std::mt19937 rng;
+    static std::uniform_int_distribution<uint32_t> dist;
+    DHSetup<T>* DH;
     uint32_t secret;
     T key;
 
 public:
-    User(DHSetup& _DH) {
-        DH = _DH;
-        dist = 
-            std::uniform_int_distribution<uint32_t> 
-            (0, std::numeric_limits<uint32_t>::max());
+    User(DHSetup<T>* _dh) {
+        DH = _dh;
         secret = dist(rng);
     }
     
     T getPublicKey() {
-        DH.power(DH.getGenerator(), secret);
+        return DH->power(DH->getGenerator(), secret);
     }
 
     void setKey(T a) {
-        DH.power(a, secret);
+        key = DH->power(a, secret);
     }
 
     T encrypt(T m) {
@@ -36,3 +33,9 @@ public:
         return c / key;
     }
 };
+
+template<typename T>
+std::mt19937 User<T>::rng;
+
+template<typename T>
+std::uniform_int_distribution<uint32_t> User<T>::dist = std::uniform_int_distribution<uint32_t>();
