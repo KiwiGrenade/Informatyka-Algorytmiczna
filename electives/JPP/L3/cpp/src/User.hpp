@@ -10,10 +10,11 @@ private:
     static std::uniform_int_distribution<uint32_t> dist;
     DHSetup<T>* DH;
     uint32_t secret = 0;
-    T key;
+    //FIXME: Find a way to initialize GF in some other way. 
+    T key = T(1, 0);
 
     void keyException() {
-        if(key == 0) {
+        if(key == T(1, 0)) {
             throw std::invalid_argument("Secret key has not been set! Do it with User<T>::setKey(T a).");
         }
     }
@@ -22,8 +23,7 @@ public:
     User(DHSetup<T>* _dh) {
         DH = _dh;
         secret = dist(rng);
-        key = 0;
-    }
+    } 
     
     T getPublicKey() {
         return DH->power(DH->getGenerator(), secret);
