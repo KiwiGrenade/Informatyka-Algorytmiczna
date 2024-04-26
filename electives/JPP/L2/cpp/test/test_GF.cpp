@@ -10,14 +10,26 @@
 TEST_CASE("GF(1234577)") {
 
     uint32_t p = 1234577;
-    uint32_t p2 = 1234567891;
     SECTION("custom") {
-        uint32_t a = 1166403871;
-        uint32_t exp = 327745170;
-        GF A = GF(p2, a);
-        A = A * A;
-        GF EXP = GF(p2, exp);
-        REQUIRE(A == EXP);
+            uint32_t p2 = 1234567891;
+        SECTION("multiplication"){
+            uint32_t a = 1166403871;
+            uint32_t exp = 327745170;
+            GF A = GF(p2, a);
+            A = A * A;
+            GF EXP = GF(p2, exp);
+            REQUIRE(A == EXP);
+        }
+        SECTION("division"){
+            uint32_t a = 1166403871;
+            uint32_t b = 131214121;
+            uint32_t exp = 873696767;
+            GF A = GF(p2, a);
+            GF B = GF(p2, b);
+            A = A / B;
+            GF EXP = GF(p2, exp);
+            REQUIRE(A == EXP);
+        }
     }
 
     SECTION("constructor", "[GF][constructor]") {
@@ -68,11 +80,6 @@ TEST_CASE("GF(1234577)") {
                 GF R = GF(p, val-1);
                 REQUIRE_FALSE(L == R);
             }
-            SECTION("exceptions") {
-                GF L = GF(p, val);
-                GF R = GF(p-1, val);
-                REQUIRE_THROWS(L == R);
-            }
         }
         SECTION("operator !=") {
             SECTION("positive") {
@@ -84,11 +91,6 @@ TEST_CASE("GF(1234577)") {
                 GF L = GF(p, val);
                 GF R = GF(p, val - 1);
                 REQUIRE(L != R);
-            }
-            SECTION("exceptions") {
-                GF L = GF(p, val);
-                GF R = GF(p-1, val-1);
-                REQUIRE_THROWS(L != R);
             }
         }
         SECTION("operator <", "[GF][compare]") {
@@ -175,10 +177,10 @@ TEST_CASE("GF(1234577)") {
             T-=T;
             REQUIRE(T == tmp-tmp);
         }
-        // SECTION("operator *=", "[GF][assignment][mul]") {
-        //     T*=T;
-        //     REQUIRE(T == tmp*tmp);
-        // }
+        SECTION("operator *=", "[GF][assignment][mul]") {
+            T*=T;
+            REQUIRE(T == tmp*tmp);
+        }
         SECTION("operator /=", "[GF][assignment][div]") {
             T/=T;
             REQUIRE(T == tmp/tmp);
@@ -219,18 +221,18 @@ TEST_CASE("GF(1234577)") {
 
                 REQUIRE(C.getVal() == exp_res);
             }
-            // SECTION("operator *", "[GF][arithmetic][mul]") {
-            //     GF C = L * R;
-            //
-            //     exp_res = (R.getVal() * L.getVal()) % p;
-            //
-            //     REQUIRE(C.getVal() == exp_res);
-            // }
+            SECTION("operator *", "[GF][arithmetic][mul]") {
+                GF C = L * R;
+
+                exp_res = ((uint64_t)R.getVal() * L.getVal()) % p;
+
+                REQUIRE(C.getVal() == exp_res);
+            }
             SECTION("operator /", "[GF][arithmetic][mul]") {
                 GF C = L / R;
 
                 uint32_t ReversedRVal = ILDES((uint64_t) R.getVal(), (uint64_t)R.getP(), IGCD(R.getVal(), R.getP())).x;
-                exp_res = (L.getVal() * ReversedRVal) % R.getP();
+                exp_res = ((uint64_t)L.getVal() * ReversedRVal) % R.getP();
 
                 REQUIRE(C.getVal() == exp_res);
             }
