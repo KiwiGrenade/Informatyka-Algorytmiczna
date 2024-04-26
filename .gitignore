@@ -7,3 +7,7 @@ venv/
 *build*/
 *.class
 *.lst
+# clangd lsp
+.cache/
+.clangd
+compile_commands.json
