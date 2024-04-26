@@ -1,13 +1,12 @@
 //
 // Created by jaskow on 06.04.24.
 //
-
 #include <stdexcept>
 #include "GF.hpp"
 #include "lib.h"
 void GF::checkP(const GF& L, const GF& R) {
     if(L.p != R.p)
-        throw std::invalid_argument("[GF]ERROR: not matching p!");
+        throw std::invalid_argument("[GF]ERROR: not matching p! " + std::to_string(L.p) + " != " + std::to_string(R.p));
 }
 
 uint32_t GF::inverse(const uint32_t _p, const int64_t _val){
@@ -39,7 +38,7 @@ void GF::setVal(int64_t _val) noexcept{
         val = inverse(p, _val);
     }
     else {
-        val = _val;
+        val = _val % p;
     }
 }
 
@@ -78,13 +77,12 @@ GF GF::operator-(const GF &R) const {
 }
 GF GF::operator+(const GF &R) const {
     checkP(*this, R);
-    uint32_t _val = (val + R.val) % p;
-    return GF(R.p, _val);
+    return GF(R.p, ((uint64_t) val + R.val) % p);
 }
 GF GF::operator*(const GF &R) const {
     checkP(*this, R);
-    uint32_t _val = (val * R.val) % p;
-    return GF(p, _val);
+    // uint64_t _val = ((uint64_t) val * R.val) % p; 
+    return GF(p, ((uint64_t) val * R.val) % p); 
 }
 GF GF::operator/(const GF &R) const {
     checkP(*this, R);
@@ -114,7 +112,7 @@ GF& GF::operator/=(const GF &other) {
 }
 
 std::ostream &operator<<(std::ostream &out, const GF &gf) {
-    out << "p   = " << gf.p
-        << "val = " << gf.val;
+    out << "p: " << gf.p << ", "
+        << "val: " << gf.val;
     return out;
 }
