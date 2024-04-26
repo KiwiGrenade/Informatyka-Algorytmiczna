@@ -2,8 +2,8 @@
 #include <random>
 #include <vector>
 #include <cmath>
-#include <iostream>
 #include "GF.hpp"
+
 template<typename T>
 class DHSetup {
 private:
@@ -73,7 +73,6 @@ public:
             b >>= 1; // b /= 2
             a *= a;
         }
-        std::cout << res << std::endl;
         return res;
     }
 };

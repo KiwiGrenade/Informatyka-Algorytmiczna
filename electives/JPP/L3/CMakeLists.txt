@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.26)
 project(JPP-L3)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 Include(FetchContent)
 
 FetchContent_Declare(
