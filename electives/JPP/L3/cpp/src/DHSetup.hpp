@@ -2,31 +2,32 @@
 #include <random>
 #include <vector>
 #include <cmath>
-
+#include <iostream>
+#include "GF.hpp"
 template<typename T>
 class DHSetup {
 private:
-    T g;
+    T* g;
     static std::mt19937 rng;
-    static std::uniform_int_distribution<T> dist;
-    std::vector<T> primeFactors;
-    bool isGenerator(const T& a, const T& _p) {
-        //TODO: throwing if primeFactors aren't initialized
-        for(T q : primeFactors) {
+    static std::uniform_int_distribution<uint32_t> dist;
+    std::vector<uint32_t> primeFactors;
+    
+    bool isGenerator(const uint32_t& a, const uint32_t& _p) {
+        for(uint32_t q : primeFactors) {
             if(a * (_p-1)/q == 1)
                 return false;
         }
         return true;
     }
 
-    void TrialDivision(T n) {
-        T f;
+    void TrialDivision(uint32_t n) {
+        uint32_t f;
         f = 2;
         while (n % 2 == 0) { primeFactors.push_back(f); n /= 2; }
         f = 3;
         while (n % 3 == 0) { primeFactors.push_back(f); n /= 3; }
         f = 5;
-        T ac = 9, temp = 16;
+        uint32_t ac = 9, temp = 16;
         do {
             ac += temp; // Assume addition does not cause overflow with U type
             if (ac > n) break; 
@@ -44,34 +45,40 @@ private:
     }
     
 public: 
-   DHSetup(const T _p) {
-        dist = std::uniform_int_distribution<T> ((T) 1, _p);
+    DHSetup(const uint32_t _p) {
+        dist = std::uniform_int_distribution<uint32_t> (1, _p);
         rng = std::mt19937();
         TrialDivision(_p - 1); 
 
-        do {g = dist(rng);}
-        while(isGenerator(g, _p-1) == false);
+        uint32_t tmp;
+        do {tmp = dist(rng);}
+        while(isGenerator(tmp, _p-1) == false);
+        g = new GF(_p, tmp);
+    }
+
+    ~DHSetup(){
+        free(g);
     }
 
     T getGenerator() {
-        return g;
+        return *g;
     }
 
     T power(T a, unsigned long b) {
-        T res = (T) 1;
-        while(b > 0) {
-            if(b % 2 == 1) {
-                res = res * a;
+        T res = T(a.getP(), 1);
+        for(int i = 0; b > 0; i++) {
+            if(b & 1) {
+                res *= a;
             }
-            b /= 2; // b /= 2
+            b >>= 1; // b /= 2
             a *= a;
         }
+        std::cout << res << std::endl;
         return res;
     }
 };
-
 template<typename T>
 std::mt19937 DHSetup<T>::rng;
 template<typename T>
-std::uniform_int_distribution<T> DHSetup<T>::dist;
+std::uniform_int_distribution<uint32_t> DHSetup<T>::dist;
  
