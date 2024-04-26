@@ -10,7 +10,6 @@ private:
     static std::uniform_int_distribution<uint32_t> dist;
     DHSetup<T>* DH;
     uint32_t secret = 0;
-    //FIXME: Find a way to initialize GF in some other way. 
     T key = T(1, 0);
 
     void keyException() {
