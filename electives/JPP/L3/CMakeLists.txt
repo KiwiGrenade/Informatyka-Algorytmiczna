@@ -14,7 +14,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 
 set(CMAKE_CXX_STANDARD 23)
-
 include(CTest)
 add_subdirectory(cpp)
 # add_subdirectory(java)
