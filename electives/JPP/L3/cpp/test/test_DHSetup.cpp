@@ -1,9 +1,8 @@
 #include <stdint.h>
-#include <random>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators_adapters.hpp>
 #include <catch2/generators/catch_generators_random.hpp>
-#include "../src/DHSetup.hpp"
+#include "DHSetup.hpp"
 #include "GF.hpp"
 
 TEST_CASE("DHSetup: p = 1234567891"){  
