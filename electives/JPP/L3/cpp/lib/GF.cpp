@@ -5,8 +5,7 @@
 #include "GF.hpp"
 #include "lib.h"
 
-//////////////////////////////////////////////////////////////
-// private
+
 void GF::checkP(const GF& L, const GF& R) {
     if(L.p != R.p)
         throw std::invalid_argument("[GF]ERROR: not matching p! " + std::to_string(L.p) + " != " + std::to_string(R.p));
@@ -17,8 +16,6 @@ uint32_t GF::inverse(const uint32_t _p, const int64_t _val){
 }
 
 
-//////////////////////////////////////////////////////////////
-// public
 GF::GF(const uint32_t& _p, const int64_t& _val) {
     if(_p == 0) {
         throw std::invalid_argument("[GF]ERROR: p must be > 0");
