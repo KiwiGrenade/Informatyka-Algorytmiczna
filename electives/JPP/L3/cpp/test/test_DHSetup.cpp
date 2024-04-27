@@ -3,8 +3,9 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators_adapters.hpp>
 #include <catch2/generators/catch_generators_random.hpp>
-#include "DHSetup.hpp"
+#include "../src/DHSetup.hpp"
 #include "GF.hpp"
+
 TEST_CASE("DHSetup: p = 1234567891"){  
     constexpr uint32_t p = 1234567891;
     DHSetup<GF> DH = DHSetup<GF>(p);
