@@ -26,11 +26,31 @@ class TestGF(unittest.TestCase):
         C = self.L - self.R
         self.assertEqual(C.get_val(), exp_res)
 
+    def test_multiplication_custom(self):
+        p2 = 1234567891
+        a = 1166403871
+        exp = 327745170
+        A = GF(p2, a)
+        A.assign(A*A)
+        EXP = GF(p2, exp)
+        self.assertEqual(A.get_val(), exp)
+
     def test_multiplication(self):
         exp_res: int = (self.L.get_val() * self.R.get_val()) % self.R.get_p()
         C = self.L * self.R
         self.assertEqual(C.get_val(), exp_res)
 
+    def test_division_custom(self):
+        p2 = 1234567891
+        a = 1166403871
+        b = 131214121
+        exp = 873696767
+        A = GF(p2, a)
+        B = GF(p2, b)
+        A.assign(A/B)
+        EXP = GF(p2, exp)
+        self.assertEqual(A.get_val(), exp)
+    
     def test_division(self):
         exp_res: int = (self.L.get_val() * pow(self.R.get_val(), -1, self.R.get_p())) % self.R.get_p()
         C = self.L / self.R
