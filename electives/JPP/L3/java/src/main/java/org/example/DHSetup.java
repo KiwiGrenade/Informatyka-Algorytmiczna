@@ -3,9 +3,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class DHSetup<T extends GF   > {
-    private T g;
-    private Class<T> gClass;
+public class DHSetup {
+    private GF g;
+    private Class<GF> gClass;
     private static final Random rng = new Random();
     private List<Integer> primeFactors = new ArrayList<>();
 
@@ -17,7 +17,7 @@ public class DHSetup<T extends GF   > {
         return true;
     }
 
-    private void TrialDivision(int n) {
+    private void GFrialDivision(int n) {
         int f;
         f = 2;
         while (n % 2 == 0) { primeFactors.add(f); n /= 2; }
@@ -42,27 +42,26 @@ public class DHSetup<T extends GF   > {
     }
 
     public DHSetup(int _p) {
-        TrialDivision(_p - 1);
+        GFrialDivision(_p - 1);
 
         int tmp;
         do {tmp = rng.nextInt(_p) + 1;}
         while(isGenerator(tmp, _p-1) == false);
-        g = gClass.getConstructor()
-        g = new T(_p, tmp);
+        g = new GF(_p, tmp);
     }
 
-    public T getGenerator() {
+    public GF getGenerator() {
         return g;
     }
 
-    public T power(T a, long b) {
-        T res = new (a.getP(), 1);
-        for(int i = 0; b > 0; i++) {
+    public GF power(GF a, long b) {
+        GF res = new GF(a.getP(), b);
+        while(b > 0) {
             if((b & 1) == 1) {
-                res.multiply(a);
+                res.multiplyAssign(a);
             }
-            b >>= 1; // b /= 2
-            a.multiply(a);
+            b /= 2; // b /= 2
+            res.multiplyAssign(a);
         }
         return res;
     }
