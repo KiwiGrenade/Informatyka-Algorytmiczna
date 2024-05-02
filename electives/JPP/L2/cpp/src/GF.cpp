@@ -95,10 +95,9 @@ GF GF::operator*(const GF &R) const {
 GF GF::operator/(const GF &R) const {
     checkP(*this, R);
 
-    uint32_t RValReverse = ILDES((uint64_t)R.val, (uint64_t)R.p, RGCD(R.val, R.p)).x;
+    uint64_t RValReverse = ILDES(R.val, R.p, RGCD(R.val, R.p)).x;
 
-    uint32_t _val = ((uint64_t)val * RValReverse) % p;
-    return GF(p, _val);
+    return GF(p, val) * GF(p, RValReverse);
 }
 
 
