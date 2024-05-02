@@ -5,7 +5,8 @@
 #include "GF.hpp"
 #include "lib.h"
 
-
+//////////////////////////////////////////////////////////////
+// private
 void GF::checkP(const GF& L, const GF& R) {
     if(L.p != R.p)
         throw std::invalid_argument("[GF]ERROR: not matching p! " + std::to_string(L.p) + " != " + std::to_string(R.p));
@@ -16,6 +17,8 @@ uint32_t GF::inverse(const uint32_t _p, const int64_t _val){
 }
 
 
+//////////////////////////////////////////////////////////////
+// public
 GF::GF(const uint32_t& _p, const int64_t& _val) {
     if(_p == 0) {
         throw std::invalid_argument("[GF]ERROR: p must be > 0");
@@ -92,10 +95,9 @@ GF GF::operator*(const GF &R) const {
 GF GF::operator/(const GF &R) const {
     checkP(*this, R);
 
-    uint32_t RValReverse = ILDES((uint64_t)R.val, (uint64_t)R.p, RGCD(R.val, R.p)).x;
+    uint64_t RValReverse = ILDES(R.val, R.p, RGCD(R.val, R.p)).x;
 
-    uint32_t _val = ((uint64_t)val * RValReverse) % p;
-    return GF(p, _val);
+    return GF(p, val) * GF(p, RValReverse);
 }
 
 
