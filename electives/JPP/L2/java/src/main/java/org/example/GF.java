@@ -101,6 +101,7 @@ public class GF {
     static public GF divide(GF L, GF R) {
         checkP(L, R);
         long RValReverse = Lib.iLDES(R.val, R.p, Lib.iGCD(R.val, R.p))[0];
+        System.out.println(RValReverse);
         long _val = (L.val * RValReverse) % L.p;
         return new GF(L.p, _val);
     }

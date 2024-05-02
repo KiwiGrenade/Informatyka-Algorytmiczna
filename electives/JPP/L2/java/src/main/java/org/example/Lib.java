@@ -50,7 +50,7 @@ public class Lib {
         return result;
     }
 
-    public static long[] eIGCD(long a, long b) {
+    public static long eIGCD(long a, long b) {
         long x0 = 1, y0 = 0, x1 = 0, y1 = 1;
         while (b != 0) {
             long quotient = a / b;
@@ -66,7 +66,7 @@ public class Lib {
             y1 = y0 - quotient * y1;
             y0 = temp;
         }
-        return new long[]{a, x0, y0};
+        return a, x0, y0;
     }
 
     public static long[] rLDES(long a, long b, long c) {
@@ -95,10 +95,9 @@ public class Lib {
             }
             return new long[]{0, 0, 0};
         }
-        long[] gcd = eIGCD(a, b);
-        if (c % gcd[0] != 0) {
+        long gcd = eIGCD(a, b, x, y);
+        if (c % gcd != 0) {
             System.out.println("No Solution Exists");
-            return new long[]{0, 0, 0};
         }
         return new long[]{gcd[0], gcd[1], gcd[2]};
     }

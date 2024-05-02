@@ -177,7 +177,17 @@ class GFTest {
                 long exp_res = (R.getVal() * L.getVal()) % p;
                 assertEquals(C.getVal(), exp_res);
             }
+            @Test
+            void customMultiply() {
+                int p = 1234567891;
+                GF A = new GF(p, 1166403871);
+                GF EXP = new GF(p, 327745170);
 
+                A.multiplyAssign(A);
+
+                assertEquals(A.getVal(), EXP.getVal());
+                assertTrue(GF.equals(A, EXP));
+            }
             @Test
             void divide() {
                 L = new GF(p, val1);
@@ -187,6 +197,17 @@ class GFTest {
                 long RValReverse = Lib.iLDES(R.getVal(), R.getP(), Lib.iGCD(R.getVal(), R.getP()))[0];
                 long _val = (L.getVal() * RValReverse) % L.getP();
                 assertEquals(C.getVal(), _val);
+            }
+            @Test
+            void customDivide() {
+                int p = 1234567891;
+                GF A = new GF(p, 1166403871);
+                GF B = new GF(p, 131214121);
+                GF EXP = new GF(p, 873696767);
+
+                A.divideAssign(B);
+
+                assertEquals(A.getVal(), EXP.getVal());
             }
         }
     }
