@@ -32,7 +32,6 @@ class TestGF(unittest.TestCase):
         exp = 327745170
         A = GF(p2, a)
         A.assign(A*A)
-        EXP = GF(p2, exp)
         self.assertEqual(A.get_val(), exp)
 
     def test_multiplication(self):
@@ -48,7 +47,6 @@ class TestGF(unittest.TestCase):
         A = GF(p2, a)
         B = GF(p2, b)
         A.assign(A/B)
-        EXP = GF(p2, exp)
         self.assertEqual(A.get_val(), exp)
     
     def test_division(self):
