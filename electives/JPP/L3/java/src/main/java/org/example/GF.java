@@ -7,6 +7,11 @@ public class GF {
     private long p;
     private long val;
 
+    public GF() {
+        p = 0;
+        setVal(0);
+    }
+
     public GF(long _p, long _val) {
         if(_p <= 0) {
             throw new IllegalArgumentException("[GF]ERROR: p must be > 0");
@@ -15,14 +20,9 @@ public class GF {
         setVal(_val);
     }
 
-    public long getP() {
-        return p;
-    }
+    public long getP() { return p; }
 
-    public void setP(long _p) {
-        p = _p;
-        setVal(val);
-    }
+    public void setP(long _p) { p = _p; setVal(val); }
 
     public long getVal() {
         return val;
