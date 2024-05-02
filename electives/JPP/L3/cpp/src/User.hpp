@@ -2,7 +2,6 @@
 #include <stdexcept>
 #include "DHSetup.hpp"
 
-// FIXME: implement all things in GF
 template<typename T>
 class User {
 private:

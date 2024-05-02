@@ -19,5 +19,5 @@ target_include_directories(User_TEST PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../lib
 )
 
-add_test(TEST_DHSetup ./DHSetup_TEST)
-add_test(TEST_User ./User_TEST)
+add_test(TEST_CPP_DHSetup ./DHSetup_TEST)
+add_test(TEST_CPP_User ./User_TEST)
