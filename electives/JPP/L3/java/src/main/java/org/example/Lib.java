@@ -1,7 +1,7 @@
 package org.example;
 
 public class Lib {
-    public static long iFactor(int n) {
+    public static long IFactor(int n) {
         long r = 1;
         for(int i = 2; i <= n; i++) {
             r *= i;
@@ -9,15 +9,15 @@ public class Lib {
         return r;
     }
 
-    public static long rFactor(int n) {
+    public static long RFactor(int n) {
         if(n < 2) {
             return 1;
         } else {
-            return n * rFactor(n-1);
+            return n * RFactor(n-1);
         }
     }
 
-    public static long iGCD(long a, long b) {
+    public static long IGCD(long a, long b) {
         long t;
         while (b != 0) {
             t = b;
@@ -27,22 +27,22 @@ public class Lib {
         return a;
     }
 
-    public static long rGCD(long a, long b) {
+    public static long RGCD(long a, long b) {
         if (b == 0) {
             return a;
         } else {
-            return rGCD(b, a % b);
+            return RGCD(b, a % b);
         }
     }
 
-    public static long[] eRGCD(long a, long b) {
+    public static long[] ERGCD(long a, long b) {
         long[] result = new long[3];
         if (b == 0) {
             result[0] = a;
             result[1] = 1;
             result[2] = 0;
         } else {
-            long[] temp = eRGCD(b, a % b);
+            long[] temp = ERGCD(b, a % b);
             result[0] = temp[0];
             result[1] = temp[2];
             result[2] = temp[1] - (a / b) * temp[2];
@@ -50,7 +50,7 @@ public class Lib {
         return result;
     }
 
-    public static long[] eIGCD(long a, long b) {
+    public static long[] EIGCD(long a, long b) {
         long x0 = 1, y0 = 0, x1 = 0, y1 = 1;
         while (b != 0) {
             long quotient = a / b;
@@ -69,37 +69,37 @@ public class Lib {
         return new long[]{a, x0, y0};
     }
 
-    public static long[] rLDES(long a, long b, long c) {
+    public static long[] RLDES(long a, long b, long c) {
         if (a == 0 && b == 0) {
             if (c == 0) {
                 System.out.println("Infinite Solutions Exist");
             } else {
                 System.out.println("No Solution Exists");
             }
-            return new long[]{0, 0, 0};
+            return new long[]{0, 0};
         }
-        long[] gcd = eRGCD(a, b);
+        long[] gcd = ERGCD(a, b);
         if (c % gcd[0] != 0) {
             System.out.println("No Solution Exists");
-            return new long[]{0, 0, 0};
+            return new long[]{0, 0};
         }
-        return new long[]{gcd[0], gcd[1], gcd[2]};
+        return new long[]{gcd[1], gcd[2]};
     }
 
-    public static long[] iLDES(long a, long b, long c) {
+    public static long[] ILDES(long a, long b, long c) {
         if (a == 0 && b == 0) {
             if (c == 0) {
                 System.out.println("Infinite Solutions Exist");
             } else {
                 System.out.println("No Solution Exists");
             }
-            return new long[]{0, 0, 0};
+            return new long[]{0, 0};
         }
-        long[] gcd = eIGCD(a, b);
+        long[] gcd = EIGCD(a, b);
         if (c % gcd[0] != 0) {
             System.out.println("No Solution Exists");
-            return new long[]{0, 0, 0};
+            return new long[]{0, 0};
         }
-        return new long[]{gcd[0], gcd[1], gcd[2]};
+        return new long[]{gcd[1], gcd[2]};
     }
 }
