@@ -194,7 +194,7 @@ class GFTest {
                 R = new GF(p, val2);
                 C = GF.divide(L, R);
 
-                long RValReverse = Lib.iLDES(R.getVal(), R.getP(), Lib.iGCD(R.getVal(), R.getP()))[0];
+                long RValReverse = Lib.ILDES(R.getVal(), R.getP(), Lib.IGCD(R.getVal(), R.getP()))[0];
                 long _val = (L.getVal() * RValReverse) % L.getP();
                 assertEquals(C.getVal(), _val);
             }
