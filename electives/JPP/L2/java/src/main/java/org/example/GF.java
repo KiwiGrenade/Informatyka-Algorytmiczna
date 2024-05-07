@@ -7,22 +7,22 @@ public class GF {
     private long p;
     private long val;
 
+    public GF() {
+        p = 0;
+        setVal(0);
+    }
+
     public GF(long _p, long _val) {
-        if(_p <= 0) {
+        if(_p == 0) {
             throw new IllegalArgumentException("[GF]ERROR: p must be > 0");
         }
         p = _p;
         setVal(_val);
     }
 
-    public long getP() {
-        return p;
-    }
+    public long getP() { return p; }
 
-    public void setP(long _p) {
-        p = _p;
-        setVal(val);
-    }
+    public void setP(long _p) { p = _p; setVal(val); }
 
     public long getVal() {
         return val;
@@ -30,10 +30,10 @@ public class GF {
 
     public void setVal(long _val) {
         if(_val < 0 ) {
-            val = inverse(p, val);
+            val = inverse(p, _val);
         }
         else {
-            val = _val;
+            val = _val % p;
         }
     }
 
@@ -73,14 +73,7 @@ public class GF {
         return this;
     }
     public GF minus() {
-        return new GF(this.p, (this.p - this.val) % this.p);
-    }
-    @NotNull
-    static public GF subtract(GF L, GF R) {
-        checkP(L, R);
-        R = R.minus();
-        long _val = (L.val + R.val) % L.p;
-        return new GF(R.p, _val);
+        return new GF(this.p, this.p - this.val);
     }
     @NotNull
     @Contract("_, _ -> new")
@@ -90,20 +83,24 @@ public class GF {
         return new GF(R.p, _val);
     }
     @NotNull
+    static public GF subtract(GF L, GF R) {
+        checkP(L, R);
+        R = R.minus();
+        return add(R, L);
+    }
+    @NotNull
     @Contract("_, _ -> new")
     static public GF multiply(GF L, GF R) {
         checkP(L, R);
-        long _val = (L.val * R.val) % L.p;
-        return new GF(L.p, _val);
+        return new GF(L.p, (L.val * R.val) % L.p);
     }
     @NotNull
     @Contract("_, _ -> new")
     static public GF divide(GF L, GF R) {
         checkP(L, R);
-        long RValReverse = Lib.iLDES(R.val, R.p, Lib.iGCD(R.val, R.p))[0];
-        System.out.println(RValReverse);
-        long _val = (L.val * RValReverse) % L.p;
-        return new GF(L.p, _val);
+        long RValReverse = Lib.ILDES(R.val, R.p, Lib.IGCD(R.val, R.p))[0];
+        GF result = new GF(R.p, RValReverse);
+        return multiply(L, result);
     }
 
     // assign
