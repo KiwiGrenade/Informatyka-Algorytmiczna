@@ -1,61 +1,67 @@
-board(N) :-
-    hetmany(N, X),
-    draw(X, 1, N).
+main(X):-
+    hetmany(_,X),
+    board(X).
 
-draw(_, Row, N) :-
-    Row > N,
-    dashed(N),
+board(X):-
+    length(X,L),
+    rysuj(X,1,L).
+
+rysuj(_,Nk,Roz):-
+    Nk > Roz,
+    draw_dotted(Roz),
     nl,
     !.
 
-draw(Queens, Row, N) :-
-    dashed(N),
-    RowRed is N + 1 - Row,
-    row(RowRed, 1, Queens, N),
-    row(RowRed, 1, Queens, N),
-    Row1 is Row +1,
-    draw(Queens, Row1, N),
+rysuj(Tab,Nk,Roz):-
+    draw_dotted(Roz),
+    Y is Roz - Nk +1,
+    draw_line(1,Y,Tab,Roz),
+    draw_line(1,Y,Tab,Roz),
+    Nk1 is Nk +1,
+    rysuj(Tab,Nk1,Roz),
     !.
 
-row(_, Col, _, N) :-
-    N + 1 =:= Col,
+draw_line(Nw,_,_,Roz):-
+    Roz + 1 =:= Nw,
     write('|'),
     nl,
     !.
 
-row(Row, Col, Tab, N) :-
-    nth1(Col, Tab, Row),
-    (   (((Row + N + 1) mod 2 =:= 0, Col mod 2 =:= 1)
-        ;((Row + N + 1) mod 2 =:= 1, Col mod 2 =:= 0)
+draw_line(Nw,Nk,Tab,Roz):-
+    nth1(Nw,Tab,Nk),
+    (   ((Nw mod 2 =:= 0, Nk mod 2 =:= 1)
+        ;(Nw mod 2 =:= 1, Nk mod 2 =:= 0)
         ) -> write('|:###:') ; write('| ### ')
     ),
-    Col1 is Col + 1,
-    row(Row, Col1, Tab,N),
+    Nw1 is Nw + 1,
+    draw_line(Nw1,Nk,Tab,Roz),
     !.
 
-row(Row, Col, Tab, N) :-
-    (   (((Row + N + 1) mod 2 =:= 0, Col mod 2 =:= 1)
-        ;((Row + N + 1) mod 2 =:= 1, Col mod 2 =:= 0)
+draw_line(Nw,Nk,Tab,Roz):-
+    (   ((Nw mod 2 =:= 0, Nk mod 2 =:= 1)
+        ;(Nw mod 2 =:= 1, Nk mod 2 =:= 0)
         ) -> write('|:::::') ; write('|     ')
     ),
-    Col1 is Col + 1,
-    row(Row, Col1, Tab,N),
+    Nw1 is Nw + 1,
+    draw_line(Nw1,Nk,Tab,Roz),
     !.
 
-dashed(0) :-
+
+
+draw_dotted(0):-
     write('+'),
     nl,
     !.
-
-dashed(N) :-
+draw_dotted(Rozmiar):-
     write('+-----'),
-    N1 is N - 1,
-    dashed(N1).
+    R is Rozmiar -1,
+    draw_dotted(R).
 
-hetmany(N, P) :-
+hetmany(N, P):-
     between(1, 100, N),
     numlist(1, N, L),
     permutation(L,P),
+
     dobra(P).
 
 dobra(P) :-
