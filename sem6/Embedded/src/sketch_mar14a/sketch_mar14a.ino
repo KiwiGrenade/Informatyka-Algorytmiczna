@@ -1,6 +1,6 @@
 //#include <LiquidCrystal_I2C.h>
 #include "Wheels.h"
-
+#include <IRemote.hpp>
 
 Wheels w;
 volatile char cmd;
@@ -41,19 +41,19 @@ void loop() {
 
 //LiquidCrystal_I2C lcd(LCDAddress, 16, 2);
   
-uint8_t arrowRight[8] =
-{
-    0b01000,
-    0b01100,
-    0b00110,
-    0b11111,
-    0b11111,
-    0b00110,
-    0b01100,
-    0b01000
-};
+// uint8_t arrowRight[8] =
+// {
+//     0b01000,
+//     0b01100,
+//     0b00110,
+//     0b11111,
+//     0b11111,
+//     0b00110,
+//     0b01100,
+//     0b01000
+// };
 
-int argIn = 0;
+// int argIn = 0;
 
 // void setup() {
 
