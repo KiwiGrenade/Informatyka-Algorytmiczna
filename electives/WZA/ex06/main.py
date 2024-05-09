@@ -1,73 +1,45 @@
-import sys
+import matplotlib.pyplot as plt
 
-from itertools import product
-from typing import List
-from random import shuffle
-from copy import deepcopy
-
-
-class Set:
-    def __init__(self, expo: int, value_func, border_func) -> None:
-        self.expo = expo
-        self.border_func = border_func
-        self.value_func = value_func
-
-    def gen_points(self, low_border: int, high_border: int) -> List:
-        ranges_list = [range(low_border, high_border) for _ in range(self.expo)]
-        all_points = list(product(*ranges_list))
-        set_points = [point for point in all_points if self.border_func(self.value_func(point))]
-        shuffle(set_points)
-        return set_points
-
-
-def evaluate(point1: List[int], point2: List[int]) -> bool:
-    for (x, y) in zip(point1, point2):
-        if x > y:
+def lt(a, b):
+    for i in range(len(a)):
+        if a[i] < b[i]:
             return False
     return True
 
+def minimalElements(A):
+    minimal_elements = []
+    for a in A:
+        found = False
 
-def find_minimal(points: List[List[int]]) -> List[List[int]]:
-    minimal = []
-    flag = True
-    for a in points:
-        for m in list(minimal):
-            if evaluate(m, a):
-                flag = False
+        for m in minimal_elements:
+            if lt(m, a):
+                minimal_elements.remove(m)
+            elif lt(a, m):
+                found = True
                 break
-            if evaluate(a, m):
-                minimal.remove(m)
-        if flag:
-            minimal.append(deepcopy(a))
-        else:
-            flag = True
 
-    return minimal
+        if not found:
+            minimal_elements.append(a)
+    
+    return minimal_elements
 
+def draw(all_elements, minimal_elements):
+    plt.figure(figsize=(4, 4))
 
-def func1(point: List[int]) -> int:
-    return point[0] * point[1]
+    for a in all_elements:
+        plt.scatter(a[0], a[1], color='blue')
 
+    for m in minimal_elements:
+        plt.scatter(m[0], m[1], color='red')
 
-def func2(point: List[int]) -> int:
-    return (point[0] - 10) ** 2 + (point[1] - 10) ** 2
+    plt.show()
 
+grid1 = [(n, k) for n in range(0, 10) for k in range(0, 10) if n * k >= 11]
+print("Minimals elements of set A = { (n, k) | n, k ∈ [0, 100) and n * k >= 11 } are:")
+print(minimalElements(grid1))
+draw(grid1, minimalElements(grid1))
 
-def border(value: int) -> bool:
-    return value >= 11
-
-
-def border2(value: int) -> bool:
-    return value <= 25
-
-
-def main() -> int:
-    s = Set(2, func1, border)
-    points = s.gen_points(0, 15)
-    minimal = find_minimal(points)
-    print(minimal)
-    return 0
-
-
-if __name__ == '__main__':
-    sys.exit(main())
+grid2 = [(n, k) for n in range(0, 100) for k in range(0, 100) if (n - 10)**2 + (k - 10)**2 <= 25]
+print("Minimals elements of set B = { (n, k) | n, k ∈ [0, 100) and (n - 10)^2 + (k - 10)^2 <= 25 } are:")
+print(minimalElements(grid2))
+draw(grid2, minimalElements(grid2))
