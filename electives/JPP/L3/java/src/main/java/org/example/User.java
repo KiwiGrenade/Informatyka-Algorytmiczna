@@ -2,9 +2,6 @@ package org.example;
 
 import java.util.Random;
 
-import static org.example.GF.divide;
-import static org.example.GF.multiply;
-
 public class User {
     private DHSetup dh = null;
     private long secret;
@@ -25,10 +22,10 @@ public class User {
     }
 
     public GF encrypt(GF m) {
-        return multiply(m, key);
+        return m.multiply(m, key);
     }
 
     public GF decrypt(GF m) {
-        return divide(m, key);
+        return m.divide(m, key);
     }
 }
