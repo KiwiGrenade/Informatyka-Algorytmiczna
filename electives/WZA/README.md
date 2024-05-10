@@ -1,10 +1,8 @@
-# Wybrane Zagadnienia Algebry
+# Wybrane Zagadnienia Algebry - Lato 2023/2024
 
-### Laboratoria - Lato 2023/2024
-
-
-- P. wykład: prof. dr hab. Jacek Cichoń
-- P. laboratoria oraz ćwiczenia: dr inż. Dominik Bojko
+### Prowadzący
+- wykład: prof. dr hab. Jacek Cichoń
+- laboratoria oraz ćwiczenia: dr inż. Dominik Bojko
 ---
 ### Lista zadań
 
@@ -13,5 +11,5 @@
 - [x] ex03 
 - [x] ex04 
 - [x] ex06
-- [ ] ex07
-- [ ] ex08
+- [x] ex07
+- [x] ex08
