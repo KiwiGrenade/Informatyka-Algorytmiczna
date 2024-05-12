@@ -1,126 +1,135 @@
-#include <algorithm>
-#include <array>
 #include <chrono>
 #include <iostream>
 #include <mutex>
 #include <random>
-#include <string>
-#include <string_view>
+#include <semaphore>
 #include <thread>
 
-const int timeScale = 42;  // scale factor for the philosophers task duration
-
-void Message(std::string_view message)
+constexpr const size_t N = 5;  // number of philosophers (and forks)
+enum class State 
 {
-    // thread safe printing
-    static std::mutex cout_mutex;
-    std::scoped_lock cout_lock(cout_mutex);
-    std::cout << message << std::endl;
+    THINKING = 0,  // philosopher is THINKING
+    HUNGRY = 1,    // philosopher is trying to get forks
+    EATING = 2,    // philosopher is EATING
+};
+
+size_t inline left(size_t i) 
+{  
+    // number of the left neighbor of philosopher i, for whom both forks are available
+    return (i - 1 + N) % N; // N is added for the case when  i - 1 is negative
 }
 
-struct Fork {
-    std::mutex mutex;
-};
+size_t inline right(size_t i) 
+{  
+    // number of the right neighbour of the philosopher i, for whom both forks are available
+    return (i + 1) % N;
+}
 
-struct Dinner {
-    std::array<Fork, 5> forks;
-    ~Dinner() { Message("Dinner is over"); }
-};
+State state[N];  // array to keep track of everyone's both_forks_available state
 
-class Philosopher
+std::mutex critical_region_mtx;  // mutual exclusion for critical regions for 
+// (picking up and putting down the forks)
+std::mutex output_mtx;  // for synchronized cout (printing THINKING/HUNGRY/EATING status)
+
+// array of binary semaphors, one semaphore per philosopher.
+// Acquired semaphore means philosopher i has acquired (blocked) two forks
+std::binary_semaphore both_forks_available[N]
 {
-    // generates random numbers using the Mersenne Twister algorithm
-    // for task times and messages
-    std::mt19937 rng{std::random_device {}()};
+    std::binary_semaphore{0}, std::binary_semaphore{0},
+    std::binary_semaphore{0}, std::binary_semaphore{0},
+    std::binary_semaphore{0}
+};
 
-    const std::string name;
-    Fork& left;
-    Fork& right;
-    std::thread worker;
+size_t my_rand(size_t min, size_t max) 
+{
+    static std::mt19937 rnd(std::time(nullptr));
+    return std::uniform_int_distribution<>(min, max)(rnd);
+}
 
-    void live();
-    void dine();
-    void ponder();
-public:
-    Philosopher(std::string name_, Fork& l, Fork& r)
-    : name(std::move(name_)), left(l), right(r), worker(&Philosopher::live, this)
-    {}
-    ~Philosopher()
+void test(size_t i) 
+// if philosopher i is hungry and both neighbours are not eating then eat
+{ 
+    // i: philosopher number, from 0 to N-1
+    if (state[i] == State::HUNGRY &&
+        state[left(i)] != State::EATING &&
+        state[right(i)] != State::EATING) 
     {
-        worker.join();
-        Message(name + " went to sleep.");
+        state[i] = State::EATING;
+        both_forks_available[i].release(); // forks are no longer needed for this eat session
     }
-};
+}
 
-void Philosopher::live()
+void think(size_t i) 
 {
-    for(;;) // run forever
+    size_t duration = my_rand(400, 800);
     {
+        std::lock_guard<std::mutex> lk(output_mtx); // critical section for uninterrupted print
+        std::cout << i << " is thinking " << duration << "ms\n";
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(duration));
+}
+
+void take_forks(size_t i)
+{
+    {
+        std::lock_guard<std::mutex> lk{critical_region_mtx};  // enter critical region
+        state[i] = State::HUNGRY;  // record fact that philosopher i is State::HUNGRY
         {
-            //Aquire forks.  scoped_lock acquires the mutexes for 
-            //both forks using a deadlock avoidance algorithm
-            std::scoped_lock dine_lock(left.mutex, right.mutex);
-
-            dine();
-
-            //The mutexes are released here at the end of the scope
+            std::lock_guard<std::mutex> lk(output_mtx); // critical section for uninterrupted print
+            std::cout << "\t\t" << i << " is State::HUNGRY\n";
         }
-        
-        ponder();
-    }
+        test(i);                        // try to acquire (a permit for) 2 forks
+    }                                   // exit critical region
+    both_forks_available[i].acquire();  // block if forks were not acquired
 }
 
-void Philosopher::dine()
+void eat(size_t i, size_t& m)
 {
-    Message(name + " started eating.");
+    size_t duration = my_rand(400, 800);
+    {
+        std::lock_guard<std::mutex> lk(output_mtx); // critical section for uninterrupted print
+        std::cout << "\t\t\t\t" << i << " is eating " << duration << "ms\n";
+    }
+    m--;
+    std::this_thread::sleep_for(std::chrono::milliseconds(duration));
+}
 
-    // Print some random messages while the philosopher is eating
-    thread_local std::array<const char*, 3> foods {"chicken", "rice", "soda"};
-    thread_local std::array<const char*, 3> reactions {
-        "I like this %s!", "This %s is good.", "Mmm, %s..."
-    };
-    thread_local std::uniform_int_distribution<> dist(1, 6);
-    std::shuffle(    foods.begin(),     foods.end(), rng);
-    std::shuffle(reactions.begin(), reactions.end(), rng);
+void put_forks(size_t i) 
+{ 
     
-    constexpr size_t buf_size = 64;
-    char buffer[buf_size];
-    for(int i = 0; i < 3; ++i) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(dist(rng) * timeScale));
-        snprintf(buffer, buf_size, reactions[i], foods[i]);
-        Message(name + ": " + buffer);
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(dist(rng)) * timeScale);
-
-    Message(name + " finished and left.");
+    std::lock_guard<std::mutex> lk{critical_region_mtx};    // enter critical region
+    state[i] = State::THINKING;  // philosopher has finished State::EATING
+    test(left(i));               // see if left neighbor can now eat
+    test(right(i));             // see if right neighbor can now eat
+                                    // exit critical region by exiting the function
 }
 
-void Philosopher::ponder()
-{
-    static constexpr std::array<const char*, 5> topics {{
-        "politics", "art", "meaning of life", "source of morality", "how many straws makes a bale"
-    }};
-    thread_local std::uniform_int_distribution<> wait(1, 6);
-    thread_local std::uniform_int_distribution<> dist(0, topics.size() - 1);
-    while(dist(rng) > 0) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(wait(rng) * 3 * timeScale));
-        Message(name + " is pondering about " + topics[dist(rng)] + ".");
+void philosopher(size_t i, size_t m)
+{  
+    while (m > 0) 
+    {                         // repeat forever
+        think(i);             // philosopher is State::THINKING
+        take_forks(i);        // acquire two forks or block
+        eat(i, m);               // yum-yum, spaghetti
+        put_forks(i);         // put both forks back on table and check if neighbours can eat
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(wait(rng) * 3 * timeScale));
-    Message(name + " is hungry again!");
+    std::lock_guard<std::mutex> lk(output_mtx); // critical section for uninterrupted print
+    std::cout << "[" << i << " ]: I'm leaving!";
 }
 
-int main()
-{
-    Dinner dinner;
-    Message("Dinner started!");
-    // The philosophers will start as soon as they are created
-    std::array<Philosopher, 5> philosophers {{
-            {"Aristotle",   dinner.forks[0], dinner.forks[1]},
-            {"Democritus",  dinner.forks[1], dinner.forks[2]},
-            {"Plato",       dinner.forks[2], dinner.forks[3]},
-            {"Pythagoras",  dinner.forks[3], dinner.forks[4]},
-            {"Socrates",    dinner.forks[4], dinner.forks[0]},
-    }};
-    Message("It is dark outside...");
+int main(int argc, char* argv[]) {
+
+    if(argc != 3) {
+        std::cerr << "Need 2 arguments: 1. number of philospers 2. number of meals each one has to eat." << std::endl;
+        exit(1);
+    }
+
+    size_t p = std::stol(argv[1]);
+    size_t m = std::stol(argv[2]);
+
+    std::vector<std::jthread> jthreads(p);
+
+    for(size_t i = 0; i < p; i++) {
+        jthreads.emplace_back(std::jthread([&] { philosopher(i, m); })); // [&] means every variable outside the ensuing lambda 
+    }
 }
