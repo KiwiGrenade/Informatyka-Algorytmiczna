@@ -96,7 +96,6 @@ void eat(size_t i, size_t& m)
 
 void put_forks(size_t i) 
 { 
-    
     std::lock_guard<std::mutex> lk{critical_region_mtx};    // enter critical region
     state[i] = State::THINKING;  // philosopher has finished State::EATING
     test(left(i));               // see if left neighbor can now eat
@@ -130,6 +129,6 @@ int main(int argc, char* argv[]) {
     std::vector<std::jthread> jthreads(p);
 
     for(size_t i = 0; i < p; i++) {
-        jthreads.emplace_back(std::jthread([&] { philosopher(i, m); })); // [&] means every variable outside the ensuing lambda 
+        jthreads.emplace_back([&] { philosopher(i, m); }); // [&] means every variable outside the ensuing lambda 
     }
 }
