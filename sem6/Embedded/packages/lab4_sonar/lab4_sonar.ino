@@ -28,7 +28,6 @@ void setup() {
   
 /* patrz przed siebie */
   serwo.write(90);
-
 }
 
 void loop() { /* nic nie rób */ }
