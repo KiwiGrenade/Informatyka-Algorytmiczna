@@ -1,18 +1,31 @@
 //#include <LiquidCrystal_I2C.h>
 #include "Wheels.h"
-#include <IRemote.hpp>
+#include <Servo.h>
+// #include <IRemote.hpp>
 
+// SONAR
+#define TRIG A4
+#define ECHO A5
+// SERVO
+#define SERVO 3
+
+Servo serwo;
 Wheels w;
 volatile char cmd;
 
 void setup() {
-  // put your setup code here, to run once:
-  w.attach(7,8,5,12,4,6);
-  
+  pinMode(TRIG, OUTPUT);    // TRIG startuje sonar
+  pinMode(ECHO, INPUT);     // ECHO odbiera powracający impuls
+
+  w.attach( 7,8,5,    // right
+            12,4,6);  // left
   Serial.begin(9600);
   Serial.println("Forward: WAD");
   Serial.println("Back: ZXC");
   Serial.println("Stop: S");
+
+
+  serwo.attach(SERVO);
 
 }
 // Remember about w.setSpeed on the wheels. Otherwise they won't turn!
@@ -22,7 +35,10 @@ void loop() {
     cmd = Serial.read();
     switch(cmd)
     {
-      case 'w': w.forward(); break;
+      case 'w': {
+        w.forward();
+        break;
+      }
       case 'x': w.back(); break;
       case 'a': w.forwardLeft(); break;
       case 'd': w.forwardRight(); break;
@@ -34,9 +50,48 @@ void loop() {
       case '9': w.setSpeedRight(75); break;
       case '0': w.setSpeedRight(200); break;
       case '5': w.setSpeed(100); break;
+      case 'p': scan(); break;
     }
   }
 }
+
+void scan() {
+  for(byte angle = 0; angle < 180; angle+= 20) {
+    lookAndTellDistance(angle);
+    delay(500);
+  }
+  serwo.write(90);
+}
+
+int getDistance() {
+  unsigned long tot;      // czas powrotu (time-of-travel)
+  unsigned int distance;
+  digitalWrite(TRIG, HIGH);
+  delay(10);
+  digitalWrite(TRIG, LOW);
+  tot = pulseIn(ECHO, HIGH);
+
+/* prędkość dźwięku = 340m/s => 1 cm w 29 mikrosekund
+ * droga tam i z powrotem, zatem:
+ */
+  distance = tot/58;
+  return distance;
+}
+
+void lookAndTellDistance(byte angle) {
+
+
+  Serial.print("Patrzę w kącie ");
+  Serial.print(angle);
+  serwo.write(angle);
+  
+/* uruchamia sonar (puls 10 ms na `TRIGGER')
+ * oczekuje na powrotny sygnał i aktualizuje
+ */
+  Serial.print(": widzę coś w odległości ");
+  Serial.println(getDistance());
+}
+
 // byte LCDAddress = 0x27;
 
 //LiquidCrystal_I2C lcd(LCDAddress, 16, 2);

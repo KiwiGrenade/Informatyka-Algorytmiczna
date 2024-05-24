@@ -31,8 +31,8 @@ class Wheels {
          */
         void attachRight(int pinForward, int pinBack, int pinSpeed);
         void attachLeft(int pinForward, int pinBack, int pinSpeed);
-        void attach(int pinRightForward, int pinRightBack, int pinRightSpeed,
-                    int pinLeftForward, int pinLeftBack, int pinLeftSpeed);
+        void attach(int pinRightForward, int pinRightBack, int pinRightSpeed,   // 7, 8, 5
+                    int pinLeftForward, int pinLeftBack, int pinLeftSpeed);     // 12, 4, 6
         /*
          *  funkcje ruchu
          */
