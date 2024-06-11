@@ -2,6 +2,7 @@
 
 #include "Wheels.h"
 
+#include "TimerOne.h"
 
 #define SET_MOVEMENT(side,f,b) digitalWrite( side[0], f);\
                                digitalWrite( side[1], b)

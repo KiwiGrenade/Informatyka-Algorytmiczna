@@ -1,32 +1,45 @@
 //#include <LiquidCrystal_I2C.h>
 #include "Wheels.h"
-#include <Servo.h>
+#include "MyServo.h"
+#include <TimerOne.h>
 // #include <IRemote.hpp>
 
-// SONAR
-#define TRIG A4
-#define ECHO A5
-// SERVO
-#define SERVO 3
+// pin 9 and 10 is taken by TimerOne
 
-Servo serwo;
+#define BEEPER_PIN              13
+
+// wheels
+#define MOTOR_LEFT_EN            3  // bialy
+#define MOTOR_LEFT_IN1           4  // szary
+#define MOTOR_LEFT_IN2           2  // bordowy
+#define MOTOR_LEFT_SENSOR       14  // to be discovered
+
+#define MOTOR_RIGHT_EN           6  // żółty
+#define MOTOR_RIGHT_IN1          7  // zielony
+#define MOTOR_RIGHT_IN2          5  // niebieski
+#define MOTOR_RIGHT_SENSOR      15  // to be discovered
+
 Wheels w;
 volatile char cmd;
 
-void setup() {
-  pinMode(TRIG, OUTPUT);    // TRIG startuje sonar
-  pinMode(ECHO, INPUT);     // ECHO odbiera powracający impuls
+long int beeperPeriod = 50000000;
 
-  w.attach( 7,8,5,    // right
-            12,4,6);  // left
+void setup() {
+  // servo
+  servo_initialize();
+  
+  // beeper
+  // pinMode(BEEPER_PIN, OUTPUT);
+  // Timer1.initialize();
+  // TimerUpdate();
+  // distanceUpdate();
+
+  w.attach( MOTOR_RIGHT_IN1, MOTOR_RIGHT_IN2, MOTOR_RIGHT_EN, // right
+            MOTOR_LEFT_IN1, MOTOR_LEFT_IN2, MOTOR_LEFT_EN);   // left
   Serial.begin(9600);
   Serial.println("Forward: WAD");
   Serial.println("Back: ZXC");
   Serial.println("Stop: S");
-
-
-  serwo.attach(SERVO);
-
 }
 // Remember about w.setSpeed on the wheels. Otherwise they won't turn!
 void loop() {
@@ -35,10 +48,7 @@ void loop() {
     cmd = Serial.read();
     switch(cmd)
     {
-      case 'w': {
-        w.forward();
-        break;
-      }
+      case 'w': w.forward(); break;
       case 'x': w.back(); break;
       case 'a': w.forwardLeft(); break;
       case 'd': w.forwardRight(); break;
@@ -60,30 +70,14 @@ void scan() {
     lookAndTellDistance(angle);
     delay(500);
   }
-  serwo.write(90);
+  servo_set(90);
 }
 
-int getDistance() {
-  unsigned long tot;      // czas powrotu (time-of-travel)
-  unsigned int distance;
-  digitalWrite(TRIG, HIGH);
-  delay(10);
-  digitalWrite(TRIG, LOW);
-  tot = pulseIn(ECHO, HIGH);
-
-/* prędkość dźwięku = 340m/s => 1 cm w 29 mikrosekund
- * droga tam i z powrotem, zatem:
- */
-  distance = tot/58;
-  return distance;
-}
 
 void lookAndTellDistance(byte angle) {
-
-
   Serial.print("Patrzę w kącie ");
   Serial.print(angle);
-  serwo.write(angle);
+  servo_set(angle);
   
 /* uruchamia sonar (puls 10 ms na `TRIGGER')
  * oczekuje na powrotny sygnał i aktualizuje
@@ -91,6 +85,20 @@ void lookAndTellDistance(byte angle) {
   Serial.print(": widzę coś w odległości ");
   Serial.println(getDistance());
 }
+
+// void doBeep() {
+//   digitalWrite(BEEPER_PIN, digitalRead(BEEPER_PIN) ^ 1);
+// }
+
+// void TimerUpdate() {
+//   Timer1.detachInterrupt();
+//   Timer1.attachInterrupt(doBeep, beeperPeriod);
+// }
+
+// void distanceUpdate() {
+//   Timer1.detachInterrupt();
+//   Timer1.attachInterrupt(scan, beeperPeriod);
+// }
 
 // byte LCDAddress = 0x27;
 
