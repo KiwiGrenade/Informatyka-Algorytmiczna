@@ -31,7 +31,6 @@ void loop() {
     }
     Serial.println(intPeriod);
   }
-
 }
 
 // aktualizuje Timer1 aktualną wartością intPeriod
