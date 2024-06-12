@@ -1,84 +1,72 @@
 package main
 
 import (
-	"hash/fnv"
-	"log"
+	"fmt"
 	"math/rand"
 	"os"
+	"strconv"
+	"sync"
 	"time"
 )
 
-// Number of philosophers is simply the length of this list.
-// It is not otherwise fixed in the program.
-var ph = []string{"Aristotle", "Kant", "Spinoza", "Marx", "Russell"}
+var meals int
 
-const hunger = 3                // number of times each philosopher eats
-const think = time.Second / 100 // mean think time
-const eat = time.Second / 100   // mean eat time
+func philosopher(philosopher int, A, B *sync.Mutex, C *sync.Mutex, WG *sync.WaitGroup) {
+	defer WG.Done()
+	for i := 0; i < meals; i++ {
+		duration := rand.Intn(800 - 200 + 1) + 200 
+		C.Lock()
+		fmt.Printf("%d is thinking %dms\n", philosopher, duration)
+		C.Unlock()
+		time.Sleep(time.Duration(duration) * time.Millisecond)
 
-var fmt = log.New(os.Stdout, "", 0) // for thread-safe output
+		C.Lock()
+		fmt.Printf("\t\t%d is hungry\n", philosopher)
+		C.Unlock()
 
-var done = make(chan bool)
-
-// This solution uses channels to implement synchronization.
-// Sent over channels are "forks."
-type fork byte
-
-// A fork object in the program models a physical fork in the simulation.
-// A separate channel represents each fork place.  Two philosophers
-// have access to each fork.  The channels are buffered with capacity = 1,
-// representing a place for a single fork.
-
-// Goroutine for philosopher actions.  An instance is run for each
-// philosopher.  Instances run concurrently.
-func philosopher(phName string,
-	dominantHand, otherHand chan fork, done chan bool, hunger int) {
-	fmt.Println(phName, "seated")
-	// each philosopher goroutine has a random number generator,
-	// seeded with a hash of the philosopher's name.
-	h := fnv.New64a()
-	h.Write([]byte(phName))
-	rg := rand.New(rand.NewSource(int64(h.Sum64())))
-	// utility function to sleep for a randomized nominal time
-	rSleep := func(t time.Duration) {
-		time.Sleep(t/2 + time.Duration(rg.Int63n(int64(t))))
+		A.Lock()
+		B.Lock()
+		duration = rand.Intn(800 - 200 + 1) + 200
+		C.Lock()
+		fmt.Printf("\t\t\t\t%d eats his %d meal %dms\n", philosopher, i+1, duration)
+		C.Unlock()
+		time.Sleep(time.Duration(duration) * time.Millisecond)
+		B.Unlock()
+		A.Unlock()
 	}
-	for h := hunger; h > 0; h-- {
-		fmt.Println(phName, "hungry")
-		<-dominantHand // pick up forks
-		<-otherHand
-		fmt.Println(phName, "eating")
-		rSleep(eat)
-		dominantHand <- 'f' // put down forks
-		otherHand <- 'f'
-		fmt.Println(phName, "thinking")
-		rSleep(think)
-	}
-	fmt.Println(phName, "satisfied")
-	done <- true
-	fmt.Println(phName, "left the table")
 }
 
 func main() {
-	fmt.Println("table empty")
-	// Create fork channels and start philosopher goroutines,
-	// supplying each goroutine with the appropriate channels
-	place0 := make(chan fork, 1)
-	place0 <- 'f' // byte in channel represents a fork on the table.
-	placeLeft := place0
-	for i := 1; i < p; i++ {
-		placeRight := make(chan fork, 1)
-		placeRight <- 'f'
-		go philosopher(i, placeLeft, placeRight, done, hunger)
-		placeLeft = placeRight
+	if len(os.Args) <= 2 {
+		fmt.Println("Usage: go run main.go [nPhilosophers] [nMeals]")
+		return
 	}
-	// Make one philosopher left handed by reversing fork place
-	// supplied to philosopher's dominant hand.
-	// This makes precedence acyclic, preventing deadlock.
-go philosopher(0, place0, placeLeft, done, hunger)
-	// they are all now busy eating
-	for range ph {
-		<-done // wait for philosphers to finish
+
+	philNum, err := strconv.Atoi(os.Args[1])
+	if err != nil || philNum <= 1 {
+		fmt.Println("!!! nPhilosophers > 1 !!!")
+		return
 	}
-	fmt.Println("table empty")
+
+	meals, err = strconv.Atoi(os.Args[2])
+	if err != nil || meals <= 0 {
+		fmt.Println("!!! nMeals > 0 !!!")
+		return
+	}
+
+	var wg sync.WaitGroup
+	mutexes := make([]*sync.Mutex, philNum)
+	for i := range mutexes {
+		mutexes[i] = &sync.Mutex{}
+	}
+	C := &sync.Mutex{}
+
+	for i := 0; i < philNum; i++ {
+		wg.Add(1)
+		go func(i int) {
+			philosopher(i+1, mutexes[i], mutexes[(i + 1) % philNum], C, &wg)
+		}(i)
+	}
+
+	wg.Wait()
 }
