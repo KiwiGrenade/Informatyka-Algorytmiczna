@@ -5,9 +5,24 @@
 Wheels w;
 volatile char cmd;
 
+
+
+// wheels
+#define MOTOR_LEFT_EN            3  // bialy
+#define MOTOR_LEFT_IN1           4  // szary
+#define MOTOR_LEFT_IN2           2  // bordowy
+#define MOTOR_LEFT_SENSOR       14  // to be discovered
+
+#define MOTOR_RIGHT_EN           6  // żółty
+#define MOTOR_RIGHT_IN1          7  // zielony
+#define MOTOR_RIGHT_IN2          5  // niebieski
+#define MOTOR_RIGHT_SENSOR      15  // to be discovered
+
 void setup() {
   // put your setup code here, to run once:
-  w.attach(7,8,5,12,11,10);
+  
+  w.attach( MOTOR_RIGHT_IN1, MOTOR_RIGHT_IN2, MOTOR_RIGHT_EN, // right
+            MOTOR_LEFT_IN1, MOTOR_LEFT_IN2, MOTOR_LEFT_EN);   // left
   
   Serial.begin(9600);
   Serial.println("Forward: WAD");
