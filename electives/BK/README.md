@@ -1,3 +1,16 @@
-# Bezpieczeństwo Komputerowe - sem. letni 2023/2024
-## Prowadzący: (Dr. Inż. Anna Lauks-Dutka)[https://cs.pwr.edu.pl/lauks/index.html]
-Hasło do pliku z poleceniami: Takie samo jak na stronie Pani Doktor. 
+# Bezpieczeństwo Komputerowe - Lato 2024
+Prowadząca wykład: Dr. inż. **Anna Lauks-Dutka**
+Prowadzący laboratoria: mgr inż. **Patryk Stopyra**
+#### Punkty:
+
+1. 10/10
+
+2. 15/15
+
+3. 15/15
+
+4. 25/25
+
+5. 10/15 (kod jest dobry, brakowało wiedzy)
+
+6. 10/20

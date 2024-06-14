@@ -1,22 +1,49 @@
-def rc4(key: bytes, data: bytes) -> bytes:
-    # KSA
-    s = list(range(256))
-    j = 0
-    key_length = len(key)
-    for i in range(256):
-        j = (j + s[i] + key[i % key_length]) % 256
-        s[i], s[j] = s[j], s[i]
+import random
+import sys
 
-    # PRGA
-    i = j = 0
-    ciphertext = bytearray()
-    for byte in data:
+from itertools import combinations
+
+def KSA(key):
+    key_length = len(key)
+    S = list(range(256))
+    j = 0
+    for i in range(256):
+        j = (j + S[i] + key[i % key_length]) % 256
+        S[i], S[j] = S[j], S[i]
+    return S
+
+def PRGA(S):
+    i = 0
+    j = 0
+    while True:
         i = (i + 1) % 256
-        j = (j + s[i]) % 256
-        s[i], s[j] = s[j], s[i]
-        k = s[(s[i] + s[j]) % 256]
-        ciphertext.append(byte ^ k)
-    return bytes(ciphertext)
+        j = (j + S[i]) % 256
+        S[i], S[j] = S[j], S[i]
+        K = S[(S[i] + S[j]) % 256]
+        yield K
+
+def RC4(key):
+    S = KSA(key)
+    return PRGA(S)
+
+def encrypt(plaintext, key):
+    key = [ord(c) for c in key]
+    keystream = RC4(key)
+    ciphertext = []
+    for char in plaintext:
+        val = ("%02X" % (ord(char) ^ next(keystream)))
+        ciphertext.append(val)
+    return ''.join(ciphertext)
+
+def decrypt(ciphertext, key):
+    key = [ord(c) for c in key]
+    keystream = RC4(key)
+    ciphertext = bytes.fromhex(ciphertext)
+    plaintext = []
+    for char in ciphertext:
+        val = chr(char ^ next(keystream))
+        plaintext.append(val)
+    return ''.join(plaintext)
 
 def uses_same_key(ciphertext0: bytes, ciphertext1: bytes) -> bool:
     for i in range(min(len(ciphertext0), len(ciphertext1))):
@@ -63,32 +90,73 @@ def calculte_nr_control_number(nr):
         sum += nr[i] * weights[i]
     return (10 - (sum % 10)) % 10
 
+def detect_account_numbers(possible_xors):
+    detected_numbers = []
 
-def main():
+    for xor_result in possible_xors:
+        possible_digits = []
+
+        for byte in xor_result:
+            # Zakładamy, że wynik XOR powinien być w zakresie cyfr 0-9 (ASCII 48-57)
+            if 0 <= byte <= 9:
+                possible_digits.append(byte)
+
+        if len(possible_digits) == len(xor_result):
+            detected_numbers.append(possible_digits)
+
+    return detected_numbers
+
+def ex3():
     bank_numbers = gen_bank_numbers(10)
-    key = b"Very Good Key"
+    key = "Very Good Key"
     cryptograms = []
+    possible_xors = []
     for bank_number in bank_numbers:
-        cryptogram = rc4(key, bank_number.encode())
-        cryptograms.append(cryptogram)
+        cryptogram = encrypt(str(bank_number), key)
+        cryptograms.append(bytes.fromhex(cryptogram))
 
     for c0, c1 in combinations(cryptograms, 2):
         xored = [i0 ^ i1 for i0, i1 in zip(c0, c1)]
-        print(xored[2:10])
+        possible_xors.append(xored)
 
-key = b"Very Good Key"
-data = b"Hello, World!"
+    detected_numbers = detect_account_numbers(possible_xors)
 
-ciphertext = rc4(key, data)
-print("Ciphertext:", ciphertext)
-ciphertext = rc4(key, data)
-print("Ciphertext:", ciphertext)
+    for digits in detected_numbers:
+        print(f"Possible account numbers: {digits}")
 
-decrypted = rc4(key, ciphertext)
-print("Decrypted:", decrypted)
+def ex12(key, key_prime):
+    plaintext = 'Hello, World!'
 
-ciphertext1 = rc4(key, b"Another message")
-ciphertext2 = rc4(b"Different Key", b"Another message")
+    # Szyfrowanie przy użyciu klucza key
+    ciphertext = encrypt(plaintext, key)
+    print(f'Ciphertext with key: {ciphertext}')
 
-print("Same key used:", uses_same_key(ciphertext, ciphertext1))
-print("Same key used:", uses_same_key(ciphertext, ciphertext2))
+    # Deszyfrowanie przy użyciu klucza key
+    decrypted_text = decrypt(ciphertext, key)
+    print(f'Decrypted text with key: {decrypted_text}')
+
+    # Szyfrowanie przy użyciu klucza key_prime
+    ciphertext_prime = encrypt(plaintext, key_prime)
+    print(f'Ciphertext with key_prime: {ciphertext_prime}')
+
+    # Deszyfrowanie przy użyciu klucza key_prime
+    decrypted_text_prime = decrypt(ciphertext_prime, key_prime)
+    print(f'Decrypted text with key_prime: {decrypted_text_prime}')
+
+    if uses_same_key(bytes.fromhex(ciphertext), bytes.fromhex(ciphertext_prime)):
+        print("SAME KEY WAS USED!")
+
+    # Sprawdzenie poprawności
+    assert plaintext == decrypted_text, "Decryption failed with key!"
+    assert plaintext == decrypted_text_prime, "Decryption failed with key_prime!"
+
+def main():
+    key = sys.argv[1]
+    key_prime = sys.argv[2]
+
+    ex12(key, key_prime)
+    ex3() 
+
+
+if __name__ == '__main__':
+    main()
