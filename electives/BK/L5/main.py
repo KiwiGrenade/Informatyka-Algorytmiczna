@@ -51,6 +51,9 @@ def uses_same_key(ciphertext0: bytes, ciphertext1: bytes) -> bool:
             return False
     return True
 
+import random
+from itertools import combinations
+
 def gen_bank_numbers(q):
     bank_numbers = []
     numery_rozliczeniowe = [
@@ -86,7 +89,7 @@ def calculte_nr_control_number(nr):
     for i in range(7):
         sum += nr[i] * weights[i]
     return (10 - (sum % 10)) % 10
-
+  
 def detect_account_numbers(possible_xors):
     detected_numbers = []
 
