@@ -8,3 +8,6 @@ Punkty: ?/20
 - openssl ocsp -issuer pwr-edu-pl-chain.pem -cert pwr-edu-pl.pem -text -url http://GEANT.ocsp.sectigo.com
 
 #### Zad2:
+- openssl req -newkey rsa:2048 -keyout key.pem -out MYCSR.csr
+- openssl rsa -in key.pem -outform PEM -pubout -out public.pem
+- openssl req -in L6/MYCSR.csr -text
