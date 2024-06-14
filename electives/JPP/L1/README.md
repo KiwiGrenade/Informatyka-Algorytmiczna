@@ -1,6 +1,6 @@
 #### Build
 ```
-$ cmake -B <build_directory> && cd build
+$ cmake -B <build_directory> && cd <build_directory>
 $ make -j 8
 ```
 #### Test
