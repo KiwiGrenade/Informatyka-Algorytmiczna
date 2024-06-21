@@ -17,4 +17,6 @@
 
 8.  10/10 dr Gębala
 
-9.  TBA/10 dr Gębala
+9.  5/10 dr Gębala **Note:** Oddane tylko zadanie 1.
+
+Zadanie 9.2 i 9.3 można znaleźć tutaj (raczej nie działają): [arturpazurkiewicz](https://github.com/arturpazurkiewicz/Prolog), [ilithiofobik](https://github.com/ilithiofobik/pl-prolog)
