@@ -13,4 +13,4 @@ Prowadzący laboratoria: mgr inż. **Patryk Stopyra**
 
 5. 10/15 (kod jest dobry, brakowało wiedzy)
 
-6. 10/20
+6. 20/20
