@@ -1,0 +1,647 @@
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo$ # Jakub Jaśków 268416
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo$ # Środowisko Programisty Lista 3 Zadanie 1
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo$ # Stworze własnego brancha
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo$ svn copy https://repo.cs.pwr.edu.pl/p-0/app_1/trunk https://repo.cs.pwr.edu.pl/p-0/app_1/branches/268416
+Committing transaction...
+Committed revision 22.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo$ # pobieram repozytorium
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo$ https://repo.cs.pwr.edu.pl/p-0/app_1/
+-bash: https://repo.cs.pwr.edu.pl/p-0/app_1/: No such file or directory
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo$ svn checkout https://repo.cs.pwr.edu.pl/p-0/app_1/
+A    app_1/branches
+A    app_1/branches/268416
+A    app_1/branches/999
+A    app_1/tags
+A    app_1/tags/v_268426
+A    app_1/tags/v_999
+A    app_1/trunk
+A    app_1/trunk/s268426_podprogram.c
+A    app_1/trunk/s999_podprogram.c
+A    app_1/tags/v_999/makefile
+A    app_1/tags/v_999/program_usage.c
+A    app_1/tags/v_999/s999_podprogram.c
+A    app_1/trunk/main.c
+A    app_1/trunk/program.h
+A    app_1/trunk/s0_podprogram.c
+A    app_1/branches/268416/README
+A    app_1/branches/268416/main.c
+A    app_1/branches/268416/makefile
+A    app_1/branches/268416/program.h
+A    app_1/branches/268416/s268426_podprogram.c
+A    app_1/branches/268416/program_usage.c
+A    app_1/branches/268416/s0_podprogram.c
+A    app_1/branches/268416/s999_podprogram.c
+A    app_1/branches/999/README
+A    app_1/branches/999/main.c
+A    app_1/branches/999/makefile
+A    app_1/branches/999/program.h
+A    app_1/branches/999/program_usage.c
+A    app_1/branches/999/s0_podprogram.c
+A    app_1/branches/999/s999_podprogram.c
+A    app_1/tags/v_268426/README
+A    app_1/tags/v_268426/main.c
+A    app_1/tags/v_268426/makefile
+A    app_1/tags/v_268426/program.h
+A    app_1/tags/v_268426/s268426_podprogram.c
+A    app_1/tags/v_268426/program_usage.c
+A    app_1/tags/v_268426/s0_podprogram.c
+A    app_1/tags/v_268426/s999_podprogram.c
+A    app_1/tags/v_999/README
+A    app_1/tags/v_999/main.c
+A    app_1/tags/v_999/program.h
+A    app_1/tags/v_999/s0_podprogram.c
+A    app_1/trunk/README
+A    app_1/trunk/makefile
+A    app_1/trunk/program_usage.c
+Checked out revision 22.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo$ ls
+app_1  CHIP-8  elo  GameBoyWeb  Informatyka-Algorytmiczna  not  svn-kik
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo$ cd app_1/
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ ls
+branches  tags  trunk
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ cd branches/
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches$ ls
+268416  999
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches$ cd 268416/
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ ls
+main.c  makefile  program.h  program_usage.c  README  s0_podprogram.c  s268426_podprogram.c  s999_podprogram.c
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ svn mergeinfo
+svn: E205000: Try 'svn help mergeinfo' for more information
+svn: E205000: Not enough arguments given
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ svn mergeinfo . ../../trunk/
+    youngest common ancestor
+    |         last full merge
+    |         |        tip of branch
+    |         |        |         repository path
+
+    21                 22
+    |                  |
+       --| |------------         app_1/branches/268416
+      /
+     /
+  -------| |------------         app_1/trunk
+                       |
+                       WC
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ # teraz dodam moją funkcję
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ ls
+main.c  makefile  program.h  program_usage.c  README  s0_podprogram.c  s268426_podprogram.c  s999_podprogram.c
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ nano s268416_podprogram.c
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ nano main.c
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ nano s268416_podprogram.c
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ nano makefile
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ nano README
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ # test programu
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ make
+cc    -c -o main.o main.c
+main.c: In function ‘main’:
+main.c:27:9: warning: implicit declaration of function ‘s268416_podprogram’; did you mean ‘s268426_podprogram’? [-Wimplicit-function-declaration]
+   27 |         s268416_podprogram();
+      |         ^~~~~~~~~~~~~~~~~~
+      |         s268426_podprogram
+cc    -c -o program_usage.o program_usage.c
+cc    -c -o s0_podprogram.o s0_podprogram.c
+cc    -c -o s999_podprogram.o s999_podprogram.c
+cc    -c -o s268426_podprogram.o s268426_podprogram.c
+cc    -c -o s268416_podprogram.o s268416_podprogram.c
+cc -o program main.o program_usage.o s0_podprogram.o s999_podprogram.o s268426_podprogram.o s268416_podprogram.o
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ ./program 268416
+Student Jakub Jaśków nr indeksu: 268416
+Program pyta się, czy dzisiaj jest środa.
+
+Czy dzisiaj jest środa?
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ nano README
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ # poprawiłem opis w README
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ # skoro program działa, pora na komita
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ svn status
+M       README
+M       main.c
+M       makefile
+?       program
+?       s268416_podprogram.c
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ make clean
+rm *.o program
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ svn status
+M       README
+M       main.c
+M       makefile
+?       s268416_podprogram.c
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ svn add s268416_podprogram.c
+A         s268416_podprogram.c
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ svn commit -m "268416 zaimplementował swoją procedurę"
+Sending        README
+Sending        main.c
+Sending        makefile
+Adding         s268416_podprogram.c
+Transmitting file data ....done
+Committing transaction...
+Committed revision 23.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ svn update
+Updating '.':
+At revision 23.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ svn merge ^/trunk
+svn: E160013: '/p-0/!svn/rvr/23/trunk' path not found
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ svn merge ^/app1/trunk
+svn: E160013: '/p-0/!svn/rvr/23/app1/trunk' path not found
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ svn merge ^/app_1/trunk
+--- Recording mergeinfo for merge of r22 through r23 into '.':
+ U   .
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ svn commit -m "268416 synchronizuje gałąź z trunk"
+Sending        .
+Committing transaction...
+Committed revision 24.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ # przejście do trunka i merg brancha
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ svn mergeinfo . ../../trunk/
+    youngest common ancestor
+    |         last full merge
+    |         |        tip of branch
+    |         |        |         repository path
+
+    21                 24
+    |                  |
+       --| |------------         app_1/branches/268416
+      /
+     /
+  -------| |------------         app_1/trunk
+                       |
+                       WC
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/branches/268416$ cd ../../trunk/
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ ls
+main.c  makefile  program.h  program_usage.c  README  s0_podprogram.c  s268426_podprogram.c  s999_podprogram.c
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ svn update
+Updating '.':
+At revision 24.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ svm merge --reintegrate ^/app_1/branches/268416
+Command 'svm' not found, but there are 15 similar ones.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ svn merge --reintegrate ^/app_1/branches/268416
+--- Merging differences between repository URLs into '.':
+U    README
+U    main.c
+U    makefile
+A    s268416_podprogram.c
+ U   .
+--- Recording mergeinfo for merge between repository URLs into '.':
+ U   .
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ ls
+main.c  makefile  program.h  program_usage.c  README  s0_podprogram.c  s268416_podprogram.c  s268426_podprogram.c  s999_podprogram.c
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ svn status
+ M      .
+M       README
+M       main.c
+M       makefile
+A  +    s268416_podprogram.c
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ make
+cc    -c -o main.o main.c
+main.c: In function ‘main’:
+main.c:27:9: warning: implicit declaration of function ‘s268416_podprogram’; did you mean ‘s268426_podprogram’? [-Wimplicit-function-declaration]
+   27 |         s268416_podprogram();
+      |         ^~~~~~~~~~~~~~~~~~
+      |         s268426_podprogram
+cc    -c -o program_usage.o program_usage.c
+cc    -c -o s0_podprogram.o s0_podprogram.c
+cc    -c -o s999_podprogram.o s999_podprogram.c
+cc    -c -o s268426_podprogram.o s268426_podprogram.c
+cc    -c -o s268416_podprogram.o s268416_podprogram.c
+cc -o program main.o program_usage.o s0_podprogram.o s999_podprogram.o s268426_podprogram.o s268416_podprogram.o
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ ./program 268416
+Student Jakub Jaśków nr indeksu: 268416
+Program pyta się, czy dzisiaj jest środa.
+
+Czy dzisiaj jest środa?
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ # program działa
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ make clean
+rm *.o program
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ # możemy commitowac
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ svn commit -m "268416 merguje gałąź z trunkiem"
+Sending        .
+Sending        README
+Sending        main.c
+Sending        makefile
+Adding         s268416_podprogram.c
+Transmitting file data ...done
+Committing transaction...
+Committed revision 25.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ # tworzymy taga
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1/trunk$ cd ..
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ ls
+branches  tags  trunk
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ svn copy ^/app_1/trunk ^/app_1/tags/v_268416 -m "268416 tworzy taga"
+Committing transaction...
+Committed revision 26.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ ls tags/
+v_268426  v_999
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ svn log -v branches/268416/
+------------------------------------------------------------------------
+r24 | 268416 | 2024-11-05 22:57:48 +0100 (wto, 05 lis 2024) | 1 line
+Changed paths:
+   M /app_1/branches/268416
+
+268416 synchronizuje gałąź z trunk
+------------------------------------------------------------------------
+r23 | 268416 | 2024-11-05 22:47:46 +0100 (wto, 05 lis 2024) | 1 line
+Changed paths:
+   M /app_1/branches/268416/README
+   M /app_1/branches/268416/main.c
+   M /app_1/branches/268416/makefile
+   A /app_1/branches/268416/s268416_podprogram.c
+
+268416 zaimplementował swoją procedurę
+------------------------------------------------------------------------
+r22 | 268416 | 2024-11-05 22:09:09 +0100 (wto, 05 lis 2024) | 2 lines
+Changed paths:
+   A /app_1/branches/268416 (from /app_1/trunk:21)
+
+Student 268416 tworzy własną gałąź https://repo.cs.pwr.edu.pl/p-0/app_1/branches/268416
+
+------------------------------------------------------------------------
+r17 | 268426 | 2024-11-05 16:39:41 +0100 (wto, 05 lis 2024) | 1 line
+Changed paths:
+   M /app_1/trunk
+   M /app_1/trunk/README
+   M /app_1/trunk/main.c
+   M /app_1/trunk/makefile
+   M /app_1/trunk/program.h
+   A /app_1/trunk/s268426_podprogram.c (from /app_1/branches/268426/s268426_podprogram.c:16)
+
+Merge branch 268426 to trunk
+------------------------------------------------------------------------
+r13 | mk1 | 2024-10-29 13:45:35 +0100 (wto, 29 paź 2024) | 2 lines
+Changed paths:
+   M /app_1/branches/999/README
+   M /app_1/branches/999/main.c
+   M /app_1/branches/999/makefile
+   M /app_1/branches/999/program.h
+   M /app_1/branches/999/program_usage.c
+   M /app_1/branches/999/s0_podprogram.c
+   M /app_1/branches/999/s999_podprogram.c
+   M /app_1/tags/v_999/README
+   M /app_1/tags/v_999/main.c
+   M /app_1/tags/v_999/makefile
+   M /app_1/tags/v_999/program.h
+   M /app_1/tags/v_999/program_usage.c
+   M /app_1/tags/v_999/s0_podprogram.c
+   M /app_1/tags/v_999/s999_podprogram.c
+   M /app_1/trunk/README
+   M /app_1/trunk/main.c
+   M /app_1/trunk/makefile
+   M /app_1/trunk/program.h
+   M /app_1/trunk/program_usage.c
+   M /app_1/trunk/s0_podprogram.c
+   M /app_1/trunk/s999_podprogram.c
+
+wykonano: `svn propset svn:mime-type 'text/plain;charset=utf-8' $(find app_1/ -type f )`
+
+------------------------------------------------------------------------
+r12 | admin | 2020-11-12 10:52:01 +0100 (czw, 12 lis 2020) | 2 lines
+Changed paths:
+   M /app_1/trunk/README
+
+Poprawione kodowanie README i względny adres katalogu z tagami.
+
+------------------------------------------------------------------------
+r10 | 999 | 2016-10-24 13:55:29 +0200 (pon, 24 paź 2016) | 3 lines
+Changed paths:
+   M /app_1/trunk
+   M /app_1/trunk/README
+   M /app_1/trunk/main.c
+   M /app_1/trunk/makefile
+   M /app_1/trunk/program.h
+   A /app_1/trunk/s999_podprogram.c (from /app_1/branches/999/s999_podprogram.c:9)
+
+999 zreintegrował swoją gałąź z trunk-iem
+
+
+------------------------------------------------------------------------
+r7 | admin | 2016-10-24 13:44:15 +0200 (pon, 24 paź 2016) | 3 lines
+Changed paths:
+   M /app_1/trunk/README
+
+Dodatkowe wyjaśnienia w pliku README o tworzeniu tag-ów
+
+
+------------------------------------------------------------------------
+r3 | 999 | 2016-10-24 13:04:10 +0200 (pon, 24 paź 2016) | 2 lines
+Changed paths:
+   A /app_1/trunk/README
+
+dodano plik README w trunk
+
+------------------------------------------------------------------------
+r1 | admin | 2016-10-17 14:28:36 +0200 (pon, 17 paź 2016) | 3 lines
+Changed paths:
+   M /
+   A /app_1
+   A /app_1/branches
+   A /app_1/trunk
+   A /app_1/trunk/main.c
+   A /app_1/trunk/makefile
+   A /app_1/trunk/program.h
+   A /app_1/trunk/program_usage.c
+   A /app_1/trunk/s0_podprogram.c
+
+początkowa wersja projektu.
+
+
+------------------------------------------------------------------------
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ svn log -v tags/v_268416/
+svn: E155010: The node '/home/jaskow/Repo/app_1/tags/v_268416' was not found.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ ls tags
+v_268426  v_999
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ svn update
+Updating '.':
+A    tags/v_268416
+A    tags/v_268416/README
+A    tags/v_268416/main.c
+A    tags/v_268416/makefile
+A    tags/v_268416/s268416_podprogram.c
+A    tags/v_268416/program.h
+A    tags/v_268416/s268426_podprogram.c
+A    tags/v_268416/program_usage.c
+A    tags/v_268416/s0_podprogram.c
+A    tags/v_268416/s999_podprogram.c
+Updated to revision 26.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ svn log -v tags/v_268416/
+------------------------------------------------------------------------
+r26 | 268416 | 2024-11-05 23:04:57 +0100 (wto, 05 lis 2024) | 1 line
+Changed paths:
+   A /app_1/tags/v_268416 (from /app_1/trunk:25)
+
+268416 tworzy taga
+------------------------------------------------------------------------
+r25 | 268416 | 2024-11-05 23:02:44 +0100 (wto, 05 lis 2024) | 1 line
+Changed paths:
+   M /app_1/trunk
+   M /app_1/trunk/README
+   M /app_1/trunk/main.c
+   M /app_1/trunk/makefile
+   A /app_1/trunk/s268416_podprogram.c (from /app_1/branches/268416/s268416_podprogram.c:24)
+
+268416 merguje gałąź z trunkiem
+------------------------------------------------------------------------
+r17 | 268426 | 2024-11-05 16:39:41 +0100 (wto, 05 lis 2024) | 1 line
+Changed paths:
+   M /app_1/trunk
+   M /app_1/trunk/README
+   M /app_1/trunk/main.c
+   M /app_1/trunk/makefile
+   M /app_1/trunk/program.h
+   A /app_1/trunk/s268426_podprogram.c (from /app_1/branches/268426/s268426_podprogram.c:16)
+
+Merge branch 268426 to trunk
+------------------------------------------------------------------------
+r13 | mk1 | 2024-10-29 13:45:35 +0100 (wto, 29 paź 2024) | 2 lines
+Changed paths:
+   M /app_1/branches/999/README
+   M /app_1/branches/999/main.c
+   M /app_1/branches/999/makefile
+   M /app_1/branches/999/program.h
+   M /app_1/branches/999/program_usage.c
+   M /app_1/branches/999/s0_podprogram.c
+   M /app_1/branches/999/s999_podprogram.c
+   M /app_1/tags/v_999/README
+   M /app_1/tags/v_999/main.c
+   M /app_1/tags/v_999/makefile
+   M /app_1/tags/v_999/program.h
+   M /app_1/tags/v_999/program_usage.c
+   M /app_1/tags/v_999/s0_podprogram.c
+   M /app_1/tags/v_999/s999_podprogram.c
+   M /app_1/trunk/README
+   M /app_1/trunk/main.c
+   M /app_1/trunk/makefile
+   M /app_1/trunk/program.h
+   M /app_1/trunk/program_usage.c
+   M /app_1/trunk/s0_podprogram.c
+   M /app_1/trunk/s999_podprogram.c
+
+wykonano: `svn propset svn:mime-type 'text/plain;charset=utf-8' $(find app_1/ -type f )`
+
+------------------------------------------------------------------------
+r12 | admin | 2020-11-12 10:52:01 +0100 (czw, 12 lis 2020) | 2 lines
+Changed paths:
+   M /app_1/trunk/README
+
+Poprawione kodowanie README i względny adres katalogu z tagami.
+
+------------------------------------------------------------------------
+r10 | 999 | 2016-10-24 13:55:29 +0200 (pon, 24 paź 2016) | 3 lines
+Changed paths:
+   M /app_1/trunk
+   M /app_1/trunk/README
+   M /app_1/trunk/main.c
+   M /app_1/trunk/makefile
+   M /app_1/trunk/program.h
+   A /app_1/trunk/s999_podprogram.c (from /app_1/branches/999/s999_podprogram.c:9)
+
+999 zreintegrował swoją gałąź z trunk-iem
+
+
+------------------------------------------------------------------------
+r7 | admin | 2016-10-24 13:44:15 +0200 (pon, 24 paź 2016) | 3 lines
+Changed paths:
+   M /app_1/trunk/README
+
+Dodatkowe wyjaśnienia w pliku README o tworzeniu tag-ów
+
+
+------------------------------------------------------------------------
+r3 | 999 | 2016-10-24 13:04:10 +0200 (pon, 24 paź 2016) | 2 lines
+Changed paths:
+   A /app_1/trunk/README
+
+dodano plik README w trunk
+
+------------------------------------------------------------------------
+r1 | admin | 2016-10-17 14:28:36 +0200 (pon, 17 paź 2016) | 3 lines
+Changed paths:
+   M /
+   A /app_1
+   A /app_1/branches
+   A /app_1/trunk
+   A /app_1/trunk/main.c
+   A /app_1/trunk/makefile
+   A /app_1/trunk/program.h
+   A /app_1/trunk/program_usage.c
+   A /app_1/trunk/s0_podprogram.c
+
+początkowa wersja projektu.
+
+
+------------------------------------------------------------------------
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ svn diff tags/v_268416/ trunk/
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ svn diff -r 25 tags/v_268416/ trunk/
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ # jak widać nasz tag niczym nie różni się od trunka
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ # teraz usune mojego brancha
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ svn delete ^/app_1/branches/268416 -m "remove 268416 branch"
+Committing transaction...
+Committed revision 27.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ svn update
+Updating '.':
+D    branches/268416
+Updated to revision 27.
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ svn status
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ svn blame trunk/*
+     1      admin #include "program.h"
+     1      admin
+     1      admin
+     1      admin int main(int argc, char *argv[])
+     1      admin {
+     1      admin
+    10        999   if(argc!=2)
+     1      admin     {
+     1      admin       program_usage();
+     1      admin       exit(EXIT_FAILURE);
+     1      admin     }
+     1      admin
+     1      admin   {
+     1      admin     int idx=atoi(argv[1]);
+     1      admin     switch( idx )
+     1      admin       {
+    10        999       case 0:
+    10        999         s0_podprogram() ; // podprogram studenta o numerze indeksu 0
+    10        999         break;
+    17     268426       case 999:
+    17     268426               s999_podprogram() ; // podprogram studenta o numerze indeksu 999
+    17     268426               break;
+    17     268426       case 268426:
+    17     268426         s268426_podprogram();
+    25     268416         break;
+    25     268416       case 268416:
+    25     268416         s268416_podprogram();
+    25     268416         break;
+     1      admin       default:
+    25     268416               printf("\nStudent o numerze indeksu %d nie wykonał jeszcze zadania\n\n",idx);
+     1      admin       break;
+     1      admin
+     1      admin       }
+     1      admin   }
+     1      admin   exit(EXIT_SUCCESS);
+     1      admin }
+     1      admin objects = main.o program_usage.o \
+    10        999           s0_podprogram.o \
+    17     268426           s999_podprogram.o \
+    25     268416         s268426_podprogram.o \
+    25     268416           s268416_podprogram.o
+     1      admin
+     1      admin program : $(objects)
+     1      admin       cc -o program $(objects)
+     1      admin main.o : program.h
+     1      admin
+     1      admin program_usage.o : program.h
+     1      admin
+     1      admin s0_podprogram.o : program.h
+     1      admin
+    10        999 s999_podprogram.o : program.h
+    10        999
+    17     268426 s268426_podprogram.o : program.h
+    17     268426
+    25     268416 s268416_podprogram.o : program.h
+    25     268416
+     1      admin .PHONY : clean
+     1      admin
+    25     268416 clean :
+     1      admin       -rm *.o program
+     1      admin
+     1      admin #include <stdlib.h>
+     1      admin #include <stdio.h>
+     1      admin #include <string.h>
+     1      admin
+     1      admin
+     1      admin /* deklaracje funkcji używanych w programie */
+     1      admin void program_usage( );
+     1      admin
+     1      admin
+     1      admin /* tu studenci mogą deklarować własne funkcje.
+     1      admin    Wszystkie nazwy funkcji studenta o numerze indeksu NNNNNN
+     1      admin    powinny rozpoczynać się od przedrostka sNNNNNN_
+     1      admin    aby nie kolidowały z nazwami funkcji innych studentów */
+     1      admin
+     1      admin void s0_podprogram(); /* funkcja studenta 0 */
+    10        999 void s999_podprogram(); /* funkcja studenta 999 */
+    17     268426 void s268426_podprogram(); /* funkcja studenta 268426 */
+     1      admin
+     1      admin
+     1      admin
+     1      admin
+     1      admin #include "program.h"
+     1      admin
+     1      admin void program_usage( )
+     1      admin {
+     1      admin   printf("wywołanie: program <nr_indeksu>\n");
+     1      admin }
+     7      admin Ten plik README utworzony, żeby studenci mogli umieszczać
+     3        999 tu opisy działania swoich podprogramów.
+     3        999
+     7      admin
+     3        999 Wywołanie programu:
+     3        999
+     3        999    program ARG
+     3        999
+     3        999 Dla poszczególnych wartości ARG program działa następująco:
+     3        999
+    10        999          0 - wyświetla ogólny opis działania podprogramów;
+    10        999        999 - wczytuje liczbę i drukuje jej kwadrat.
+    17     268426        268426 - wczytuje liczbę i sprawdza czy jest parzysta
+    25     268416        268416 - pyta się, czy dzisiaj jest środa
+     3        999
+     3        999
+     7      admin Dodatkowo, po zreintegrowaniu swojej gałęzi do trunk-a student ma utworzyć
+     7      admin w katalogu:
+     7      admin
+    12      admin ^/app_1/tags
+     7      admin
+     7      admin własnego taga tej wersji o nazwie: v_<nr_indeksu>
+     1      admin #include "program.h"
+     1      admin
+     1      admin void s0_podprogram()
+     1      admin {
+     1      admin   printf("\n\nTo jest tylko szablon przykładowego rozwiązania.\n\n");
+     1      admin   printf("Na początku podprogram ma wydrukować imię, nazwisko i numer indeksu studenta\n");
+     1      admin   printf("oraz krótkie wyjaśnienie co dany podprogram robi wraz z instrukcją obsługi,\n");
+     1      admin   printf("następnie wczytać ze standardowego wejścia dane wejściowe i wydrukować wynik\n\n");
+     1      admin }
+    23     268416 #include "program.h"
+    23     268416
+    23     268416 void s268416_podprogram()
+    23     268416 {
+    23     268416       printf("Student Jakub Jaśków nr indeksu: 268416\n");
+    23     268416       printf("Program pyta się, czy dzisiaj jest środa.\n");
+    23     268416
+    23     268416       printf("\nCzy dzisiaj jest środa?\n");
+    23     268416 }
+    15     268426 #include "program.h"
+    15     268426
+    15     268426 void s268426_podprogram() {
+    15     268426  printf("Student: Aleksandra Zaremba\n");
+    15     268426  printf("Nr indeksu: 268426\n");
+    15     268426  printf("Program wczytuje liczę całkowitą i sprawdza czy jest parzysta\n");
+    15     268426
+    15     268426  int input;
+    15     268426  printf("Podaj liczbę: ");
+    15     268426  scanf("%d", &input);
+    15     268426
+    15     268426  if(input % 2 == 0) {
+    15     268426   printf("Liczba jest parzysta\n");
+    15     268426  } else {
+    15     268426   printf("Liczba jest nieparzysta\n");
+    15     268426  }
+    15     268426 }
+    15     268426
+     1      admin #include "program.h"
+     1      admin
+     5        999 void s999_podprogram()
+     1      admin {
+     5        999
+     5        999   printf("Student Sztuczny nr indeksu: 999\n");
+     5        999   printf("Program wczytuje liczbę całkowitą i drukuje jej kwadrat\n");
+     5        999   int x;
+     5        999   printf("Podaj liczbę x: ");
+     5        999   scanf("%d", &x);
+     5        999
+     5        999   printf("Liczba x do kwadratu wynosi: %d\n", x*x);
+     5        999
+     1      admin }
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ # to koniec
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo/app_1$ cd ..
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo$ cd ..
+jaskow@jaskow-HP-EliteBook-840-G5:~$ cd Repo/
+jaskow@jaskow-HP-EliteBook-840-G5:~/Repo$ tmux capture-pane -p -S'-' -E'-' >> sp_l3_z1_log
+
